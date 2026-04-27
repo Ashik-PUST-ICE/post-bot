@@ -6,15 +6,7 @@
         selector.modal('show');
     });
 
-    $(document).on('change', 'select[name=employee_limit_type]', function () {
-        var selector = $(this).closest('div');
-        if ($(this).val() == 1) {
-            selector.find('input').prop('disabled', false);
-        } else {
-            selector.find('input').val(0);
-            selector.find('input').prop('disabled', true);
-        }
-    });
+
 
     $(document).on('click', '.edit', function () {
         commonAjax('GET', $('#packageInfoRoute').val(), getDataEditRes, getDataEditRes, { 'id': $(this).data('id') });
@@ -26,15 +18,10 @@
         selector.find('.error-message').remove();
 
         selector.find('input[name=id]').val(response.data.id);
-        selector.find('.upload-img-box img').attr('src', response.data.icon);
+        selector.find('input[name=icon]').val(response.data.icon);
         selector.find('input[name=name]').val(response.data.name);
-        if (response.data.employee_limit == -1) {
-            selector.find('input[name=employee_limit]').val(0);
-            selector.find('select[name=employee_limit_type]').val(2);
-        } else {
-            selector.find('input[name=employee_limit]').val(response.data.employee_limit);
-            selector.find('select[name=employee_limit_type]').val(1);
-        }
+        selector.find('input[name=page_limit]').val(response.data.page_limit);
+        selector.find('input[name=message_limit]').val(response.data.message_limit);
 
         // others
         var otherHtmlFields = '';
@@ -111,6 +98,7 @@
         columns: [
             { data: 'DT_RowIndex', "name": 'DT_RowIndex', orderable: false, searchable: false, },
             { data: "name", name: "packages.name" },
+            { data: "icon", name: "packages.icon" },
             { data: "monthly_price", name: "packages.monthly_price" },
             { data: "yearly_price", name: "packages.yearly_price" },
             { data: "status", name: "status" },

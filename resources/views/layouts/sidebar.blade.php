@@ -33,8 +33,7 @@
                     </a>
                 </li>
 
-            
-                <!-- <li>
+                <li>
                     <a href="{{ route('super-admin.packages.index') }}"
                         class="d-flex align-items-center cg-21 {{ $activePackageIndex ?? '' }}">
                         <div class="d-flex {{ isset($activePackageIndex) ? 'active' : 'collapsed' }}">
@@ -90,7 +89,7 @@
                         </div>
                         <span class="">{{ __('All Orders') }}</span>
                     </a>
-                </li> -->
+                </li>
                 <!-- <li>
                     <a href="{{ route('super-admin.setting.profile.index') }}"
                         class="d-flex align-items-center cg-21 {{ $activeProfile ?? '' }}">

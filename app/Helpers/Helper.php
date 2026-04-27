@@ -1535,9 +1535,15 @@ if (!function_exists('getAdminLimit')) {
             ->first();
 
         if (!is_null($userPackage)) {
-            if ($type == RULES_EMPLOYEE_LIMIT && $userPackage->employee_limit != -1) {
-                $limit = $userPackage->employee_limit;
-                $used = User::where('created_by', auth()->id())->where('role', USER_ROLE_EMPLOYEE)->count();
+            if ($type == RULES_PAGE_LIMIT && $userPackage->page_limit != -1) {
+                $limit = $userPackage->page_limit;
+                $used = User::where('created_by', auth()->id())->where('role', USER_ROLE_EMPLOYEE)->count(); // Assuming pages are linked to users or something
+                $remain = $limit - $used;
+                $remain = $remain < 0 ? 0 : $remain;
+                return $remain;
+            } elseif ($type == RULES_MESSAGE_LIMIT && $userPackage->message_limit != -1) {
+                $limit = $userPackage->message_limit;
+                $used = 0; // Logic for used messages
                 $remain = $limit - $used;
                 $remain = $remain < 0 ? 0 : $remain;
                 return $remain;
@@ -1772,7 +1778,8 @@ if (!function_exists('setUserPackage')) {
             'user_id' => $userId,
             'package_id' => $package->id,
             'name' => $package->name,
-            'employee_limit' => $package->employee_limit,
+            'page_limit' => $package->page_limit,
+            'message_limit' => $package->message_limit,
             'monthly_price' => $package->monthly_price,
             'yearly_price' => $package->yearly_price,
             'order_id' => $orderId,

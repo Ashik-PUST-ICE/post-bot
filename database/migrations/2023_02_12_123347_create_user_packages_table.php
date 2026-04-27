@@ -18,7 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('package_id');
             $table->string('name');
-            $table->integer('employee_limit')->default(0);
+            $table->integer('page_limit')->default(0);
+            $table->integer('message_limit')->default(0);
             $table->decimal('monthly_price', 8, 2)->default(0);
             $table->decimal('yearly_price', 8, 2)->default(0);
             $table->dateTime('start_date');

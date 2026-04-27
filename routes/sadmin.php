@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\RolePermisionController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\AddonUpdateController;
 use App\Http\Controllers\VersionUpdateController;
 use App\Models\Language;
@@ -154,6 +155,15 @@ Route::group(['prefix' => 'roles', 'as' => 'roles.'], function () {
     Route::post('permission-update', [RolePermisionController::class, 'permissionUpdate'])->name('permission-update');
 });
 
+
+    Route::group(['prefix' => 'packages', 'as' => 'packages.'], function () {
+        Route::get('/', [PackageController::class, 'index'])->name('index');
+        Route::post('store', [PackageController::class, 'store'])->name('store');
+        Route::get('edit/{id}', [PackageController::class, 'edit'])->name('edit');
+        Route::get('get-info', [PackageController::class, 'getInfo'])->name('get.info');
+        Route::post('destroy/{id}', [PackageController::class, 'destroy'])->name('destroy');
+        Route::get('user-package', [PackageController::class, 'userPackage'])->name('user');
+    });
 
 //users
 Route::group(['prefix' => 'user', 'as' => 'user.'], function () {

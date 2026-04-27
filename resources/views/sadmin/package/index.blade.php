@@ -31,6 +31,9 @@
                         <div>{{ __('Name') }}</div>
                     </th>
                     <th>
+                        <div>{{ __('Icon') }}</div>
+                    </th>
+                    <th>
                         <div class="text-nowrap">{{ __('Monthly Price') }}</div>
                     </th>
                     <th>
@@ -74,14 +77,21 @@
                                        class="form-control zForm-control">
                             </div>
                             <div>
-                                <label class="zForm-label">{{ __('Employee Limit') }} <span
+                                <label for="icon" class="zForm-label">{{ __('Icon (FontAwesome/Image Path)') }}</label>
+                                <input type="text" name="icon" id="icon" placeholder="{{ __('Icon') }}"
+                                       class="form-control zForm-control">
+                            </div>
+                            <div>
+                                <label for="page_limit" class="zForm-label">{{ __('Page Limit') }} <span
                                         class="text-danger">*</span></label>
-                                <input type="number" name="employee_limit" id="employee_limit"
-                                       placeholder="{{ __('Employee Limit') }}" class="form-control zForm-control mb-8">
-                                <select name="employee_limit_type" class="sf-select-without-search">
-                                    <option value="1">{{ __('Limited') }}</option>
-                                    <option value="2">{{ __('Unlimited') }}</option>
-                                </select>
+                                <input type="number" name="page_limit" id="page_limit"
+                                       placeholder="{{ __('Page Limit') }}" class="form-control zForm-control mb-8">
+                            </div>
+                            <div>
+                                <label for="message_limit" class="zForm-label">{{ __('Message Limit') }} <span
+                                        class="text-danger">*</span></label>
+                                <input type="number" name="message_limit" id="message_limit"
+                                       placeholder="{{ __('Message Limit') }}" class="form-control zForm-control mb-8">
                             </div>
                         </div>
 
@@ -176,14 +186,21 @@
                                        class="form-control zForm-control">
                             </div>
                             <div>
-                                <label class="zForm-label">{{ __('Employee Limit') }} <span
+                                <label for="icon" class="zForm-label">{{ __('Icon (FontAwesome/Image Path)') }}</label>
+                                <input type="text" name="icon" id="icon" placeholder="{{ __('Icon') }}"
+                                       class="form-control zForm-control">
+                            </div>
+                            <div>
+                                <label for="page_limit" class="zForm-label">{{ __('Page Limit') }} <span
                                         class="text-danger">*</span></label>
-                                <input type="number" name="employee_limit" id="employee_limit"
-                                       placeholder="{{ __('Employee Limit') }}" class="form-control zForm-control mb-8">
-                                <select name="employee_limit_type" class="sf-select-without-search">
-                                    <option value="1">{{ __('Limited') }}</option>
-                                    <option value="2">{{ __('Unlimited') }}</option>
-                                </select>
+                                <input type="number" name="page_limit" id="page_limit"
+                                       placeholder="{{ __('Page Limit') }}" class="form-control zForm-control mb-8">
+                            </div>
+                            <div>
+                                <label for="message_limit" class="zForm-label">{{ __('Message Limit') }} <span
+                                        class="text-danger">*</span></label>
+                                <input type="number" name="message_limit" id="message_limit"
+                                       placeholder="{{ __('Message Limit') }}" class="form-control zForm-control mb-8">
                             </div>
                         </div>
 

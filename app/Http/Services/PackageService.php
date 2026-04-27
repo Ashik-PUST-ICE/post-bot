@@ -30,7 +30,7 @@ class PackageService
             ->addColumn('icon', function ($data) {
                 return '<div class="min-w-160 d-flex align-items-center cg-10">
                             <div class="flex-shrink-0 w-35 h-35 bd-one bd-c-stroke rounded-circle overflow-hidden bg-eaeaea d-flex justify-content-center align-items-center">
-                                <img src="' . getFileUrl($data->icon_id) . '" alt="icon" class="rounded avatar-xs w-100">
+                                <img src="' . asset($data->icon) . '" alt="icon" class="rounded avatar-xs w-100">
                             </div>
                         </div>';
             })
@@ -81,16 +81,11 @@ class PackageService
                 $package = new Package();
             }
 
-            // Slug exists
-            $slug = getSlug($request->name);
-            $slugExist = Package::where('slug', $slug)->whereNot('id', $request->id)->exists();
-            if ($slugExist) {
-                throw new Exception(__('Name Already Exist!'));
-            }
-
             $package->name = $request->name;
-            $package->slug = $slug;
-            $package->employee_limit = $request->employee_limit_type == 1 ? $request->employee_limit : -1;
+            $package->slug = $request->slug;
+            $package->icon = $request->icon;
+            $package->page_limit = $request->page_limit;
+            $package->message_limit = $request->message_limit;
 
             $package->others = json_encode($request->others);
             $package->status = $request->status ? ACTIVE : DEACTIVATE;
@@ -102,7 +97,8 @@ class PackageService
 
             // user subscription update
             UserPackage::where('package_id', $package->id)->update([
-                'employee_limit' => $package->employee_limit
+                'page_limit' => $package->page_limit,
+                'message_limit' => $package->message_limit,
             ]);
 
             DB::commit();

@@ -16,11 +16,16 @@ return new class extends Migration
         Schema::create('packages', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('icon')->nullable();
             $table->string('slug');
-            $table->integer('employee_limit')->default(0);
+            $table->integer('page_limit')->nullable()->default(0);
+            $table->integer('message_limit')->nullable()->default(0);
             $table->text('others')->nullable();
             $table->decimal('monthly_price', 12, 2)->default(0.00);
             $table->decimal('yearly_price', 12, 2)->default(0.00);
+            $table->string('stripe_monthly_plan_id')->nullable();
+            $table->string('stripe_yearly_plan_id')->nullable();
+            $table->string('stripe_product_id')->nullable();
             $table->tinyInteger('status')->default(DEACTIVATE)->comment('active for 1 , deactivate for 0');
             $table->tinyInteger('is_default')->default(DEACTIVATE)->comment('active for 1 , deactivate for 0');
             $table->tinyInteger('is_trail')->default(DEACTIVATE)->comment('active for 1 , deactivate for 0');

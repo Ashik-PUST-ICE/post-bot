@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\PackageRequest;
-use App\Http\Services\Addon\Saas\PackageService;
+use App\Http\Services\PackageService;
 use App\Traits\ResponseTrait;
 use Illuminate\Http\Request;
 
