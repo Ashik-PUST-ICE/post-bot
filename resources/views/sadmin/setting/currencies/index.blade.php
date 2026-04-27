@@ -67,29 +67,28 @@
                     @csrf
 
                     <div class="row rg-20 pb-20">
-                        <div class="">
-                            <label for="currency_code" class="zForm-label">{{ __('Currency ISO Code') }}
-                                <span class="text-danger">*</span></label>
-                            <select id="sf-select-currency-add" class="primary-form-control" id="currency_code"
-                                    name="currency_code">
+                        <div class="col-12">
+                            <label for="currency_code" class="zForm-label">{{ __('Currency ISO Code') }} <span
+                                    class="text-danger">*</span></label>
+                            <select id="sf-select-currency-add" class="primary-form-control" name="currency_code">
                                 @foreach (getCurrency() as $code => $currencyItem)
                                     <option value="{{ $code }}">{{ $currencyItem }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="">
+                        <div class="col-12">
                             <label for="symbol" class="zForm-label">{{ __('Symbol') }} <span
                                     class="text-danger">*</span></label>
-                            <input type="text" name="symbol" id="symbol" placeholder="{{ __('Type Symbol') }}"
+                            <input type="text" name="symbol" id="symbol" placeholder="{{ __('e.g. $') }}"
                                    class="form-control zForm-control">
                         </div>
-                        <div class="">
+                        <div class="col-12">
                             <label for="currency_placement" class="zForm-label">{{ __('Currency Placement') }}
                                 <span class="text-danger">*</span></label>
-                            <select class="sf-select-without-search" id="eventType" name="currency_placement">
+                            <select class="sf-select-without-search primary-form-control" name="currency_placement">
                                 <option value="">--{{ __('Select Option') }}--</option>
-                                <option value="before">{{ __('Before Amount') }}</option>
-                                <option value="after">{{ __('After Amount') }}</option>
+                                <option value="before">{{ __('Before Amount (e.g. $100)') }}</option>
+                                <option value="after">{{ __('After Amount (e.g. 100$)') }}</option>
                             </select>
                         </div>
                         <div class="col-12 mt-4">

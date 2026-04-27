@@ -13,8 +13,7 @@
         <div class="col-12">
             <label for="currency_code" class="zForm-label">{{ __('Currency ISO Code') }} <span
                     class="text-danger">*</span></label>
-            <select class="sf-select-edit-modal primary-form-control" id="currency_code"
-                    name="currency_code">
+            <select class="sf-select-edit-modal primary-form-control" name="currency_code">
                 @foreach (getCurrency() as $code => $currencyItem)
                     <option value="{{ $code }}" {{ $code==$currency->currency_code ? 'selected' : '' }}>{{
                                 $currencyItem }}
@@ -26,7 +25,7 @@
         <div class="col-12">
             <label for="symbol" class="zForm-label">{{ __('Symbol') }}<span
                     class="text-danger">*</span></label>
-            <input type="text" class="form-control zForm-control" name="symbol" placeholder="Type symbol"
+            <input type="text" class="form-control zForm-control" name="symbol" placeholder="{{ __('e.g. $') }}"
                    value="{{ $currency->symbol }}" required>
         </div>
         <div class="col-12">
@@ -35,24 +34,23 @@
             <select class="sf-select-without-search primary-form-control" name="currency_placement">
                 <option value="">--{{ __('Select Option') }}--</option>
                 <option {{ $currency->currency_placement == 'before' ? 'selected' : '' }} value="before">
-                    {{ __('Before Amount') }}</option>
+                    {{ __('Before Amount (e.g. $100)') }}</option>
                 <option {{ $currency->currency_placement == 'after' ? 'selected' : '' }} value="after">
-                    {{ __('After Amount') }}</option>
+                    {{ __('After Amount (e.g. 100$)') }}</option>
             </select>
         </div>
         <div class="col-12 mt-4">
             <div class="d-flex form-check ps-0">
-                <div class="zCheck form-switch">
+                <div class="zCheck form-check form-switch">
                     <input class="form-check-input mt-0" value="1" name="current_currency" {{
                             $currency->current_currency == STATUS_ACTIVE ? 'checked' : '' }} type="checkbox"
-                           id="flexCheckChecked--{{ $currency->id }}">
+                           id="flexCheckChecked-{{ $currency->id }}">
                 </div>
                 <label class="form-check-label ps-3 d-flex" for="flexCheckChecked-{{ $currency->id }}">
                     {{ __('Current Currency') }}
                 </label>
             </div>
         </div>
-
     </div>
 
     <div class="d-flex g-12 flex-wrap pt-20 bd-t-one bd-c-light-border">

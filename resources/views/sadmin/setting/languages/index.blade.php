@@ -17,7 +17,7 @@
                     <div class="search-one flex-grow-1 max-w-207">
                         <button class="icon"><img src="{{ asset('assets/images/icon/search.svg') }}" alt=""/>
                         </button>
-                        <input type="text" id="superAdminMultiLanguageSearch" placeholder="{{ __('Search here...') }}""/>
+                        <input type="text" id="superAdminMultiLanguageSearch" placeholder="{{ __('Search here...') }}"/>
                     </div>
                 </div>
                 <div class="d-flex justify-content-center justify-content-sm-start g-10 flex-wrap">
