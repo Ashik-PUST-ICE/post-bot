@@ -4,7 +4,6 @@ namespace App\Http\Services;
 
 use App\Models\Currency;
 use App\Traits\ResponseTrait;
-use Illuminate\Support\Facades\Auth;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -14,7 +13,8 @@ class CurrencyService
 
     public function getAllData()
     {
-        $currencies = Currency::orderBy('id', 'desc')->select('id', 'currency_code', 'current_currency', 'symbol', 'currency_placement');
+        $currencies = Currency::orderBy('id', 'desc')
+            ->select('id', 'currency_code', 'current_currency', 'symbol', 'currency_placement');
         return datatables($currencies)
             ->addIndexColumn()
             ->editColumn('currency_code', function ($data) {
@@ -24,23 +24,22 @@ class CurrencyService
                 }
                 return $currencyCode;
             })
-            ->addColumn('action', function ($data){
-
-                return '<ul class="d-flex align-items-center cg-5 justify-content-center">
+            ->addColumn('action', function ($data) {
+                return '<ul class="d-flex align-items-center cg-5 justify-content-end">
                             <li class="d-flex gap-2">
-                                <button onclick="getEditModal(\'' . route('admin.setting.currencies.edit', $data->id) . '\'' . ', \'#edit-modal\')" class="d-flex justify-content-center align-items-center w-30 h-30 rounded-circle bd-one bd-c-ededed bg-white" data-bs-toggle="modal" data-bs-target="#alumniPhoneNo">
-                                    <img src="' . asset('assets/images/icon/edit.svg') . '" alt="edit" />
+                                <button onclick="getEditModal(\'' . route('super-admin.setting.currencies.edit', $data->id) . '\'' . ', \'#edit-modal\')" class="d-flex justify-content-center align-items-center w-30 h-30 rounded-circle bd-one bd-c-stroke bg-white" data-bs-toggle="modal" data-bs-target="#alumniPhoneNo">
+                                    <img src="' . asset('assets/images/icon/edit-black.svg') . '" alt="edit" />
                                 </button>
-                                <button onclick="deleteItem(\'' . route('admin.setting.currencies.delete', $data->id) . '\', \'commonDataTable\')" class="d-flex justify-content-center align-items-center w-30 h-30 rounded-circle bd-one bd-c-ededed bg-white" title="'.__('Delete').'">
+                                <button onclick="deleteItem(\'' . route('super-admin.setting.currencies.delete', $data->id) . '\', \'commonDataTable\')" class="d-flex justify-content-center align-items-center w-30 h-30 rounded-circle bd-one bd-c-stroke bg-white" title="Delete">
                                     <img src="' . asset('assets/images/icon/delete-1.svg') . '" alt="delete">
                                 </button>
                             </li>
                         </ul>';
-
             })
             ->rawColumns(['action', 'currency_code'])
             ->make(true);
     }
+
 
     public function store($request)
     {

@@ -2,7 +2,6 @@
 
 namespace App\Http\Services;
 
-use App\Models\Currency;
 use App\Models\FileManager;
 use App\Models\Language;
 use App\Traits\ResponseTrait;
@@ -36,7 +35,7 @@ class LanguageService
                 return $return;
             })
             ->addColumn('flag', function ($data) {
-                return '<div class="min-w-160 d-flex align-items-center cg-10"><div class="flex-shrink-0 w-35 h-35 bd-one bd-c-cdef84 rounded-circle overflow-hidden bg-eaeaea d-flex justify-content-center align-items-center"><img src="' . getFileUrl($data->flag_id) . '" alt="icon" class="rounded avatar-xs w-100"></div><p>'.htmlspecialchars($data->name).'</p></div>';
+                return '<div class="min-w-160 d-flex align-items-center cg-10"><div class="flex-shrink-0 w-30 h-30 bd-one bd-c-stroke rounded-circle overflow-hidden bg-body-bg d-flex justify-content-center align-items-center"><img src="' . getFileUrl($data->flag_id) . '" alt="icon" class="rounded avatar-xs w-100"></div><p>' . htmlspecialchars($data->name) . '</p></div>';
             })
             ->addColumn('font', function ($data) {
                 if ($data->font != null) {
@@ -46,28 +45,31 @@ class LanguageService
                 }
             })
             ->addColumn('action', function ($data) {
-                if(auth()->user()->role == USER_ROLE_ADMIN){
-                    $role = 'admin';
-                }else{
-                    $role = 'super_admin';
+                if (auth()->user()->role == USER_ROLE_ADMIN) {
+                    $editRoute = 'admin.setting.languages.edit';
+                    $DeleteRoute = 'admin.setting.languages.delete';
+                    $translateRoute = 'admin.setting.languages.translate';
+                } else {
+                    $editRoute = 'super-admin.setting.languages.edit';
+                    $DeleteRoute = 'super-admin.setting.languages.delete';
+                    $translateRoute = 'super-admin.setting.languages.translate';
                 }
-                return '<ul class="d-flex align-items-center cg-5 justify-content-center">
-                <li class="align-items-center d-flex gap-2">
-                    <button onclick="getEditModal(\'' . route($role.'.setting.languages.edit', $data->id) . '\'' . ', \'#edit-modal\')" class="d-flex justify-content-center align-items-center w-30 h-30 rounded-circle bd-one bd-c-ededed bg-white" data-bs-toggle="modal" data-bs-target="#alumniPhoneNo">
-                        <img src="' . asset('assets/images/icon/edit.svg') . '" alt="edit" />
-                    </button>
-                    <button onclick="deleteItem(\'' . route($role.'.setting.languages.delete', $data->id) . '\', \'commonDataTable\')" class="d-flex justify-content-center align-items-center w-30 h-30 rounded-circle bd-one bd-c-ededed bg-white" title="'.__('Delete').'">
-                        <img src="' . asset('assets/images/icon/delete-1.svg') . '" alt="delete">
-                    </button>
-                    <a href="' . route($role.'.setting.languages.translate', $data->id) . '"
-                                                                                class="btn-action" title="">
-                                                                                <span class="status-btn status-btn-blue">
-                                                                                    ' . __("Translator") . '</span>
-                                                                            </a>
-                </li>
-            </ul>
+                return '<ul class="d-flex align-items-center cg-5 justify-content-end">
+                            <li class="align-items-center d-flex gap-2">
+                                <button onclick="getEditModal(\'' . route($editRoute, $data->id) . '\'' . ', \'#edit-modal\')" class="d-flex  justify-content-center align-items-center w-30 h-30 rounded-circle bd-one bd-c-stroke bg-white" data-bs-toggle="modal" data-bs-target="#alumniPhoneNo">
+                                        <img src="' . asset('assets/images/icon/edit-black.svg') . '" alt="edit" />
+                                    </button>
+                                    <button onclick="deleteItem(\'' . route($DeleteRoute, $data->id) . '\', \'commonDataTable\')" class="d-flex justify-content-center        align-items-center w-30 h-30 rounded-circle bd-one bd-c-stroke bg-white" title="Delete">
+                                    <img src="' . asset('assets/images/icon/delete-1.svg') . '" alt="delete">
+                                </button>
+                                <a href="' . route($translateRoute, $data->id) . '"
+                                    class="btn-action" title="">
+                                    <span class="fs-14 fw-400 lh-24 text-main-color">
+                                        ' . __("Translator") . '</span>
+                                </a>
+                            </li>
+                        </ul>';
 
-                ';
             })
             ->rawColumns(['action', 'language', 'flag', 'font', 'rtl'])
             ->make(true);
@@ -138,8 +140,8 @@ class LanguageService
             file_put_contents($path . "$request->iso_code.json", '{}');
             DB::commit();
             $message = getMessage(CREATED_SUCCESSFULLY);
-            return $this->success(['route' => route('admin.setting.languages.index', [$language->id])], $message);
-//            return $this->success([], __(UPDATED_SUCCESSFULLY));
+            // return $this->success(['route' => route('super-admin.setting.languages.index', [$language->id])], $message);
+            return $this->success([], __($message));
         } catch (Exception $e) {
             DB::rollBack();
             $message = getErrorMessage($e, $e->getMessage());
@@ -221,7 +223,7 @@ class LanguageService
             file_put_contents($path . "$request->iso_code.json", '{}');
             DB::commit();
             $message = getMessage(UPDATED_SUCCESSFULLY);
-            return $this->success(['route' => route('admin.setting.languages.index', [$language->id])], $message);
+            return $this->success(['route' => route('super-admin.setting.languages.index', [$language->id])], $message);
         } catch (Exception $e) {
             DB::rollBack();
             $message = getErrorMessage($e, $e->getMessage());

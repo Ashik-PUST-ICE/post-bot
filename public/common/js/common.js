@@ -29,41 +29,40 @@
                     type: 'GET',
                     url: $(this).data("url"),
                     success: function (data) {
-                        selector.closest('.removable-item').fadeOut('fast');
-                        Swal.fire({
-                            title: 'Deleted',
-                            html: ' <span style="color:red">Item has been deleted</span> ',
-                            timer: 2000,
-                            icon: 'success'
-                        })
+                        if (data.status == true) {
+                            selector.closest('.removable-item').fadeOut('fast');
+                            Swal.fire({
+                                title: 'Deleted',
+                                html: ' <span style="color:red">' + data.message + '</span> ',
+                                timer: 2000,
+                                icon: 'success'
+                            })
+                            location.reload()
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                html: ' <span style="color:red">' + data.message + '</span> ',
+                                timer: 2000,
+                                icon: 'error'
+                            })
+                        }
+                    },
+                    error: function (data) {
+                        if (data.responseJSON.status == false) {
+                            Swal.fire({
+                                title: 'Error',
+                                html: ' <span style="color:red">' + data.responseJSON.message + '</span> ',
+                                timer: 2000,
+                                icon: 'error'
+                            })
+
+                        }
                     }
                 })
             }
         })
     });
 
-    $(document).on("click", ".deleteItem", function () {
-        let form_id = this.dataset.formid;
-        Swal.fire({
-            title: 'Sure! You want to delete?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, Delete It!'
-        }).then((result) => {
-            if (result.value) {
-                $("#" + form_id).submit();
-            } else if (result.dismiss === "cancel") {
-                Swal.fire(
-                    "Cancelled",
-                    "Your imaginary file is safe :)",
-                    "error"
-                )
-            }
-        })
-    });
 
     $(document).ready(function () {
         $(".multiple-basic-single").select2({
@@ -136,7 +135,7 @@
         return moment(date).format(format);
     }
 
-    window.deleteItem = function (url, id) {
+    window.deleteItem = function (url, id, redirect_url = null) {
         Swal.fire({
             title: 'Sure! You want to delete?',
             text: "You won't be able to revert this!",
@@ -161,10 +160,9 @@
                             icon: 'success'
                         })
                         toastr.success(data.message);
-                        if(typeof id != 'undefined'){
-                            $('#' + id).DataTable().ajax.reload();
-                        }else{
-                            location.reload();
+                        $('#' + id).DataTable().ajax.reload();
+                        if (redirect_url) {
+                            window.location.href = redirect_url;
                         }
                     },
                     error: function (error) {
@@ -176,6 +174,9 @@
     }
 
     window.commonAjax = function (type, url, successHandler, errorHandler, data) {
+        if (typeof url == 'undefined') {
+            return false;
+        }
         var ajaxData = {
             type: type,
             url: url,
@@ -204,7 +205,6 @@
     }
 
     window.commonHandler = function (data) {
-        console.log("this is common handler section");
         var output = '';
         var type = 'error';
         $('.error-message').remove();
@@ -214,6 +214,8 @@
         } else if (data['status'] === 422) {
             var errors = data['responseJSON']['errors'];
             output = getValidationError(errors);
+        } else if (data['status'] === 500) {
+            output = data['responseJSON']['message'];
         } else if (typeof data['responseJSON']['error'] !== 'undefined') {
             output = data['responseJSON']['error'];
         } else {
@@ -235,6 +237,7 @@
     }
 
     window.getValidationError = function (errors) {
+        console.log(errors);
         var output = 'Validation Errors';
         $.each(errors, function (index, items) {
             if (index.indexOf('.') != -1) {
@@ -244,14 +247,17 @@
                 var message = items[0];
                 var itemSelect = $(document).find('.' + getName + ':eq(' + i + ')')
                 itemSelect.addClass('is-invalid');
-                itemSelect.closest('div').append('<span class="d-block error-message fs-12 invalid-feedback position-relative text-danger z-index-10">' + message + '</span>')
+                itemSelect.closest('div').append('<span class="text-danger p-2 fs-12 z-index-10 position-relative error-message">' + message + '</span>')
             } else {
-                var itemSelect = $(document).find("[name='" + index + "']");
+                var itemSelect = $(document).find("." + index);
+                if (!itemSelect.length) {
+                    itemSelect = $(document).find("[name='" + index + "']");
+                }
                 if (!itemSelect.length) {
                     itemSelect = $(document).find("[name^='" + index + "']");
                 }
                 itemSelect.addClass('is-invalid');
-                itemSelect.closest('div').append('<span class="d-block error-message fs-12 invalid-feedback position-relative text-danger z-index-10">' + items[0] + '</span>')
+                itemSelect.closest('div').append('<span class="text-danger p-2 fs-12 z-index-10 position-relative error-message">' + items[0] + '</span>')
             }
         });
         return output;
@@ -273,6 +279,7 @@
                 $('.dataTable').DataTable().ajax.reload();
             }
             alertAjaxMessage(type, output);
+            $('.reset-form')[0].reset();
             if ($(document).find('form.reset').length) {
                 $(document).find('form.reset')[0].reset();
                 if ($('.summernoteOne')) {
@@ -293,7 +300,7 @@
         }
     }
 
-    window.getEditModal = function (url, modalId, callbackFunc) {
+    window.getEditModal = function (url, modalId) {
         $.ajax({
             type: 'GET',
             url: url,
@@ -316,36 +323,19 @@
                     $(document).find(modalId).find('.date-time-picker').each(function () {
                         $(this).closest(".primary-form-group-wrap").addClass("calendarIcon"); // Add your custom class here
                     });
-
-                    $(document).find(modalId).find('.date-time-picker').daterangepicker({
-                        singleDatePicker: true,
-                        timePicker: true,
-                        timePicker24Hour:true,
-                        locale: {
-                            format: "Y-M-D H:mm",
-                        },
-                    });
                 }
 
-                if ($(document).find(modalId).find('.date-time-picker2').length) {
-
-                    $(document).find(modalId).find('.date-time-picker2').each(function () {
-                        $(this).closest(".primary-form-group-wrap").addClass("calendarIcon"); // Add your custom class here
-                    });
-
-                    $(document).find(modalId).find('.date-time-picker2').daterangepicker({
+                if ($(document).find(modalId).find('.date-time-picker').length) {
+                    $(".date-time-picker").daterangepicker({
                         singleDatePicker: true,
                         autoApply: true,
-                        timePicker: true,
                         autoUpdateInput: false,
-                        timePicker24Hour:true,
                         locale: {
-                            format: "Y-M-D H:mm",
+                            format: "D-M-Y",
                         },
                     });
-
-                    $(document).find(modalId).find('.date-time-picker2').on("apply.daterangepicker", function (ev, picker) {
-                        $(this).val(picker.startDate.format("Y-M-D H:mm"));
+                    $(".date-time-picker").on("apply.daterangepicker", function (ev, picker) {
+                        $(this).val(picker.startDate.format("YYYY-MM-DD"));
                     });
                 }
 
@@ -355,13 +345,6 @@
                         tabsize: 2,
                         minHeight: 183,
                         toolbar: [
-                            // ["style", ["style"]],
-                            // ["view", ["undo", "redo"]],
-                            // ["fontname", ["fontname"]],
-                            // ["fontsize", ["fontsize"]],
-                            // ["font", ["bold", "italic", "underline"]],
-                            // ["para", ["ul", "ol", "paragraph"]],
-                            // ["color", ["color"]],
                             ["font", ["bold", "italic", "underline"]],
                             ["para", ["ul", "ol", "paragraph"]],
                         ],
@@ -369,11 +352,6 @@
                 }
 
                 $(modalId).modal('toggle');
-
-                // Execute callback after modal is fully loaded and toggled
-                if (typeof callbackFunc !== 'undefined'  && typeof window[callbackFunc] === 'function') {
-                    window[callbackFunc]();
-                }
             },
             error: function (error) {
                 toastr.error(error.responseJSON.message)
@@ -382,7 +360,6 @@
     }
 
     window.commonResponseForModal = function (response) {
-        console.log("This is commonResponseForModal");
         $('.error-message').remove();
         $('.is-invalid').removeClass('is-invalid');
         if (response['status'] === true) {
@@ -443,10 +420,17 @@
         $('.is-invalid').removeClass('is-invalid');
         if (response['status'] === true) {
             toastr.success(response['message']);
+            $(".reset").trigger("reset");
+            $("#files-names").html(" ");
+            if ($('#serviceImage ').length) {
+                $("#serviceImage").src('');
+            }
             if ($('.dataTable ').length) {
                 $('.dataTable').DataTable().ajax.reload();
             }
-
+            if ($('.modal.show').length) {
+                $('.modal.show').modal('toggle');
+            }
             if ($(document).find('form.reset').length) {
                 $(document).find('form.reset')[0].reset();
                 if ($('.summernoteOne')) {
@@ -463,6 +447,17 @@
                 }
             }
 
+
+        } else {
+            commonHandler(response)
+        }
+    }
+
+    window.getShowMessage = function (response) {
+        $('.error-message').remove();
+        $('.is-invalid').removeClass('is-invalid');
+        if (response['status'] === true) {
+            toastr.success(response['message']);
         } else {
             commonHandler(response)
         }
@@ -511,5 +506,54 @@
             return $currency + ' ' + $price;
         }
     }
+
+    function visualNumberFormat(value) {
+        try {
+            if (value == null || value == undefined || isNaN(value) || value == '') {
+                return '0.00';
+            }
+            value = parseFloat(value);
+            if (Number.isInteger(value)) {
+                return value.toFixed(2);
+            }
+            const temp = value.toFixed(8);
+            const number = temp.split('.');
+            let floatValue = number[1];
+            floatValue = floatValue.toString();
+            const result = floatValue.replace(/[0]+$/, '');
+            if (result.length < 2) {
+                return value.toFixed(2);
+            }
+
+            return `${number[0]}.${result}`;
+        } catch (e) {
+            return '';
+        }
+    }
+    window.visualNumberFormat = visualNumberFormat;
+
+    $(document).on("click", ".subscriptionCancel", function () {
+        let stateSelect = $(this);
+        Swal.fire({
+            title: 'Sure! You want to cancel?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Cancel It!'
+        }).then((result) => {
+            if (result.value) {
+                stateSelect.closest('form').submit();
+            } else if (result.dismiss === "cancel") {
+                Swal.fire(
+                    "Cancelled",
+                    "Your imaginary file is safe :)",
+                    "error"
+                )
+            }
+        })
+    });
+
 
 })(jQuery)

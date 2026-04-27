@@ -1,109 +1,99 @@
 @extends('auth.layouts.app')
 
 @push('title')
-    {{ __('Login') }}
+{{ __('Login') }}
 @endpush
 
 @section('content')
-    <div class="register-area">
-        <div class="register-wrap">
-            <div class="register-left section-bg-img"
-                style="background-image: url({{ getSettingImage('login_left_image') }})">
-                <div class="register-left-wrap">
-                    <a class="d-inline-block mb-26 max-w-150" href="{{ route('index') }}"><img
-                            src="{{ getSettingImage('app_logo') }}" alt="{{ getOption('app_name') }}" /></a>
-                    <h2 class="fs-36 fw-600 lh-34 text-white pb-8">{{ getOption('sign_up_left_text_title') }}</h2>
-                    <p class="fs-16 fw-400 lh-24 text-white">{{ getOption('sign_up_left_text_subtitle') }}</p>
-                </div>
-            </div>
-            <div class="register-right">
-                <div class="primary-form">
-                    <!-- Title -->
-                    <div class="pb-40">
-                        <h2 class="fs-32 fw-600 lh-38 text-1b1c17 pb-3">{{ __('Log In') }}</h2>
-                        @if (getOption('disable_registration') != 1)
-                            <h4 class="fs-16 fw-400 lh-25">{{ __('Don’t have an account?') }} <a
-                                    href="{{ route('register') }}"
-                                    class="text-decoration-underline fw-500 text-black hover-color-one">{{ __('Sign up') }}</a>
-                            </h4>
-                        @endif
-
+<div class="signLog-section">
+    <div class="signLog-section-wrap">
+        <div class="left" data-background="{{ asset('assets/images/auth-img-bg.png') }}" data-aos="fade-left"
+            data-aos-duration="1000">
+            <div class="wrap">
+                <div class="zMain-signLog-content">
+                    <!-- Logo -->
+                    <a href="{{ route('frontend') }}" class="d-flex mb-30">
+                        <img src="{{ getSettingImage('app_logo') }}" alt="{{ getOption('app_name') }}" />
+                    </a>
+                    @if (isAddonInstalled('KPISAAS') > 0)
+                    @if (getOption('registration_status', 0) == ACTIVE)
+                    <div class="pb-30">
+                        <h4 class="fs-32 fw-600 lh-48 text-textBlack pb-5">{{ __('Sign In') }}</h4>
+                        <p class="fs-14 fw-400 lh-22 text-para-text">{{ __("Don't have an account?") }} <a
+                                href="{{ route('register') }}" class="text-main-color text-decoration-underline">{{
+                                __('Sign Up') }}</a></p>
                     </div>
-                    <!-- Form -->
+                    @endif
+                    @endif
+
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
-                        <div class="form-wrap-main pb-14">
-                            <div class="primary-form-group">
-                                <div class="primary-form-group-wrap">
-                                    <label for="EmailAddress" class="form-label">{{ __('Email Address') }}</label>
-                                    <input type="text" class="primary-form-control" id="EmailAddress" name="email"
-                                        value="{{ old(' email') }}" placeholder="{{ __(' Your Email') }}" required />
-                                </div>
-                                @error('email')
-                                    <span class="fs-12 text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="primary-form-group">
-                                <div class="primary-form-group-wrap">
-                                    <label for="Password" class="form-label">{{__('Password')}}</label>
-                                    <input type="password" class="primary-form-control" id="Password" name="password"
-                                        placeholder="********" required />
-                                </div>
-                                @error('password')
-                                    <span class="fs-12 text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            @if (!empty(getOption('google_recaptcha_status')) && getOption('google_recaptcha_status') == 1)
-                                <div class="form-group{{ $errors->has('g-recaptcha-response') ? ' has-error' : '' }}">
-                                    <div class="col-md-6">
-                                        {!! RecaptchaV3::field('register') !!}
-                                        @if ($errors->has('g-recaptcha-response'))
-                                            <span class="help-block">
-                                                <strong>{{ $errors->first('g-recaptcha-response') }}</strong>
-                                            </span>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endif
+                        <div class="pb-20">
+                            <label for="inputPhoneNumberOrEmail" class="zForm-label">{{ __('Email') }}</label>
+                            <input type="text" name="email" class="form-control zForm-control"
+                                id="inputPhoneNumberOrEmail" placeholder="{{ __('Enter email address') }}" />
+                            @error('email')
+                            <span class="fs-12 text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
-                        <a href="{{ route('password.request') }}"
-                            class="d-inline-block fs-12 fw-400 lh-22 text-707070 mb-25 hover-color-one">{{ __('Forgot your Password?') }}</a>
-                        <button type="submit"
-                            class="d-flex justify-content-center align-items-center w-100 border-0 fs-15 fw-500 lh-25 text-1b1c17 p-13 bd-ra-12 bg-cdef84 hover-bg-one">{{ __('Log In') }}</button>
-                    </form>
+                        <div class="pb-14">
+                            <label for="inputPassword" class="zForm-label">{{ __('Password') }}</label>
+                            <div class="passShowHide">
+                                <input type="password" name="password"
+                                    class="form-control zForm-control passShowHideInput" id="inputPassword"
+                                    placeholder="{{ __(' Enter your password') }}" />
+                                <button type="button" toggle=".passShowHideInput"
+                                    class="toggle-password fa-solid fa-eye"></button>
+                                @error('password')
+                                <span class="fs-12 text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
 
-                    @if (getOption('google_login_status') == 1 || getOption('facebook_login_status') == 1)
-                        <!-- Another Sign In options -->
-                        <h4 class="position-relative fs-12 fw-400 lh-22 text-707070 text-center mt-20 under-border-one">
-                            <span class="bg-white position-relative px-5">{{ __('Or continue with') }}</span>
-                        </h4>
-                        <ul class="continue-btn-list">
-                            @if (getOption('facebook_login_status') == 1)
-                                <li>
-                                    <a href="{{ route('facebook-login') }}" class="continue-btn">
-                                        <img src="{{ asset('assets/images/facebook.svg') }}" alt="facebook" />
-                                    </a>
-                                </li>
-                            @endif
-                            @if (getOption('google_login_status') == 1)
-                                <li>
-                                    <a href="{{ route('google-login') }}" class="continue-btn">
-                                        <img src="{{ asset('assets/images/google.svg') }}" alt="google" />
-                                    </a>
-                                </li>
-                            @endif
-                        </ul>
-                    @endif
-                </div>
-                @if (env('LOGIN_HELP') == 'active')
-                    <div class="row">
+                        <div class="pb-30 d-flex justify-content-between align-items-center flex-wrap g-10">
+                            <div class="zForm-wrap-checkbox">
+                                <input type="checkbox" class="form-check-input" id="authRemember" name="remember"
+                                    value="1" />
+                                <label for="authRemember">{{ __('Remember Me') }}</label>
+                            </div>
+                            <a href="{{ route('password.request') }}" class="fs-14 fw-600 lh-22 text-main-color">{{
+                                __('Forgot Password?') }}</a>
+                        </div>
+                        <button type="submit"
+                            class="border-0 d-flex justify-content-center align-items-center w-100 p-15 bd-ra-4 bg-main-color fs-14 fw-700 lh-20 text-white">{{
+                            __('Sign In') }}</button>
+                    </form>
+                    @if (env('LOGIN_HELP') == 'active')
+                    <div class="row pt-12 fs-14">
                         <div class="col-md-12 mb-25">
                             <div class="table-responsive login-info-table mt-3">
                                 <table class="table table-bordered">
                                     <tbody>
+                                        @if (isAddonInstalled('KPISAAS') > 0)
+                                        <tr>
+                                            <td colspan="2" id="sadminCredentialShow" class="login-info">
+                                                <b>{{ __('Super Admin') }} :</b> {{ __('sadmin@gmail.com') }}
+                                                |
+                                                123456
+{{--                                                @if(env('APP_DEMO_NOTE', false))--}}
+{{--                                                <span class="badge bg-danger ml-2">(Addon)</span>--}}
+{{--                                                @endif--}}
+                                                <span class="badge bg-danger "><a href="{{LINK_SAAS_ADDON}}" target="_blank" style="color: white">{{ __('SAAS Addon') }}</a></span>
+                                                <p class="font-16 pt-2">
+                                                    <a  href="/" class="secondary-color font-medium">{{ __('SAAS Landing Page') }}</a>
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        @endif
                                         <tr>
                                             <td colspan="2" id="adminCredentialShow" class="login-info">
-                                                <b>Admin :</b> admin@gmail.com | 123456
+                                                <b>{{ __('Admin ') }}:</b> {{ __('admin@gmail.com') }} | 123456
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" id="employeeCredentialShow" class="login-info">
+                                                <b>{{ __('Employee ') }}:</b> {{ __('employee@gmail.com') }} |
+                                                123456
                                             </td>
                                         </tr>
                                     </tbody>
@@ -111,18 +101,39 @@
                             </div>
                         </div>
                     </div>
-                @endif
+                    @endif
+                </div>
+            </div>
+        </div>
+        <div class="right" data-background="{{ getSettingImage('login_left_image') }}" data-aos="fade-right"
+            data-aos-duration="1000">
+            <div class="content">
+                <h4 class="title">
+                    {{ getOption('auth_page_title') }}
+                    <br />
+{{--                    <span>{{ getOption('app_name') }}</span>--}}
+                </h4>
+                <p class="info">{{ getOption('auth_page_description') }}</p>
             </div>
         </div>
     </div>
+</div>
 @endsection
 
 @push('script')
-    <script>
-        "use strict"
-        $('#adminCredentialShow').on('click', function() {
-            $('#EmailAddress').val('admin@gmail.com');
-            $('#Password').val('123456');
+<script>
+    "use strict"
+        $('#sadminCredentialShow').on('click', function() {
+            $('#inputPhoneNumberOrEmail').val('sadmin@gmail.com');
+            $('#inputPassword').val('123456');
         });
-    </script>
+        $('#adminCredentialShow').on('click', function() {
+            $('#inputPhoneNumberOrEmail').val('admin@gmail.com');
+            $('#inputPassword').val('123456');
+        });
+        $('#employeeCredentialShow').on('click', function() {
+            $('#inputPhoneNumberOrEmail').val('employee@gmail.com');
+            $('#inputPassword').val('123456');
+        });
+</script>
 @endpush

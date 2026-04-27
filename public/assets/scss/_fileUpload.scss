@@ -1,0 +1,76 @@
+.servicePhotoUpload {
+  label {
+    max-width: toRem(386);
+    display: flex;
+    flex-wrap: wrap;
+    @media screen and (min-width: 576px) {
+      width: 100%;
+      flex: 1 0 auto;
+    }
+    p {
+      &:first-child {
+        flex: 1 1 auto;
+        border: toRem(1) solid $light-border;
+        border-right: 0;
+        padding: toRem(12) toRem(15) toRem(12);
+        border-radius: toRem(5) 0 0 toRem(5);
+        @media screen and (max-width: 575px) {
+          flex: 0 0 auto;
+          border-radius: toRem(5) toRem(5) 0 0;
+          border-bottom: 0;
+          border-right: toRem(1) solid $light-border;
+          width: 100%;
+          text-align: center;
+        }
+      }
+      &:last-child {
+        border-radius: 0 toRem(5) toRem(5) 0;
+        background-color: $textBlack;
+        padding: toRem(15) toRem(38) toRem(14);
+        @media screen and (max-width: 575px) {
+          border-radius: 0 0 toRem(5) toRem(5);
+          width: 100%;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+.file-upload-one {
+  label {
+    max-width: toRem(386);
+    display: flex;
+    flex-wrap: wrap;
+    @media screen and (min-width: 576px) {
+      width: 100%;
+      flex: 1 0 auto;
+    }
+    p {
+      &:first-child {
+        flex: 1 1 auto;
+        border: toRem(1) solid $light-border;
+        border-right: 0;
+        padding: toRem(15) toRem(15) toRem(14);
+        border-radius: toRem(5) 0 0 toRem(5);
+        @media screen and (max-width: 575px) {
+          flex: 0 0 auto;
+          border-radius: toRem(5) toRem(5) 0 0;
+          border-bottom: 0;
+          border-right: toRem(1) solid $main-color;
+          width: 100%;
+          text-align: center;
+        }
+      }
+      &:last-child {
+        border-radius: 0 toRem(5) toRem(5) 0;
+        background-color: $sidebar-bg;
+        padding: toRem(15) toRem(38) toRem(14);
+        @media screen and (max-width: 575px) {
+          border-radius: 0 0 toRem(5) toRem(5);
+          width: 100%;
+          text-align: center;
+        }
+      }
+    }
+  }
+}

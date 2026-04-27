@@ -1,27 +1,22 @@
 .hover {
   &-color {
-    &-one {
+    &-main-color {
       &:hover {
-        color: $hover-color !important;
+        color: $main-color !important;
       }
     }
   }
   &-bg {
-    &-one {
+    &-main-color {
       &:hover {
-        background-color: $hover-color !important;
-      }
-    }
-    &-two {
-      &:hover {
-        background-color: $primary-color !important;
+        background-color: $main-color !important;
       }
     }
   }
   &-border {
-    &-one {
+    &-main-color {
       &:hover {
-        border-color: $primary-color !important;
+        border-color: $main-color !important;
       }
     }
   }

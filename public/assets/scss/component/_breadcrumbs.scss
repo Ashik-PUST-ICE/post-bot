@@ -1,0 +1,23 @@
+// Breadcrumb
+.breadcrumb {
+  &.sf-breadcrumb {
+    --bs-breadcrumb-margin-bottom: 0;
+    --bs-breadcrumb-divider-color: var(--para-text);
+    --bs-breadcrumb-item-active-color: var(--dark-color);
+    @include fontFamily(18, $fw_semiBold, 18, $para-text !important);
+    @media screen and (max-width: 575px) {
+      display: none;
+    }
+    a {
+      @include fontFamily(18, $fw_semiBold, 18, $para-text !important);
+    }
+    li {
+      &.active {
+        a {
+          font-weight: $fw_bold;
+          color: $dark-color !important;
+        }
+      }
+    }
+  }
+}

@@ -23,9 +23,14 @@ class GatewayController extends Controller
     {
         $data['title'] = __('Gateway');
         $data['showManageApplicationSetting'] = 'show';
-        $data['activeGatewaySetting'] = 'active-color-one';
+        $data['activeGatewaySetting'] = 'active';
         $data['gateways'] = $this->gatewayService->getAll();
-        return view('admin.setting.gateway', $data);
+
+        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+            return view('sadmin.setting.gateway', $data);
+        } else {
+            return view('admin.setting.gateway', $data);
+        }
     }
 
     public function store(GatewayRequest $request)
@@ -43,13 +48,10 @@ class GatewayController extends Controller
         $data = $this->gatewayService->getCurrencyByGatewayId($request->id);
         return $this->success($data);
     }
-
     public function syncs()
     {
-        // Call the syncMissingGateway function
         syncMissingGateway();
 
-        // Redirect back or to a success page
         return redirect()->back()->with('success', 'Gateways synced successfully!');
     }
 }

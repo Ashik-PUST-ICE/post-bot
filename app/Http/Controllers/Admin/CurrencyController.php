@@ -28,14 +28,24 @@ class CurrencyController extends Controller
 
         $data['title'] = __('Currency Setting');
         $data['showManageApplicationSetting'] = 'show';
-        $data['activeCurrenciesSetting'] = 'active-color-one';
-        return view('admin.setting.currencies.index', $data);
+        $data['activeCurrenciesSetting'] = 'active';
+
+        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+            return view('sadmin.setting.currencies.index', $data);
+        } else {
+            return view('admin.setting.currencies.index', $data);
+        }
     }
 
     public function edit($id)
     {
         $data['currency'] = Currency::findOrFail($id);
-        return view('admin.setting.currencies.edit-form', $data);
+
+        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+            return view('sadmin.setting.currencies.edit-form', $data);
+        } else {
+            return view('admin.setting.currencies.edit-form', $data);
+        }
     }
 
 

@@ -13,36 +13,32 @@ class GatewayService
 {
     use ResponseTrait;
 
-    public function getAll()
+    public function getAll($tenant_id = null)
     {
-        return Gateway::get();
-
+        $tenant_id = $tenant_id == null ? null : $tenant_id;
+        return Gateway::where('tenant_id', $tenant_id)->get();
     }
 
-    public function getActiveAll()
+    public function getActiveAll($tenant_id = null)
     {
-        return Gateway::where('status', ACTIVE)->get();
+        $tenant_id = $tenant_id == null ? null : $tenant_id;
+        return Gateway::where('tenant_id', $tenant_id)->where('status', ACTIVE)->get();
     }
 
     public function getActiveBanks()
     {
-        return Bank::where('status', ACTIVE)->get();
-    }
-
-    public function getInfo($id)
-    {
-        return Gateway::findOrFail($id);
+        $user_id = isset($user_id) ? $user_id : auth()->id();
+        return Bank::where('user_id', $user_id)->where('status', ACTIVE)->get();
     }
 
     public function getCurrenciesByGatewayId($id)
     {
-
         $data['gateway'] = $this->getInfo($id);
         if ($data['gateway']->slug == 'bank') {
             $data['banks'] = $this->banks();
         }
         $data['image'] = $data['gateway']->icon;
-        $currencies = GatewayCurrency::where('gateway_id', $id)->get();
+        $currencies = GatewayCurrency::where('gateway_id', decrypt($id))->get();
         foreach ($currencies as $currency) {
             $currency->symbol;
         }
@@ -50,73 +46,82 @@ class GatewayService
         return $this->success($data);
     }
 
-    public function banks()
+    public function getInfo($id)
     {
-        return Bank::get();
+        return Gateway::where('user_id', auth()->id())->findOrFail(decrypt($id));
+    }
+
+    public function banks($tenant_id = null)
+    {
+        $tenant_id = isset($tenant_id) ? $tenant_id : $tenant_id;
+        return Bank::where('tenant_id', $tenant_id)->get();
     }
 
     public function store($request)
     {
         DB::beginTransaction();
         try {
-            $id = $request->get('id', '');
-            if ($id != '') {
-                $gateway = Gateway::findOrFail($request->id);
-            } else {
-                $gateway = new Gateway();
-            }
+            $gateway = Gateway::where('user_id', auth()->id())->findOrFail(decrypt($request->id));
             if ($gateway->slug == 'bank') {
                 $bankIds = [];
                 for ($i = 0; $i < count($request->bank['name']); $i++) {
                     $bank = Bank::updateOrCreate([
-                        'id' => $request->bank['id'][$i],
+                        'id' => isset($request->bank['id'][$i]) ? $request->bank['id'][$i] : null,
+                        'tenant_id' => auth()->user()->tenant_id,
                     ], [
                         'gateway_id' => $gateway->id,
+                        'user_id' => auth()->id(),
+                        'tenant_id' => auth()->user()->tenant_id,
                         'name' => $request->bank['name'][$i],
                         'details' => $request->bank['details'][$i],
-                        'status' => $request->bank['status'][$i],
+                        'status' => ACTIVE,
                     ]);
                     array_push($bankIds, $bank->id);
                 }
-                Bank::whereNotIn('id', $bankIds)->delete();
+                Bank::where('tenant_id', auth()->user()->tenant_id)->whereNotIn('id', $bankIds)->delete();
             } else {
-                $gateway->mode = $request->mode;
+                $gateway->mode = $request->mode == GATEWAY_MODE_LIVE ? GATEWAY_MODE_LIVE : GATEWAY_MODE_SANDBOX;
                 $gateway->url = $request->url;
                 $gateway->key = $request->key;
                 $gateway->secret = $request->secret;
             }
-            $gateway->status = $request->status;
+            $gateway->user_id = auth()->id();
+            $gateway->tenant_id = auth()->user()->tenant_id;
+            $gateway->status = $request->status == STATUS_ACTIVE ? STATUS_ACTIVE : STATUS_PENDING;
             $gateway->save();
 
             $gatewayCurrencyIds = [];
-            foreach ($request->currency as $key => $currency) {
-                $gatewayCurrency =   GatewayCurrency::updateOrCreate([
-                    'id' => $request->currency_id[$key]
-                ], [
-                    'gateway_id' => $gateway->id,
-                    'currency' => $currency,
-                    'conversion_rate' => $request->conversion_rate[$key],
-                ]);
-                array_push($gatewayCurrencyIds, $gatewayCurrency->id);
+            if (is_array($request->currency)) {
+                foreach ($request->currency as $key => $currency) {
+                    $gatewayCurrency = GatewayCurrency::updateOrCreate([
+                        'id' => isset($request->currency_id[$key]) ? $request->currency_id[$key] : null,
+                        'tenant_id' => auth()->user()->tenant_id,
+                    ], [
+                        'user_id' => auth()->id(),
+                        'tenant_id' => auth()->user()->tenant_id,
+                        'gateway_id' => $gateway->id,
+                        'currency' => $currency,
+                        'conversion_rate' => $request->conversion_rate[$key],
+                    ]);
+                    array_push($gatewayCurrencyIds, $gatewayCurrency->id);
+                }
+            } else {
+                throw new Exception(__('Please add at least one currency'));
             }
-            GatewayCurrency::whereNotIn('id', $gatewayCurrencyIds)->where('gateway_id', $gateway->id)->delete();
+            GatewayCurrency::where('tenant_id', auth()->user()->tenant_id)->whereNotIn('id', $gatewayCurrencyIds)->where('gateway_id', $gateway->id)->delete();
 
             DB::commit();
-            $message = $request->id ? UPDATED_SUCCESSFULLY : CREATED_SUCCESSFULLY;
+            $message = $request->id ? __(UPDATED_SUCCESSFULLY) : __(CREATED_SUCCESSFULLY);
             return $this->success([], $message);
         } catch (Exception $e) {
             DB::rollBack();
             $message = getErrorMessage($e, $e->getMessage());
-            return $this->error([],  $message);
+            return $this->error([], $message);
         }
     }
 
     public function getCurrencyByGatewayId($id)
     {
-        $currencies = GatewayCurrency::where('gateway_id', $id)->get();
-//        foreach ($currencies as $currency) {
-//            //$currency->symbol = $currency->symbol;
-//        }
-        return $currencies;
+        return GatewayCurrency::where('gateway_id', $id)->get();
     }
 }

@@ -12,7 +12,6 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-
 class LanguageController extends Controller
 {
     use ResponseTrait;
@@ -32,7 +31,12 @@ class LanguageController extends Controller
         $data['title'] = __('Manage Language');
         $data['showManageApplicationSetting'] = 'show';
         $data['activeLanguagesSetting'] = 'active';
-        return view('admin.setting.languages.index', $data);
+
+        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+            return view('sadmin.setting.languages.index', $data);
+        } else {
+            return view('admin.setting.languages.index', $data);
+        }
     }
 
     public function store(LanguageRequest $request)
@@ -43,7 +47,12 @@ class LanguageController extends Controller
     public function edit($id)
     {
         $data['language'] = Language::findOrFail($id);
-        return view('admin.setting.languages.edit-form', $data);
+
+        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+            return view('sadmin.setting.languages.edit-form', $data);
+        } else {
+            return view('admin.setting.languages.edit-form', $data);
+        }
     }
 
     public function update(Request $request, $id)
@@ -55,7 +64,8 @@ class LanguageController extends Controller
     {
         $data['title'] = __('Translate');
         $data['showManageApplicationSetting'] = 'show';
-        $data['activeLanguagesSetting'] = 'active-color-one';
+        $data['activeLanguagesSetting'] = 'active';
+
         $language = Language::findOrFail($id);
         $iso_code = $language->iso_code;
 
@@ -79,7 +89,7 @@ class LanguageController extends Controller
         $translators = $translators->slice(($page - 1) * $perPage, $perPage);
 
         if (request()->ajax()) {
-            return view('admin.setting.languages.partials.translations_table', compact(
+            return view('sadmin.setting.languages.partials.translations_table', compact(
                 'translators', 'language', 'total', 'perPage', 'page', 'search'
             ))->render();
         }
@@ -87,7 +97,7 @@ class LanguageController extends Controller
         $title = __('Translate');
         $languages = Language::where('iso_code', '!=', $iso_code)->get();
 
-        return view('admin.setting.languages.translate', array_merge($data, compact(
+        return view('sadmin.setting.languages.translate', array_merge($data, compact(
             'translators', 'language', 'total', 'perPage', 'page', 'search', 'languages', 'title'
         )))->with('currentPage', $page);
     }
@@ -104,7 +114,7 @@ class LanguageController extends Controller
     public function delete($id)
     {
         $lang = Language::findOrFail($id);
-        if ($lang->default == STATUS_ACTIVE) {
+        if ($lang->default_language == STATUS_ACTIVE) {
             $message = __('You Cannot delete default language');
             return $this->error([], $message);
         } else if(Language::count() == 1){
@@ -113,7 +123,8 @@ class LanguageController extends Controller
         }
 
         $lang->delete();
-        return redirect()->back()->with('success', __('Deleted Successfully'));
+        $message = DELETED_SUCCESSFULLY;
+        return $this->success([], $message);
     }
 
     public function import(Request $request)
