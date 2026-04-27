@@ -35,7 +35,7 @@ class GatewayService
     {
         $data['gateway'] = $this->getInfo($id);
         if ($data['gateway']->slug == 'bank') {
-            $data['banks'] = $this->banks(auth()->user()->tenant_id);
+            $data['banks'] = $this->banks($data['gateway']->id);
         }
         $data['image'] = asset($data['gateway']->image);
         $currencies = GatewayCurrency::where('gateway_id', decrypt($id))->get();
@@ -51,10 +51,9 @@ class GatewayService
         return Gateway::where('tenant_id', auth()->user()->tenant_id)->findOrFail(decrypt($id));
     }
 
-    public function banks($tenant_id = null)
+    public function banks($gateway_id)
     {
-        $tenant_id = $tenant_id ?? auth()->user()->tenant_id;
-        return Bank::where('tenant_id', $tenant_id)->get();
+        return Bank::where('gateway_id', $gateway_id)->get();
     }
 
     public function store($request)
@@ -67,18 +66,16 @@ class GatewayService
                 for ($i = 0; $i < count($request->bank['name']); $i++) {
                     $bank = Bank::updateOrCreate([
                         'id' => isset($request->bank['id'][$i]) ? $request->bank['id'][$i] : null,
-                        'tenant_id' => auth()->user()->tenant_id,
+                        'gateway_id' => $gateway->id,
                     ], [
                         'gateway_id' => $gateway->id,
-                        'user_id' => auth()->id(),
-                        'tenant_id' => auth()->user()->tenant_id,
                         'name' => $request->bank['name'][$i],
                         'details' => $request->bank['details'][$i],
                         'status' => ACTIVE,
                     ]);
                     array_push($bankIds, $bank->id);
                 }
-                Bank::where('tenant_id', auth()->user()->tenant_id)->whereNotIn('id', $bankIds)->delete();
+                Bank::where('gateway_id', $gateway->id)->whereNotIn('id', $bankIds)->delete();
             } else {
                 $gateway->mode = $request->mode == GATEWAY_MODE_LIVE ? GATEWAY_MODE_LIVE : GATEWAY_MODE_SANDBOX;
                 $gateway->url = $request->url;

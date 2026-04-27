@@ -6,7 +6,7 @@ var gatewayId;
     "use strict";
     $(document).on('click', '.edit', function (e) {
         gatewayId = $(this).data('id');
-        commonAjax('GET', $('#getInfoRoute').val(), getDataEditRes, getDataEditRes, { 'id': $(this).data('id') });
+        commonAjax('GET', $('#getInfoRoute').val(), getDataEditRes, commonHandler, { 'id': $(this).data('id') });
     });
 
     $('.add-currency').on('click', function (e) {
