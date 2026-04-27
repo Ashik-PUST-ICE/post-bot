@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class AdminMiddleware
+class SuperAdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,7 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next)
     {
         $routeName = $request->route()->getName();
-        if (auth()->user()->role == USER_ROLE_ADMIN || auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
             return $next($request);
         } 
         abort('403');

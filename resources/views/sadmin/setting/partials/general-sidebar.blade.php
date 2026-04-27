@@ -1,48 +1,37 @@
-<div class="email__sidebar bg-style">
-    <div class="sidebar__item">
-        <ul class="d-flex flex-column rg-15 sidebar__mail__nav">
-            <li>
-                <a href="{{ route('admin.setting.application-settings') }}"
-                   class="align-items-center flex list-item list-item">
-                    <span class="fa fa-gear fs-14 text-707070"></span>
-                    <span class="font-bold fs-14 hover-color-one text-1b1c17 {{ @$subApplicationSettingActiveClass }}">{{__('Application Setting')}}</span>
-                </a>
-            </li>
-            <li>
-                <a class="align-items-center flex list-item list-item"
-                   href="{{ route('admin.setting.storage.index') }}">
-                    <span class="fa fa-gear fs-14 text-707070"></span>
-                    <span class="font-bold fs-14 hover-color-one text-1b1c17 {{ @$subStorageSettingActiveClass }}">{{ __('Storage Setting') }}</span>
-                </a>
-            </li>
-            <li>
-                <a class="align-items-center flex list-item list-item"
-                   href="{{ route('admin.setting.color-settings') }}">
-                    <span class="fa fa-gear fs-14 text-707070"></span>
-                    <span class="font-bold fs-14 hover-color-one text-1b1c17 {{ @$subColorSettingActiveClass }}">{{ __('Color & Custom Code') }}</span>
-                </a>
-            </li>
-            <li>
-                <a class="align-items-center flex list-item list-item"
-                   href="{{ route('admin.setting.logo-settings') }}">
-                    <span class="fa fa-gear fs-14 text-707070"></span>
-                    <span class="font-bold fs-14 hover-color-one text-1b1c17 {{ @$subLogoSettingActiveClass }}">{{ __('Logo Setting') }}</span>
-                </a>
-            </li>
-            <li>
-                <a class="align-items-center flex list-item list-item"
-                   href="{{ route('admin.setting.maintenance') }}">
-                    <span class="fa fa-gear fs-14 text-707070"></span>
-                    <span class="font-bold fs-14 hover-color-one text-1b1c17 {{ @$subMaintenanceModeActiveClass }}">{{ __('Maintenance Mode') }}</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="{{ route('admin.setting.cache-settings') }}" class="align-items-center flex list-item list-item">
-                    <span class="fa fa-gear fs-14 text-707070"></span>
-                    <span class="font-bold fs-14 hover-color-one text-1b1c17 {{ @$subCacheActiveClass }}">{{ __('Cache Settings') }}</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-</div>
+<ul class="settings-sidebar zList-three">
+    <li>
+        <a href="{{ route('super-admin.setting.application-settings') }}"
+            class="d-flex justify-content-between align-items-center cg-10 {{ @$subApplicationSettingActiveClass }}">
+            <span class="fs-18 fw-600 lh-22 text-black">{{ __('Application Setting') }}</span>
+            <div class="d-flex text-textBlack"><i class="fa-solid fa-angle-right"></i></div>
+        </a>
+    </li>
+    <li>
+        <a href="{{ route('super-admin.setting.storage.index') }}"
+            class="d-flex justify-content-between align-items-center cg-10 {{ @$subStorageSettingActiveClass }}">
+            <span class="fs-18 fw-600 lh-22 text-black">{{ __('Storage Setting') }}</span>
+            <div class="d-flex text-textBlack"><i class="fa-solid fa-angle-right"></i></div>
+        </a>
+    </li>
+    <li>
+        <a href="{{ route('super-admin.setting.logo-settings') }}"
+            class="d-flex justify-content-between align-items-center cg-10 {{ @$subLogoSettingActiveClass }}">
+            <span class="fs-18 fw-600 lh-22 text-black">{{ __('Logo Setting') }}</span>
+            <div class="d-flex text-textBlack"><i class="fa-solid fa-angle-right"></i></div>
+        </a>
+    </li>
+    <li>
+        <a href="{{ route('super-admin.setting.maintenance') }}"
+            class="d-flex justify-content-between align-items-center cg-10 {{ @$subMaintenanceModeActiveClass }}">
+            <span class="fs-18 fw-600 lh-22 text-black">{{ __('Maintenance Mode') }}</span>
+            <div class="d-flex text-textBlack"><i class="fa-solid fa-angle-right"></i></div>
+        </a>
+    </li>
+    <li>
+        <a href="{{ route('super-admin.setting.cache-settings') }}"
+            class="d-flex justify-content-between align-items-center cg-10 {{ @$subCacheActiveClass }}">
+            <span class="fs-18 fw-600 lh-22 text-black">{{ __('Cache Settings') }}</span>
+            <div class="d-flex text-textBlack"><i class="fa-solid fa-angle-right"></i></div>
+        </a>
+    </li>
+</ul>

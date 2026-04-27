@@ -11,6 +11,7 @@ use App\Http\Middleware\IsDemo;
 use App\Http\Middleware\IsVerifyMiddleware;
 use App\Http\Middleware\UserMiddleware;
 use App\Http\Middleware\VersionUpdate;
+use App\Http\Middleware\SuperAdminMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel

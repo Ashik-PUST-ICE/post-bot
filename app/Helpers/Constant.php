@@ -19,8 +19,9 @@ const STATUS_CANCELED = 2;
 // User Role Type
 const USER_STATUS_ACTIVE = 1;
 const USER_STATUS_INACTIVE = 0;
-const USER_ROLE_ADMIN = 1;
-const USER_ROLE_USER = 2;
+const USER_ROLE_ADMIN = 2;
+const USER_ROLE_USER = 3;
+const USER_ROLE_SUPER_ADMIN = 1;
 
 
 // Message

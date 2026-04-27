@@ -28,9 +28,9 @@ class SettingController extends Controller
         $this->settingsService = new SettingsService();
         $this->middleware(function ($request, $next) {
             if (auth()->user()->role == USER_ROLE_ADMIN) {
-                if (isAddonInstalled('KPISAAS') > 0) {
+            
                     abort(404);
-                }
+        
             }
             return $next($request);
         });

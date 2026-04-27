@@ -46,13 +46,18 @@ class RouteServiceProvider extends ServiceProvider
                 ->as('admin.')
                 ->group(base_path('routes/admin.php'));
 
+            Route::middleware(['web', 'auth', 'super-admin',  'version.update', 'addon', 'is_email_verify'/*, '2fa_verify'*/])
+                ->prefix('sadmin')
+                ->as('super-admin.')
+                ->group(base_path('routes/sadmin.php'));
+
             Route::middleware(['web', 'version.update', 'addon'])
                 ->group(base_path('routes/frontend.php'));
         });
     }
 
     protected function allApiRoutes(): void
-    {
+    { 
         Route::middleware('api')
             ->prefix('api')
             ->group(base_path('routes/api.php'));
