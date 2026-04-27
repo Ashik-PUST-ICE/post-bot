@@ -39,12 +39,12 @@ class ConfirmPasswordController extends Controller
         $this->middleware('auth');
     }
 
-      /**
+    /**
      * Display the password reset view for the given token.
      *
      * If no token is present, display the link request form.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function showResetForm(Request $request)

@@ -11,11 +11,8 @@
             data-aos-duration="1000">
             <div class="wrap">
                 <div class="zMain-signLog-content">
-                    <!-- Logo -->
-                    <a href="{{ route('frontend') }}" class="d-flex mb-30">
-                        <img src="{{ getSettingImage('app_logo') }}" alt="{{ getOption('app_name') }}" />
-                    </a>
-                    @if (isAddonInstalled('KPISAAS') > 0)
+                    
+                    
                     @if (getOption('registration_status', 0) == ACTIVE)
                     <div class="pb-30">
                         <h4 class="fs-32 fw-600 lh-48 text-textBlack pb-5">{{ __('Sign In') }}</h4>
@@ -23,7 +20,7 @@
                                 href="{{ route('register') }}" class="text-main-color text-decoration-underline">{{
                                 __('Sign Up') }}</a></p>
                     </div>
-                    @endif
+        
                     @endif
 
                     <form method="POST" action="{{ route('login') }}">

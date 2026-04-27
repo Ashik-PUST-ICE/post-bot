@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('gateways', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('tenant_id')->nullable();
             $table->string('title');
-            $table->string('slug')->unique();
+            $table->string('slug');
             $table->string('image')->nullable();
             $table->tinyInteger('status')->default(DEACTIVATE)->comment('1=Active,0=Disable');
             $table->tinyInteger('mode')->default(GATEWAY_MODE_SANDBOX)->comment('1=live,2=sandbox');

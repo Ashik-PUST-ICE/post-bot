@@ -37,22 +37,22 @@ class GoogleController extends Controller
 
                 Auth::login($findUser);
 
-                return redirect('login');
+                return redirect()->intended('home');
 
             } else {
                 $newUser = User::where('email', $user->email)->first();
 
-                if($findUser){
-                    $findUser->update(['google_id' =>  $user->id]);
+                if ($findUser) {
+                    $findUser->update(['google_id' => $user->id]);
                     Auth::login($newUser);
-                    return redirect('login');
+                    return redirect()->intended('home');
                 }
 
                 return redirect(route('login'))->with('error', __("You have to registered first to login with google"));
             }
 
         } catch (Exception $e) {
-           return redirect(route('login'))->with('error', $e->getMessage());
+            return redirect(route('login'))->with('error', $e->getMessage());
         }
     }
 }

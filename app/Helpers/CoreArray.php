@@ -1,6 +1,6 @@
 <?php
 
-if(!function_exists("month")){
+if (!function_exists("month")) {
     function month($input = null)
     {
         $output = [
@@ -16,6 +16,27 @@ if(!function_exists("month")){
             '10' => 'October',
             '11' => 'November',
             '12' => 'December',
+        ];
+
+        if (is_null($input)) {
+            return $output;
+        } else {
+            return $output[$input];
+        }
+    }
+}
+
+if (!function_exists("getTableColumn")) {
+    function getTableColumn($input = null)
+    {
+        $output = [
+            TABLE_COLUMN_PRODUCT => 'Product',
+            TABLE_COLUMN_PLAN => 'Plan',
+            TABLE_COLUMN_PLAN_CODE => 'Plan Code',
+            TABLE_COLUMN_PRICE => 'Price',
+            TABLE_SETUP_FEE => 'SetUp Fee',
+            TABLE_COLUMN_QUANTITY => 'Quantity',
+            TABLE_COLUMN_TOTAL => 'Total',
         ];
 
         if (is_null($input)) {
@@ -587,16 +608,7 @@ function getCurrency($currency = null, $only_symbol = false)
         "VEF" => array("name" => "Venezuelan BolÃvar", "symbol" => "Bs"),
         "VND" => array("name" => "Vietnamese Dong", "symbol" => "₫"),
         "YER" => array("name" => "Yemeni Rial", "symbol" => "﷼"),
-        "ZMK" => array("name" => "Zambian Kwacha", "symbol" => "ZK"),
-        "maxiDollar" => array("name" => "Maxi Dollar", "symbol" => "$"),
-        "USDT" => array("name" => "Tether (Testnet)", "symbol" => "₮"),
-        "USDS" => array("name" => "Sandbox Dollar (USDS)", "symbol" => "$"),
-        "ETH" => array("name" => "Ethereum (Testnet)", "symbol" => "Ξ"),
-        "GGP" => array("name" => "Guernsey Pound", "symbol" => "£"),
-        "JEP" => array("name" => "Jersey Pound", "symbol" => "£"),
-        "IMP" => array("name" => "Isle of Man Pound", "symbol" => "£"),
-        "ZWL" => array("name" => "Zimbabwean Dollar", "symbol" => "Z$"),
-        "MRU" => array("name" => "Mauritanian Ouguiya", "symbol" => "UM"),
+        "ZMK" => array("name" => "Zambian Kwacha", "symbol" => "ZK")
     );
     if (is_null($currency)) {
         $all_currency = [];
@@ -617,7 +629,272 @@ function getCurrency($currency = null, $only_symbol = false)
     }
 }
 
-if(!function_exists("getRoleName")){
+if (!function_exists("getCountry")) {
+    function getCountry($input = null)
+    {
+        $countries = [
+            'AF' => 'Afghanistan',
+            'AL' => 'Albania',
+            'DZ' => 'Algeria',
+            'AS' => 'American Samoa',
+            'AD' => 'Andorra',
+            'AO' => 'Angola',
+            'AI' => 'Anguilla',
+            'AQ' => 'Antarctica',
+            'AG' => 'Antigua and Barbuda',
+            'AR' => 'Argentina',
+            'AM' => 'Armenia',
+            'AW' => 'Aruba',
+            'AU' => 'Australia',
+            'AT' => 'Austria',
+            'AZ' => 'Azerbaijan',
+            'BS' => 'Bahamas',
+            'BH' => 'Bahrain',
+            'BD' => 'Bangladesh',
+            'BB' => 'Barbados',
+            'BY' => 'Belarus',
+            'BE' => 'Belgium',
+            'BZ' => 'Belize',
+            'BJ' => 'Benin',
+            'BM' => 'Bermuda',
+            'BT' => 'Bhutan',
+            'BO' => 'Bolivia, Plurinational State of',
+            'BQ' => 'Bonaire, Sint Eustatius and Saba',
+            'BA' => 'Bosnia and Herzegovina',
+            'BW' => 'Botswana',
+            'BV' => 'Bouvet Island',
+            'BR' => 'Brazil',
+            'IO' => 'British Indian Ocean Territory',
+            'BN' => 'Brunei Darussalam',
+            'BG' => 'Bulgaria',
+            'BF' => 'Burkina Faso',
+            'BI' => 'Burundi',
+            'CV' => 'Cabo Verde',
+            'KH' => 'Cambodia',
+            'CM' => 'Cameroon',
+            'CA' => 'Canada',
+            'KY' => 'Cayman Islands',
+            'CF' => 'Central African Republic',
+            'TD' => 'Chad',
+            'CL' => 'Chile',
+            'CN' => 'China',
+            'CX' => 'Christmas Island',
+            'CC' => 'Cocos (Keeling) Islands',
+            'CO' => 'Colombia',
+            'KM' => 'Comoros',
+            'CG' => 'Congo',
+            'CD' => 'Congo, Democratic Republic of the',
+            'CK' => 'Cook Islands',
+            'CR' => 'Costa Rica',
+            'HR' => 'Croatia',
+            'CU' => 'Cuba',
+            'CW' => 'Curaçao',
+            'CY' => 'Cyprus',
+            'CZ' => 'Czechia',
+            'CI' => 'Côte d\'Ivoire',
+            'DK' => 'Denmark',
+            'DJ' => 'Djibouti',
+            'DM' => 'Dominica',
+            'DO' => 'Dominican Republic',
+            'EC' => 'Ecuador',
+            'EG' => 'Egypt',
+            'SV' => 'El Salvador',
+            'GQ' => 'Equatorial Guinea',
+            'ER' => 'Eritrea',
+            'EE' => 'Estonia',
+            'SZ' => 'Eswatini',
+            'ET' => 'Ethiopia',
+            'FK' => 'Falkland Islands (Malvinas)',
+            'FO' => 'Faroe Islands',
+            'FJ' => 'Fiji',
+            'FI' => 'Finland',
+            'FR' => 'France',
+            'GF' => 'French Guiana',
+            'PF' => 'French Polynesia',
+            'TF' => 'French Southern Territories',
+            'GA' => 'Gabon',
+            'GM' => 'Gambia',
+            'GE' => 'Georgia',
+            'DE' => 'Germany',
+            'GH' => 'Ghana',
+            'GI' => 'Gibraltar',
+            'GR' => 'Greece',
+            'GL' => 'Greenland',
+            'GD' => 'Grenada',
+            'GP' => 'Guadeloupe',
+            'GU' => 'Guam',
+            'GT' => 'Guatemala',
+            'GG' => 'Guernsey',
+            'GN' => 'Guinea',
+            'GW' => 'Guinea-Bissau',
+            'GY' => 'Guyana',
+            'HT' => 'Haiti',
+            'HM' => 'Heard Island and McDonald Islands',
+            'VA' => 'Holy See',
+            'HN' => 'Honduras',
+            'HK' => 'Hong Kong',
+            'HU' => 'Hungary',
+            'IS' => 'Iceland',
+            'IN' => 'India',
+            'ID' => 'Indonesia',
+            'IR' => 'Iran, Islamic Republic of',
+            'IQ' => 'Iraq',
+            'IE' => 'Ireland',
+            'IM' => 'Isle of Man',
+            'IL' => 'Israel',
+            'IT' => 'Italy',
+            'JM' => 'Jamaica',
+            'JP' => 'Japan',
+            'JE' => 'Jersey',
+            'JO' => 'Jordan',
+            'KZ' => 'Kazakhstan',
+            'KE' => 'Kenya',
+            'KI' => 'Kiribati',
+            'KP' => 'Korea, Democratic People\'s Republic of',
+            'KR' => 'Korea, Republic of',
+            'KW' => 'Kuwait',
+            'KG' => 'Kyrgyzstan',
+            'LA' => 'Lao People\'s Democratic Republic',
+            'LV' => 'Latvia',
+            'LB' => 'Lebanon',
+            'LS' => 'Lesotho',
+            'LR' => 'Liberia',
+            'LY' => 'Libya',
+            'LI' => 'Liechtenstein',
+            'LT' => 'Lithuania',
+            'LU' => 'Luxembourg',
+            'MO' => 'Macao',
+            'MG' => 'Madagascar',
+            'MW' => 'Malawi',
+            'MY' => 'Malaysia',
+            'MV' => 'Maldives',
+            'ML' => 'Mali',
+            'MT' => 'Malta',
+            'MH' => 'Marshall Islands',
+            'MQ' => 'Martinique',
+            'MR' => 'Mauritania',
+            'MU' => 'Mauritius',
+            'YT' => 'Mayotte',
+            'MX' => 'Mexico',
+            'FM' => 'Micronesia, Federated States of',
+            'MD' => 'Moldova, Republic of',
+            'MC' => 'Monaco',
+            'MN' => 'Mongolia',
+            'ME' => 'Montenegro',
+            'MS' => 'Montserrat',
+            'MA' => 'Morocco',
+            'MZ' => 'Mozambique',
+            'MM' => 'Myanmar',
+            'NA' => 'Namibia',
+            'NR' => 'Nauru',
+            'NP' => 'Nepal',
+            'NL' => 'Netherlands, Kingdom of the',
+            'NC' => 'New Caledonia',
+            'NZ' => 'New Zealand',
+            'NI' => 'Nicaragua',
+            'NE' => 'Niger',
+            'NG' => 'Nigeria',
+            'NU' => 'Niue',
+            'NF' => 'Norfolk Island',
+            'MK' => 'North Macedonia',
+            'MP' => 'Northern Mariana Islands',
+            'NO' => 'Norway',
+            'OM' => 'Oman',
+            'PK' => 'Pakistan',
+            'PW' => 'Palau',
+            'PS' => 'Palestine, State of',
+            'PA' => 'Panama',
+            'PG' => 'Papua New Guinea',
+            'PY' => 'Paraguay',
+            'PE' => 'Peru',
+            'PH' => 'Philippines',
+            'PN' => 'Pitcairn',
+            'PL' => 'Poland',
+            'PT' => 'Portugal',
+            'PR' => 'Puerto Rico',
+            'QA' => 'Qatar',
+            'RO' => 'Romania',
+            'RU' => 'Russian Federation',
+            'RW' => 'Rwanda',
+            'RE' => 'Réunion',
+            'BL' => 'Saint Barthélemy',
+            'SH' => 'Saint Helena, Ascension and Tristan da Cunha',
+            'KN' => 'Saint Kitts and Nevis',
+            'LC' => 'Saint Lucia',
+            'MF' => 'Saint Martin (French part)',
+            'PM' => 'Saint Pierre and Miquelon',
+            'VC' => 'Saint Vincent and the Grenadines',
+            'WS' => 'Samoa',
+            'SM' => 'San Marino',
+            'ST' => 'Sao Tome and Principe',
+            'SA' => 'Saudi Arabia',
+            'SN' => 'Senegal',
+            'RS' => 'Serbia',
+            'SC' => 'Seychelles',
+            'SL' => 'Sierra Leone',
+            'SG' => 'Singapore',
+            'SX' => 'Sint Maarten (Dutch part)',
+            'SK' => 'Slovakia',
+            'SI' => 'Slovenia',
+            'SB' => 'Solomon Islands',
+            'SO' => 'Somalia',
+            'ZA' => 'South Africa',
+            'GS' => 'South Georgia and the South Sandwich Islands',
+            'SS' => 'South Sudan',
+            'ES' => 'Spain',
+            'LK' => 'Sri Lanka',
+            'SD' => 'Sudan',
+            'SR' => 'Suriname',
+            'SJ' => 'Svalbard and Jan Mayen',
+            'SE' => 'Sweden',
+            'CH' => 'Switzerland',
+            'SY' => 'Syrian Arab Republic',
+            'TW' => 'Taiwan, Province of China',
+            'TJ' => 'Tajikistan',
+            'TZ' => 'Tanzania, United Republic of',
+            'TH' => 'Thailand',
+            'TL' => 'Timor-Leste',
+            'TG' => 'Togo',
+            'TK' => 'Tokelau',
+            'TO' => 'Tonga',
+            'TT' => 'Trinidad and Tobago',
+            'TN' => 'Tunisia',
+            'TM' => 'Turkmenistan',
+            'TC' => 'Turks and Caicos Islands',
+            'TV' => 'Tuvalu',
+            'TR' => 'Türkiye',
+            'UG' => 'Uganda',
+            'UA' => 'Ukraine',
+            'AE' => 'United Arab Emirates',
+            'GB' => 'United Kingdom of Great Britain and Northern Ireland',
+            'UM' => 'United States Minor Outlying Islands',
+            'US' => 'United States of America',
+            'UY' => 'Uruguay',
+            'UZ' => 'Uzbekistan',
+            'VU' => 'Vanuatu',
+            'VE' => 'Venezuela, Bolivarian Republic of',
+            'VN' => 'Viet Nam',
+            'VG' => 'Virgin Islands (British)',
+            'VI' => 'Virgin Islands (U.S.)',
+            'WF' => 'Wallis and Futuna',
+            'EH' => 'Western Sahara',
+            'YE' => 'Yemen',
+            'ZM' => 'Zambia',
+            'ZW' => 'Zimbabwe',
+            'AX' => 'Åland Islands',
+        ];
+
+        if (is_null($input)) {
+            return $countries;
+        }
+
+        return $countries[$input] ?? $input;
+    }
+}
+
+
+
+if (!function_exists("getRoleName")) {
     function getRoleName($input = null)
     {
         $output = [
@@ -633,7 +910,7 @@ if(!function_exists("getRoleName")){
     }
 }
 
-if(!function_exists("getMessage")){
+if (!function_exists("getMessage")) {
     function getMessage($input = null)
     {
         $output = [
@@ -645,6 +922,7 @@ if(!function_exists("getMessage")){
             SENT_SUCCESSFULLY => __("Sent Successfully"),
             SOMETHING_WENT_WRONG => __("Something went wrong! Please try again"),
             DO_NOT_HAVE_PERMISSION => __("You don\'t have the permission"),
+            STATUS_UPDATED_SUCCESSFULLY => __("Status Updated Successfully"),
         ];
 
 
@@ -656,7 +934,7 @@ if(!function_exists("getMessage")){
     }
 }
 
-if(!function_exists("getStatus")){
+if (!function_exists("getStatus")) {
     function getStatus($input = null)
     {
         $output = [
@@ -664,9 +942,7 @@ if(!function_exists("getStatus")){
             STATUS_SUCCESS => __("Success"),
             STATUS_ACTIVE => __("Active"),
             STATUS_DISABLE => __("Disabled"),
-            STATUS_DRAFT => __("Draft"),
             STATUS_DEACTIVATE => __("Deactivate"),
-            STATUS_EXPIRED => __("Expired"),
             STATUS_SUSPENDED => __("Suspended"),
         ];
 
@@ -679,8 +955,95 @@ if(!function_exists("getStatus")){
     }
 }
 
+if (!function_exists("getDurationType")) {
+    function getDurationType($input = null)
+    {
+        $output = [
+            DURATION_TYPE_DAY => __("Day"),
+            DURATION_TYPE_MONTH => __("Month"),
+            DURATION_TYPE_YEAR => __("Year"),
+        ];
 
-if(!function_exists("getDateFormatList")){
+        if (is_null($input)) {
+            return $output;
+        } else {
+            return $output[$input];
+        }
+    }
+}
+
+if (!function_exists("getReturnType")) {
+    function getReturnType($input = null)
+    {
+        $output = [
+            RETURN_TYPE_FIXED => __("Fixed"),
+            RETURN_TYPE_RANDOM => __("Random"),
+        ];
+
+
+        if (is_null($input)) {
+            return $output;
+        } else {
+            return $output[$input];
+        }
+    }
+}
+
+if (!function_exists("getPageType")) {
+    function getPageType($input = null)
+    {
+        $output = [
+            PAGE_ABOUT_US => 'About Us',
+            PAGE_PRIVACY_POLICY => 'Privacy Policy',
+            PAGE_TERMS_OF_SERVICE => 'Terms Of Service',
+            PAGE_COOKIE_POLICY => 'Cookie Policy',
+            PAGE_REFUND_POLICY => 'Refund Policy',
+        ];
+
+
+        if (is_null($input)) {
+            return $output;
+        } else {
+            return $output[$input];
+        }
+    }
+}
+
+if (!function_exists("walletDepositType")) {
+    function walletDepositType($input = null)
+    {
+        $output = [
+            DEPOSIT_TYPE_BUY => 'Buy',
+            DEPOSIT_TYPE_DEPOSIT => 'Deposit'
+        ];
+
+
+        if (is_null($input)) {
+            return $output;
+        } else {
+            return $output[$input];
+        }
+    }
+}
+if (!function_exists("orderHistoryType")) {
+    function orderHistoryType($input = null)
+    {
+        $output = [
+            ORDER_TYPE_DEPOSIT => 'Deposit',
+            ORDER_TYPE_HARDWARE => 'Hardware',
+            ORDER_TYPE_PLAN => 'Plan'
+        ];
+
+
+        if (is_null($input)) {
+            return $output;
+        } else {
+            return $output[$input];
+        }
+    }
+}
+
+if (!function_exists("getDateFormatList")) {
     function getDateFormatList($input = null)
     {
         $output = [
@@ -695,7 +1058,7 @@ if(!function_exists("getDateFormatList")){
     }
 }
 
-if(!function_exists("getTimeList")){
+if (!function_exists("getTimeList")) {
     function getTimeList($input = null)
     {
         $output = [
@@ -738,7 +1101,7 @@ function getPaymentServiceClass($input = null)
         ALIPAY => 'App\Http\Services\Payment\AlipayService',
         PADDLE => 'App\Http\Services\Payment\PaddleService',
         XENDIT => 'App\Http\Services\Payment\XenditService',
-        BANK => 'App\Http\Services\Payment\BankService',  // Add the bank service here
+        BANK => 'App\Http\Services\Payment\BankService',
     );
     if (is_null($input)) {
         return $output;
@@ -747,75 +1110,14 @@ function getPaymentServiceClass($input = null)
     }
 }
 
-if (!function_exists("getGatewaySupportedCurrencies")) {
-    function getGatewaySupportedCurrencies($gateway = null)
+
+if (!function_exists("eventType")) {
+    function eventType($input = null)
     {
-        $supported_currencies = array(
-            PAYPAL => [
-                'AUD', 'BRL', 'CAD', 'CNY', 'CZK', 'DKK', 'EUR', 'HKD', 'HUF', 'INR',
-                'ILS', 'JPY', 'MYR', 'MXN', 'TWD', 'NZD', 'NOK', 'PHP', 'PLN', 'GBP',
-                'RUB', 'SGD', 'SEK', 'CHF', 'THB', 'USD', 'VND', 'ZAR'
-            ],
-            STRIPE => [
-                // Comprehensive global currency support
-                'AED', 'AFN', 'ALL', 'AMD', 'ANG', 'AOA', 'ARS', 'AUD', 'AWG', 'AZN',
-                'BAM', 'BBD', 'BDT', 'BGN', 'BHD', 'BIF', 'BMD', 'BND', 'BOB', 'BRL',
-                'BSD', 'BTN', 'BWP', 'BYN', 'BZD', 'CAD', 'CDF', 'CHF', 'CLP', 'CNY',
-                'COP', 'CRC', 'CUC', 'CUP', 'CVE', 'CZK', 'DJF', 'DKK', 'DOP', 'DZD',
-                'EGP', 'ERN', 'ETB', 'EUR', 'FJD', 'FKP', 'GBP', 'GEL', 'GGP', 'GHS',
-                'GIP', 'GMD', 'GNF', 'GTQ', 'GYD', 'HKD', 'HNL', 'HRK', 'HTG', 'HUF',
-                'IDR', 'ILS', 'IMP', 'INR', 'IQD', 'IRR', 'ISK', 'JEP', 'JMD', 'JOD',
-                'JPY', 'KES', 'KGS', 'KHR', 'KMF', 'KPW', 'KRW', 'KWD', 'KYD', 'KZT',
-                'LAK', 'LBP', 'LKR', 'LRD', 'LSL', 'LYD', 'MAD', 'MDL', 'MGA', 'MKD',
-                'MMK', 'MNT', 'MOP', 'MRU', 'MUR', 'MVR', 'MWK', 'MXN', 'MYR', 'MZN',
-                'NAD', 'NGN', 'NIO', 'NOK', 'NPR', 'NZD', 'OMR', 'PAB', 'PEN', 'PGK',
-                'PHP', 'PKR', 'PLN', 'PYG', 'QAR', 'RON', 'RSD', 'RUB', 'RWF', 'SAR',
-                'SBD', 'SCR', 'SDG', 'SEK', 'SGD', 'SHP', 'SLL', 'SOS', 'SRD', 'STN',
-                'SVC', 'SYP', 'SZL', 'THB', 'TJS', 'TMT', 'TND', 'TOP', 'TRY', 'TTD',
-                'TVD', 'TWD', 'TZS', 'UAH', 'UGX', 'USD', 'UYU', 'UZS', 'VES', 'VND',
-                'VUV', 'WST', 'XAF', 'XCD', 'XOF', 'XPF', 'YER', 'ZAR', 'ZMW', 'ZWL'
-            ],
-            RAZORPAY => ['INR', 'USD', 'EUR', 'GBP', 'AED', 'AUD', 'CAD', 'SGD'],
-            INSTAMOJO => ['INR'],
-            MOLLIE => ['EUR', 'GBP', 'USD', 'CHF', 'PLN', 'SEK', 'NOK', 'DKK', 'AUD', 'CAD'],
-            COINBASE => ['BTC', 'ETH', 'LTC', 'BCH', 'XRP', 'USDC', 'USDT', 'ADA', 'DOGE', 'MATIC', 'SHIB', 'APE', 'SOL', 'DOT', 'UNI', 'ATOM'],
-            PAYSTACK => ['NGN', 'USD', 'ZAR', 'GHS', 'EUR', 'GBP'],
-            SSLCOMMERZ => ['BDT', 'USD', 'INR', 'EUR', 'GBP'],
-            MERCADOPAGO => ['ARS', 'BRL', 'CLP', 'COP', 'MXN', 'PEN', 'UYU', 'USD'],
-            FLUTTERWAVE => ['NGN', 'USD', 'KES', 'GHS', 'ZAR', 'GBP', 'EUR'],
-            IYZICO => ['TRY', 'USD', 'EUR', 'GBP'],
-            BITPAY => ['BTC', 'BCH', 'ETH', 'USDT', 'DOGE', 'SHIB', 'LTC', 'WBTC', 'GUSD', 'USDC', 'DAI', 'EUROC'],
-            ZITOPAY => ['USD', 'EUR', 'GBP', 'NGN'],  // Assuming major currencies based on typical global coverage
-            BINANCE => ['BTC', 'ETH', 'BNB', 'USDT', 'BUSD', 'ADA', 'DOT', 'SOL'],  // Cryptocurrencies
-            PAYTM => ['INR'],
-            PAYHERE => ['LKR', 'USD', 'EUR', 'GBP'],
-            MAXICASH => ['USD', 'XAF', 'XOF'],
-            CINETPAY => ['XOF', 'XAF', 'EUR', 'USD'],
-            VOGUEPAY => ['NGN', 'USD', 'GBP'],
-            TOYYIBPAY => ['MYR'],
-            PAYMOB => ['EGP'],
-            AUTHORIZE => ['USD', 'CAD', 'GBP', 'EUR', 'AUD', 'NZD'],
-            ALIPAY => [
-                'CNY', 'USD', 'EUR', 'GBP', 'HKD', 'JPY', 'AUD', 'SGD', 'CAD', 'NZD',
-                'KRW', 'THB'
-            ],
-            XENDIT => ['IDR', 'PHP', 'USD', 'VND', 'THB', 'MYR','SGD'],
-            PADDLE => ['USD','EUR','GBP','AUD','CAD']
-        );
-
-        if (is_null($gateway)) {
-            return $supported_currencies;
-        } else {
-            return $supported_currencies[$gateway] ?? [];
-        }
-    }
-}
-
-
-if(!function_exists("getAddonAppNameList")){
-    function getAddonAppNameList($input = null): array|string
-    {
-        $output = [];
+        $output = [
+            EVENT_TYPE_FREE => __('Free'),
+            EVENT_TYPE_PAID => __('Paid')
+        ];
 
         if (is_null($input)) {
             return $output;
@@ -825,3 +1127,185 @@ if(!function_exists("getAddonAppNameList")){
     }
 }
 
+if (!function_exists("getEmployeeStatus")) {
+    function getEmployeeStatus($input = null)
+    {
+        $output = [
+            FULL_TIME => __("Full Time"),
+            PART_TIME => __("Part Time"),
+            CONTRACTUAL => __("Contractual"),
+            REMOTE_WORKER => __("Remote Worker"),
+        ];
+
+        if (is_null($input)) {
+            return $output;
+        } else {
+            return $output[$input];
+        }
+    }
+}
+
+if (!function_exists("getJobStatus")) {
+    function getJobStatus($input = null)
+    {
+        $output = [
+            JOB_STATUS_PENDING => __("Pending"),
+            JOB_STATUS_APPROVED => __("Approved"),
+            JOB_STATUS_CANCELED => __("Canceled"),
+        ];
+
+        if (is_null($input)) {
+            return $output;
+        } else {
+            return $output[$input];
+        }
+    }
+}
+
+
+
+
+if (!function_exists("getPaymentStatus")) {
+    function getPaymentStatus($input = null)
+    {
+        $output = [
+            STATUS_PENDING => __("Pending"),
+            STATUS_ACTIVE => __("Approved"),
+            PAYMENT_STATUS_CANCELLED => __("Reject"),
+        ];
+
+        if (is_null($input)) {
+            return $output;
+        } else {
+            return $output[$input];
+        }
+    }
+}
+
+
+
+
+if (!function_exists("getDurationName")) {
+    function getDurationName($input = null)
+    {
+        $output = [
+            DURATION_MONTH => __("Month"),
+            DURATION_YEAR => __("Year"),
+        ];
+
+        if (is_null($input)) {
+            return $output;
+        } else {
+            return $output[$input];
+        }
+    }
+}
+
+if (!function_exists('customNotifyTempFields')) {
+    function customNotifyTempFields($type = null)
+    {
+        $data = [];
+    if ($type == 'password-reset') {
+        $data = [
+            '{{username}}' => '',
+            '{{reset_password_url}}' => '',
+        ];
+    } else if ($type == 'email-verify') {
+        $data = [
+            '{{username}}' => '',
+            '{{otp}}' => '',
+        ];
+    } else if ($type == 'employee-create-notify') {
+        $data = [
+            '{{username}}' => '',
+            '{{email}}' => '',
+            '{{password}}' => ''
+        ];
+    } else if ($type == 'department-head-assign-notify') {
+        $data = [
+            '{{username}}' => ''
+        ];
+    } else if ($type == 'employee-session-assign-notify') {
+        $data = [
+            '{{username}}' => '',
+            '{{session_name}}' => '',
+            '{{goal_setup_start_date}}' => '',
+            '{{goal_setup_end_date}}' => '',
+            '{{session_period_start_date}}' => '',
+            '{{session_period_end_date}}' => '',
+            '{{session_approval_process_start_date}}' => '',
+            '{{session_approval_process_end_date}}' => '',
+        ];
+    } else if ($type == 'employee-goal-submit-notify') {
+        $data = [
+            '{{username}}' => '',
+            '{{session_name}}' => '',
+            '{{goal_setup_start_date}}' => '',
+            '{{goal_setup_end_date}}' => '',
+            '{{goal_creator_name}}' => '',
+        ];
+    } else if ($type == 'goal-approved-notify-for-goal-creator') {
+        $data = [
+            '{{username}}' => '',
+            '{{session_name}}' => '',
+            '{{feedback}}' => '',
+            '{{approval_name}}' => '',
+            '{{rating}}' => '',
+        ];
+    } else if ($type == 'goal-approved-notify-for-next-approval') {
+        $data = [
+            '{{username}}' => '',
+            '{{session_name}}' => '',
+            '{{goal_creator_name}}' => '',
+            '{{sender_name}}' => '',
+            '{{feedback}}' => '',
+        ];
+    } else if ($type == 'goal-back-notify') {
+        $data = [
+            '{{username}}' => '',
+            '{{session_name}}' => '',
+            '{{sender_name}}' => '',
+            '{{feedback}}' => '',
+        ];
+    } else if ($type == 'goal-resubmit-notify') {
+        $data = [
+            '{{username}}' => '',
+            '{{session_name}}' => '',
+            '{{goal_creator_name}}' => '',
+        ];
+    } else if ($type == 'goal-final-approved') {
+        $data = [
+            '{{username}}' => '',
+            '{{session_name}}' => '',
+            '{{goal_creator_name}}' => '',
+            '{{final_approval_name}}' => '',
+            '{{feedback}}' => '',
+            '{{rating}}' => '',
+        ];
+    } else if ($type == 'subscription-paid-notify-for-super-admin') {
+        $data = [
+            '{{username}}' => '',
+            '{{package}}' => '',
+            '{{gateway}}' => '',
+        ];
+    } else if ($type == 'subscription-cancel-notify-for-super-admin') {
+        $data = [
+            '{{username}}' => '',
+            '{{package}}' => '',
+        ];
+    }else if ($type == 'saas-subscription-notify') {
+        $data = [
+            '{{username}}' => '',
+        ];
+    }
+
+    return $data;
+    }
+}
+
+if (!function_exists('emailTempFields')) {
+    function emailTempFields()
+    {
+        return customNotifyTempFields();
+    }
+}

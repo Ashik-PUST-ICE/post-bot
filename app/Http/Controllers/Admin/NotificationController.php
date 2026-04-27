@@ -18,7 +18,6 @@ class NotificationController extends Controller
     public function notificationView($id)
     {
         $data['pageTitle'] = 'Notification View';
-        $data['title'] = 'Notification View';
         $data['singleNotification'] = Notification::find($id);
 
         if($data['singleNotification'] !=null){
@@ -28,7 +27,7 @@ class NotificationController extends Controller
             ];
             NotificationSeen::firstOrCreate($dataArray);
         }
-        return view('sadmin.notification.view', $data);
+        return view('admin.notification.view', $data);
     }
     public function notificationDelete($id)
     {
@@ -49,7 +48,7 @@ class NotificationController extends Controller
 
     public function allNotification(){
         $data['pageTitle'] = 'All Notification';
-        return view('sadmin.notification.all', $data);
+        return view('admin.notification.all', $data);
     }
     public function notificationMarkAsRead($id){
         DB::beginTransaction();
@@ -69,6 +68,7 @@ class NotificationController extends Controller
         }catch (\Exception $exception){
             DB::rollBack();
             return redirect()->back()->with('error', SOMETHING_WENT_WRONG);
+
         }
 
     }
@@ -87,25 +87,21 @@ class NotificationController extends Controller
         }catch (\Exception $exception){
             DB::rollBack();
             return redirect()->back()->with('error', SOMETHING_WENT_WRONG);
-
         }
     }
 
     public function notifyTemplate()
     {
+        $data['pageTitle'] = __('Notification Template');
         $data['title'] = __('Notification Template');
-        $data['showManageApplicationSetting'] = 'show';
         $data['activeNotifySetting'] = 'active';
 
         $data['notifyTemplates'] = NotificationTemplates::where('tenant_id', auth()->user()->tenant_id)->get();
 
-        // test notification
-        // setCommonNotification(1, 'subscription-cancel', 'subscription-cancel', '');
-
         if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
             return view('sadmin.setting.notify_temp.notify-temp', $data);
         } else {
-            return view('admin.setting.email_temp.email-temp', $data);
+            return view('admin.setting.notify_temp.notify-temp', $data);
         }
     }
 
@@ -113,9 +109,7 @@ class NotificationController extends Controller
     {
         try {
             $data['template'] = NotificationTemplates::find($request->id);
-            $data['fields'] = customNotifyTempFields($data['template']->slug);
-
-
+            $data['fields'] = \customNotifyTempFields($data['template']->slug);
             return $this->success($data);
         } catch (Exception $e) {
             return $this->error([], $e->getMessage());
@@ -139,5 +133,7 @@ class NotificationController extends Controller
             return $this->error([], $e->getMessage());
         }
     }
+
+
 
 }

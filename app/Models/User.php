@@ -25,6 +25,17 @@ class User extends Authenticatable
         'nick_name',
         'email',
         'mobile',
+        'country',
+        'city',
+        'zip_code',
+        'address',
+        'currency',
+        'company_name',
+        'company_country',
+        'company_city',
+        'company_designation',
+        'company_zip_code',
+        'company_address',
         'email_verified_at',
         'password',
         'image',
@@ -38,11 +49,13 @@ class User extends Authenticatable
         'verify_token',
         'otp',
         'otp_expiry',
+        'last_seen',
         'show_email_in_public',
         'show_phone_in_public',
-        'last_seen',
         'created_by',
+        'company_logo',
         'status',
+        'tenant_id',
     ];
 
     /**
@@ -66,22 +79,21 @@ class User extends Authenticatable
         'last_seen' => 'datetime'
     ];
 
-    public function unseen_message()
-    {
-        return $this->hasMany(Chat::class, 'sender_id')->where(['is_seen' => STATUS_PENDING]);
-    }
-
-    public function messages()
-    {
-        return $this->hasMany(Chat::class, 'receiver_id')->where('sender_id' , auth()->id());
-    }
-
-
-    protected static function boot(): void
+    protected static function boot()
     {
         parent::boot();
-        self::creating(function($model){
+        self::creating(function ($model) {
             $model->uuid = Str::uuid()->toString();
         });
     }
+
+    public function userDetail()
+    {
+        return $this->hasOne(UserDetails::class);
+    }
+
+    public function employee(){
+        return $this->hasOne(EmployeeDetails::class);
+    }
+
 }

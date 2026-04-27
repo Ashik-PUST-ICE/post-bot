@@ -140,6 +140,7 @@ Route::group(['prefix' => 'setting', 'as' => 'setting.'], function () {
         Route::get('password', [ProfileController::class, 'password'])->name('password');
         Route::post('password-update', [ProfileController::class, 'passwordUpdate'])->name('password.update')->middleware('isDemo');
     });
+    });
 });
 
 

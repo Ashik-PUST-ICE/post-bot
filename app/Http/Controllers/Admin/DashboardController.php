@@ -20,10 +20,12 @@ class DashboardController extends Controller
 
     public function index(Request $request)
     {
+        return view('sadmin.dashboard');
+    }
 
-        return view('admin.dashboard', [
-            'pageTitle' => 'Dashboard',
-        ]);
+    public function userOverviewChartData(Request $request)
+    {
+        return response()->json([]);
     }
 
 }

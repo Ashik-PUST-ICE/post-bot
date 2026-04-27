@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('gateway_currencies', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('gateway_id');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('tenant_id')->nullable();
             $table->string('currency')->default('USD');
             $table->decimal('conversion_rate')->default(1);
             $table->timestamps();

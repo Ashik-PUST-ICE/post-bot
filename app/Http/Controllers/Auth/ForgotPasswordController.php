@@ -8,11 +8,10 @@ use Exception;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rules;
 
 class ForgotPasswordController extends Controller
 {
+
     /*
     |--------------------------------------------------------------------------
     | Password Reset Controller
@@ -39,7 +38,7 @@ class ForgotPasswordController extends Controller
     /**
      * Send a reset link to the given user.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
     public function sendResetLinkEmail(Request $request)
@@ -48,21 +47,14 @@ class ForgotPasswordController extends Controller
             'email' => 'required|email|exists:users',
         ]);
 
-        try{
-            $token = Str::random(64);
-            DB::table('password_resets')->insert([
-                'email' => $request->email,
-                'token' => $token,
-                'otp' => rand(1000, 9999),
-                'otp_expiry' => now()->addMinutes(5),
-                'created_at' => now()
-            ]);
-
-            $user = DB::table('password_resets')->join('users', 'users.email', '=', 'password_resets.email')->where('token', $token)->select('users.email', 'users.name', 'password_resets.otp', 'password_resets.otp_expiry')->first();
-            genericEmailNotify('',$user, NULL,'password-reset');
-
-            return redirect(route('password.reset.verify_form', ['token' => $token, 'email' => $request->email]))->with('success', 'We have e-mailed your password reset otp!');
-        }catch(Exception $e){
+        try {
+            $res = sendForgotMail($request->email);
+            if ($res['status'] == true) {
+                return back()->with('success', $res['msg']);
+            } else {
+                return back()->with('error', $res['msg']);
+            }
+        } catch (Exception $e) {
             return back()->with('error', __(SOMETHING_WENT_WRONG));
         }
     }
@@ -70,19 +62,20 @@ class ForgotPasswordController extends Controller
     public function forgetVerifyForm($token, $email)
     {
         $resetPassword = DB::table('password_resets')->where('token', $token)->where('email', $email)->first();
-        return view('auth.passwords.verify', compact('token', 'resetPassword'));
+        return view('auth.passwords.reset', compact('token', 'resetPassword'));
     }
 
     public function forgetVerify(Request $request, $token)
     {
-        $otp = $request->otp__field__1.$request->otp__field__2.$request->otp__field__3.$request->otp__field__4;
-        $user = DB::table('password_resets')->join('users', 'users.email', '=', 'password_resets.email')->where('token', $token)->select('users.email', 'users.name', 'password_resets.otp', 'password_resets.otp_expiry')->first();
-        if(!is_null($user) && $otp == $user->otp){
-            return view('auth.passwords.reset')->with(
-                ['token' => $token, 'email' => $request->email]
-            );
+        $user = DB::table('password_resets')
+            ->join('users', 'users.email', '=', 'password_resets.email')
+            ->where('token', $token)
+            ->select('users.email', 'users.name', 'password_resets.otp', 'password_resets.otp_expiry')
+            ->first();
+        if (!is_null($user)) {
+            return view('auth.passwords.reset')->with(['token' => $token, 'email' => $user->email]);
         } else {
-            return back()->with('error', __('Your otp doesn`t match or expired'));
+            return back()->with('error', __('Email Not Found'));
         }
     }
 
@@ -103,20 +96,18 @@ class ForgotPasswordController extends Controller
                     $user->otp = $otp;
                     $user->otp_expiry = $otp_expiry;
 
-                    genericEmailNotify('',$user, NULL,'password-reset');
 
                     return redirect()->route('password.reset.verify_form', $token, $user->email)->with('success', __('We have sent a fresh verify email.'));
+                } else {
+                    return back()->with('success', __('Already send an email. Please wait a minutes to try another'));
                 }
-                else{
-                   return back()->with('success', __('Already send an email. Please wait a minutes to try another'));
-                }
-               return back()->with('error', __('Verify Your Rest Password'));
-            }catch (Exception $e){
+                return back()->with('error', __('Verify Your Rest Password'));
+            } catch (Exception $e) {
                 return back()->with('error', __(SOMETHING_WENT_WRONG));
             }
 
             return back();
-        }else{
+        } else {
             return back();
         }
     }
@@ -125,19 +116,28 @@ class ForgotPasswordController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
 
-        $user = DB::table('password_resets')->join('users', 'users.email', '=', 'password_resets.email')->where('token', $token)->select('users.email', 'users.name', 'password_resets.otp', 'password_resets.otp_expiry')->first();
-        if(!is_null($user) && $user->email == $request->email){
-           User::where('email', $user->email)->update([
-                'password' => bcrypt($request->password),
-           ]);
+        try {
+            $user = DB::table('password_resets')
+                ->join('users', 'users.email', '=', 'password_resets.email')
+                ->where('token', $token)
+                ->select('users.email', 'users.name')
+                ->first();
 
-           return redirect(route('login'))->with('success', __('Reset Successfully. Please login with new passsword'));
-        } else {
-            return back()->with('error', __('Email doesn`t match'));
+            if (!is_null($user) && $user->email == $request->email) {
+                User::where('email', $user->email)
+                    ->update([
+                        'password' => bcrypt($request->password),
+                    ]);
+
+                return redirect()->route('login')->with('success', __('Reset Successfully. Please login with new password'));
+            } else {
+                throw new Exception(__('Email doesn\'t match'));
+            }
+        } catch (Exception $e) {
+            return back()->with('error', $e);
         }
     }
-
 }
