@@ -3,18 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\SMSConfigRequest;
+use App\Http\Requests\SMSConfigRequest;
 use App\Http\Services\SettingsService;
+use App\Mail\CustomEmailNotify;
 use App\Models\Currency;
 use App\Models\Language;
-use App\Models\RegisterForm;
 use App\Models\Setting;
+use App\Traits\ResponseTrait;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
-use App\Traits\ResponseTrait;
-use Exception;
+use Illuminate\Support\Facades\Mail;
 
 class SettingController extends Controller
 {
@@ -25,59 +26,104 @@ class SettingController extends Controller
     public function __construct()
     {
         $this->settingsService = new SettingsService();
+        $this->middleware(function ($request, $next) {
+            if (auth()->user()->role == USER_ROLE_ADMIN) {
+                if (isAddonInstalled('KPISAAS') > 0) {
+                    abort(404);
+                }
+            }
+            return $next($request);
+        });
     }
 
     public function applicationSetting()
     {
         $data['title'] = __("Application Setting");
+        $data['pageTitle'] = __("Application Setting");
         $data['showManageApplicationSetting'] = 'show';
+        $data['activeSetting'] = 'active';
         $data['activeApplicationSetting'] = 'active';
-        $data['subApplicationSettingActiveClass'] = 'active-color-one';
+        $data['subApplicationSettingActiveClass'] = 'active';
         $data['timezones'] = getTimeZone();
-        return view('admin.setting.general_settings.application-settings')->with($data);
+
+        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+            return view('sadmin.setting.general_settings.application-settings')->with($data);
+        } else {
+            return view('admin.setting.general_settings.application-settings')->with($data);
+        }
     }
 
     public function configurationSetting()
     {
         $data['title'] = __("Configuration Setting");
+        $data['pageTitle'] = __('Configuration Setting');
         $data['showManageApplicationSetting'] = 'show';
-        $data['activeConfigurationSetting'] = 'active-color-one';
-        return view('admin.setting.general_settings.configuration')->with($data);
+        $data['activeConfigurationSetting'] = 'active';
+
+        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+            return view('sadmin.setting.general_settings.configuration')->with($data);
+        } else {
+            return view('admin.setting.general_settings.configuration')->with($data);
+        }
     }
 
     public function configurationSettingConfigure(Request $request)
     {
-        if(env('APP_DEMO', false) == false){
-            if ($request->key == 'email_verification_status' || $request->key == 'app_mail_status') {
+        if ($request->key == 'email_verification_status' || $request->key == 'app_mail_status') {
+            if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+                return view('sadmin.setting.general_settings.configuration.form.email_configuration');
+            } else {
                 return view('admin.setting.general_settings.configuration.form.email_configuration');
-            } else if ($request->key == 'app_sms_status') {
+            }
+        } else if ($request->key == 'app_sms_status') {
+            if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+                return view('sadmin.setting.general_settings.configuration.form.sms_configuration');
+            } else {
                 return view('admin.setting.general_settings.configuration.form.sms_configuration');
-            } else if ($request->key == 'pusher_status') {
+            }
+        } else if ($request->key == 'pusher_status') {
+            if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+                return view('sadmin.setting.general_settings.configuration.form.pusher_configuration');
+            } else {
                 return view('admin.setting.general_settings.configuration.form.pusher_configuration');
-            } else if ($request->key == 'google_login_status') {
+            }
+        } else if ($request->key == 'google_login_status') {
+            if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+                return view('sadmin.setting.general_settings.configuration.form.social_login_google_configuration');
+            } else {
                 return view('admin.setting.general_settings.configuration.form.social_login_google_configuration');
-            } else if ($request->key == 'facebook_login_status') {
+            }
+        } else if ($request->key == 'facebook_login_status') {
+            if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+                return view('sadmin.setting.general_settings.configuration.form.social_login_facebook_configuration');
+            } else {
                 return view('admin.setting.general_settings.configuration.form.social_login_facebook_configuration');
-            } else if ($request->key == 'google_recaptcha_status') {
+            }
+        } else if ($request->key == 'google_recaptcha_status') {
+            if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+                return view('sadmin.setting.general_settings.configuration.form.google_recaptcha_configuration');
+            } else {
                 return view('admin.setting.general_settings.configuration.form.google_recaptcha_configuration');
-            } else if ($request->key == 'google_analytics_status') {
+            }
+        } else if ($request->key == 'google_analytics_status') {
+            if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+                return view('sadmin.setting.general_settings.configuration.form.google_analytics_configuration');
+            } else {
                 return view('admin.setting.general_settings.configuration.form.google_analytics_configuration');
-            } else if ($request->key == 'cookie_status') {
+            }
+        } else if ($request->key == 'cookie_status') {
+            if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+                return view('sadmin.setting.general_settings.configuration.form.cookie_configuration');
+            } else {
                 return view('admin.setting.general_settings.configuration.form.cookie_configuration');
             }
-        }else{
-            return '<div class="alert alert-info text-center">
-            <p>'.__('This is a demo version, and configuration setup is not visible').'.</p>
-            <p>'.__('You can access the full demo after purchase or by contacting us').'.</p>
-            <a href="https://ticket.zainikthemes.com/contact-us" target="__blank" class="btn btn-primary">'.__('Contact Us').'</a>
-        </div>';
         }
     }
 
     public function configurationSettingHelp(Request $request)
     {
         if ($request->key == 'email_verification_status' || $request->key == 'app_mail_status') {
-            return view('admin.setting.general_settings.configuration.help.email_help');
+            return view('sadmin.setting.general_settings.configuration.help.email_help');
         } else if ($request->key == 'app_sms_status') {
             return view('admin.setting.general_settings.configuration.help.sms_help');
         } else if ($request->key == 'pusher_status') {
@@ -89,30 +135,38 @@ class SettingController extends Controller
         } else if ($request->key == 'google_recaptcha_status') {
             return view('admin.setting.general_settings.configuration.help.google_recaptcha_credentials_help');
         } else if ($request->key == 'google_analytics_status') {
-            return view('admin.setting.general_settings.configuration.help.google_analytics_help');
+            return view('sadmin.setting.general_settings.configuration.help.google_analytics_help');
         } else if ($request->key == 'cookie_status') {
-            return view('admin.setting.general_settings.configuration.help.cookie_consent_help');
+            return view('sadmin.setting.general_settings.configuration.help.cookie_consent_help');
+        } else if ($request->key == 'referral_status') {
+            return view('admin.setting.general_settings.configuration.help.referral_help');
         } else if ($request->key == 'two_factor_googleauth_status') {
             return view('admin.setting.general_settings.configuration.help.google_2fa_help');
         } else if ($request->key == 'app_preloader_status') {
-            return view('admin.setting.general_settings.configuration.help.preloader_help');
+            return view('sadmin.setting.general_settings.configuration.help.preloader_help');
         } else if ($request->key == 'disable_registration') {
             return view('admin.setting.general_settings.configuration.help.disable_registration_help');
         } else if ($request->key == 'registration_approval') {
             return view('admin.setting.general_settings.configuration.help.registration_approval_help');
+        } else if ($request->key == 'force_secure_password') {
+            return view('admin.setting.general_settings.configuration.help.force_secure_password_help');
+        } else if ($request->key == 'show_agree_policy') {
+            return view('admin.setting.general_settings.configuration.help.agree_policy_help');
+        } else if ($request->key == 'enable_force_ssl') {
+            return view('admin.setting.general_settings.configuration.help.enable_force_SSL_help');
+        } else if ($request->key == 'enable_dark_mode') {
+            return view('admin.setting.general_settings.configuration.help.enable_dark_mode_help');
         } else if ($request->key == 'show_language_switcher') {
-            return view('admin.setting.general_settings.configuration.help.show_language_switcher_help');
-        } else if($request->key == 'app_debug'){
-            return view('admin.setting.general_settings.configuration.help.app_debug_help');
-        }else if($request->key == 'force_ssl'){
-            return view('admin.setting.general_settings.configuration.help.force_ssl_help');
+            return view('sadmin.setting.general_settings.configuration.help.show_language_switcher_help');
+        } else if ($request->key == 'register_file_required') {
+            return view('admin.setting.general_settings.configuration.help.register_file_required_help');
+        } else if ($request->key == 'app_debug') {
+            return view('sadmin.setting.general_settings.configuration.help.app_debug_help');
         }
-
     }
 
     public function applicationSettingUpdate(Request $request)
     {
-
         $inputs = Arr::except($request->all(), ['_token']);
 
         foreach ($inputs as $key => $value) {
@@ -127,86 +181,68 @@ class SettingController extends Controller
                 $upload = settingImageStoreUpdate($value, $request->app_logo);
                 $option->option_value = $upload;
                 $option->save();
-            } elseif ($request->hasFile('app_black_logo') && $key == 'app_black_logo') {
-                $upload = settingImageStoreUpdate($value, $request->app_black_logo);
-                $option->option_value = $upload;
-                $option->save();
             } elseif ($request->hasFile('app_fav_icon') && $key == 'app_fav_icon') {
                 $upload = settingImageStoreUpdate($value, $request->app_fav_icon);
+                $option->option_value = $upload;
+                $option->save();
+            } elseif ($request->hasFile('app_logo_white') && $key == 'app_logo_white') {
+                $upload = settingImageStoreUpdate($value, $request->app_logo_white);
                 $option->option_value = $upload;
                 $option->save();
             } elseif ($request->hasFile('login_left_image') && $key == 'login_left_image') {
                 $upload = settingImageStoreUpdate($value, $request->login_left_image);
                 $option->option_value = $upload;
                 $option->save();
-            } elseif ($request->hasFile('page_breadcrumb') && $key == 'page_breadcrumb') {
-                $upload = settingImageStoreUpdate($value, $request->page_breadcrumb);
-                $option->option_value = $upload;
-                $option->save();
-            } elseif ($request->hasFile('banner_background_breadcrumb') && $key == 'banner_background_breadcrumb') {
-                $upload = settingImageStoreUpdate($value, $request->banner_background_breadcrumb);
-                $option->option_value = $upload;
-                $option->save();
-            }elseif ($request->hasFile('join_us_left_icon') && $key == 'join_us_left_icon') {
-                $upload = settingImageStoreUpdate($value, $request->join_us_left_icon);
-                $option->option_value = $upload;
-                $option->save();
-            }elseif ($request->hasFile('join_us_middle_icon') && $key == 'join_us_middle_icon') {
-                $upload = settingImageStoreUpdate($value, $request->join_us_middle_icon);
-                $option->option_value = $upload;
-                $option->save();
-            }elseif ($request->hasFile('join_us_right_icon') && $key == 'join_us_right_icon') {
-                $upload = settingImageStoreUpdate($value, $request->join_us_right_icon);
-                $option->option_value = $upload;
-                $option->save();
-            }elseif ($request->hasFile('about_us_background_breadcrumb') && $key == 'about_us_background_breadcrumb') {
-                $upload = settingImageStoreUpdate($value, $request->about_us_background_breadcrumb);
-                $option->option_value = $upload;
-                $option->save();
-            }elseif ($request->hasFile('upcoming_events_background') && $key == 'upcoming_events_background') {
-                $upload = settingImageStoreUpdate($value, $request->upcoming_events_background);
-                $option->option_value = $upload;
-                $option->save();
-            }elseif ($request->hasFile('welcome_speech_image') && $key == 'welcome_speech_image') {
-                $upload = settingImageStoreUpdate($value, $request->welcome_speech_image);
-                $option->option_value = $upload;
-                $option->save();
-            }else {
-                if($key == 'APP_URL') {
-                    setEnvironmentValue('APP_URL', $value);
-                }
+            } else {
                 $option->option_value = $value;
                 $option->save();
             }
         }
-
+        /**  ====== Set Currency ====== */
+        if ($request->currency_id) {
+            Currency::where('id', $request->currency_id)->update(['current_currency' => 1]);
+            Currency::where('id', '!=', $request->currency_id)->update(['current_currency' => 0]);
+        }
+        /**  ====== Set Language ====== */
+        if ($request->language_id) {
+            Language::where('id', $request->language_id)->update(['default' => STATUS_ACTIVE]);
+            Language::where('id', '!=', $request->language_id)->update(['default' => STATUS_DEACTIVATE]);
+            $language = Language::where('default', STATUS_ACTIVE)->first();
+            if ($language) {
+                $ln = $language->iso_code;
+                session(['local' => $ln]);
+                App::setLocale(session()->get('local'));
+            }
+        }
         return $this->success([], getMessage(UPDATED_SUCCESSFULLY));
     }
 
     public function configurationSettingUpdate(Request $request)
     {
-        if(env('APP_DEMO', false) == false){
-            try {
-                $option = Setting::firstOrCreate(['option_key' => $request->key]);
-                $option->option_value = $request->value;
-                $option->save();
-                return $this->success([], getMessage(UPDATED_SUCCESSFULLY));
-            } catch (Exception $e) {
-                return $this->error([], getMessage(SOMETHING_WENT_WRONG));
-            }
-        }else{
-            return $this->error([], 'This is a demo version, and this setup is not available in this version. If you need full version then purchase or contact with us');
+        try {
+            $option = Setting::firstOrCreate(['option_key' => $request->key]);
+            $option->option_value = $request->value;
+            $option->save();
+            return $this->success([], getMessage(UPDATED_SUCCESSFULLY));
+        } catch (Exception $e) {
+            return $this->error([], getMessage(SOMETHING_WENT_WRONG));
         }
     }
 
     public function storageSetting()
     {
         $data['title'] = __("Storage Setting");
+        $data['pageTitle'] = __("Storage Setting");
         $data['showManageApplicationSetting'] = 'show';
         $data['activeApplicationSetting'] = 'active';
-        $data['subStorageSettingActiveClass'] = 'active-color-one';
+        $data['subStorageSettingActiveClass'] = 'active';
         $data['timezones'] = getTimeZone();
-        return view('admin.setting.general_settings.storage-setting')->with($data);
+
+        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+            return view('sadmin.setting.general_settings.storage-setting')->with($data);
+        } else {
+            return view('admin.setting.general_settings.storage-setting')->with($data);
+        }
     }
 
     public function storageSettingsUpdate(Request $request)
@@ -230,7 +266,6 @@ class SettingController extends Controller
                 'VULTR_ACCESS_KEY_ID' => 'bail|required',
                 'VULTR_SECRET_ACCESS_KEY' => 'bail|required',
                 'VULTR_DEFAULT_REGION' => 'bail|required',
-                'VULTR_ENDPOINT' => 'bail|required',
                 'VULTR_BUCKET' => 'bail|required',
             ]);
         } elseif ($request->STORAGE_DRIVER == STORAGE_DRIVER_DO) {
@@ -253,22 +288,49 @@ class SettingController extends Controller
         }
     }
 
-    public function logoSettings()
+    private function updateSettings($inputs)
     {
-        $data['title'] = __("Site Logos");
-        $data['showManageApplicationSetting'] = 'show';
-        $data['activeApplicationSetting'] = 'active';
-        $data['subLogoSettingActiveClass'] = 'active-color-one';
-        return view('admin.setting.general_settings.logo-settings')->with($data);
+        $keys = [];
+        foreach ($inputs as $k => $v) {
+            $keys[$k] = $k;
+        }
+        foreach ($inputs as $key => $value) {
+
+            $option = Setting::firstOrCreate(['option_key' => $key]);
+            $option->option_value = $value;
+            $option->save();
+            setEnvironmentValue($key, $value);
+        }
     }
 
-    public function colorSettings()
+    public function socialLoginSetting()
     {
-        $data['title'] = __("Color & Custom Code Settings");
+        $data['title'] = __("Social Login Setting");
+        $data['navSettingParentActiveClass'] = 'mm-active';
+        $data['subNavGeneralSettingActiveClass'] = 'mm-active';
+        $data['subSocialLoginSettingActiveClass'] = 'active';
+
+        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+            return view('sadmin.setting.general_settings.social-login-settings')->with($data);
+        } else {
+            return view('admin.setting.general_settings.social-login-settings')->with($data);
+        }
+    }
+
+    public function logoSettings()
+    {
+        $data['title'] = __("Logo Setting");
+        $data['pageTitle'] = __("Logo Setting");
         $data['showManageApplicationSetting'] = 'show';
+        $data['activeSetting'] = 'active';
         $data['activeApplicationSetting'] = 'active';
-        $data['subColorSettingActiveClass'] = 'active-color-one';
-        return view('admin.setting.general_settings.color-settings')->with($data);
+        $data['subLogoSettingActiveClass'] = 'active';
+
+        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+            return view('sadmin.setting.general_settings.logo-settings')->with($data);
+        } else {
+            return view('admin.setting.general_settings.logo-settings')->with($data);
+        }
     }
 
     public function googleRecaptchaSetting()
@@ -289,37 +351,29 @@ class SettingController extends Controller
         return view('admin.setting.general_settings.mail-configuration', $data);
     }
 
-    public function smsConfigurationStore(SMSConfigRequest $request)
-    {
-        return $this->settingsService->smsConfigurationStore($request);
-    }
-
-    public function smsTest(Request $request)
-    {
-        $request->validate([
-            'to' => 'required|numeric|',
-            'message' => 'required|',
-        ]);
-        return $this->settingsService->smsTest($request);
-    }
-
     public function mailTest(Request $request)
     {
-        $response = genericEmailNotify($request,'','','');
-        if($response['success']){
+        try {
+            Mail::to($request->to)->send(new CustomEmailNotify($request->subject, $request->message, ''));
             return redirect()->back()->with('success', __(SENT_SUCCESSFULLY));
-        }else{
-            return redirect()->back()->with('error', $response['message']);
+        } catch (\PharIo\Manifest\Exception $exception) {
+            return redirect()->back()->with('error', __(SOMETHING_WENT_WRONG));
         }
     }
 
     public function maintenanceMode()
     {
         $data['title'] = __("Maintenance Mode Settings");
+        $data['pageTitle'] = __("Maintenance Mode Settings");
         $data['showManageApplicationSetting'] = 'show';
         $data['activeApplicationSetting'] = 'active';
-        $data['subMaintenanceModeActiveClass'] = 'active-color-one';
-        return view('admin.setting.general_settings.maintenance-mode', $data);
+        $data['subMaintenanceModeActiveClass'] = 'active';
+
+        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+            return view('sadmin.setting.general_settings.maintenance-mode', $data);
+        } else {
+            return view('admin.setting.general_settings.maintenance-mode', $data);
+        }
     }
 
     public function maintenanceModeChange(Request $request)
@@ -373,28 +427,45 @@ class SettingController extends Controller
         return $this->success([], getMessage(UPDATED_SUCCESSFULLY));
     }
 
-    private function updateSettings($inputs)
+    public function contactUsCMS()
     {
-        $keys = [];
-        foreach ($inputs as $k => $v) {
-            $keys[$k] = $k;
-        }
-        foreach ($inputs as $key => $value) {
+        $data['title'] = 'Contact Us CMS';
+        $data['navSettingParentActiveClass'] = 'mm-active';
+        $data['subContactUsCMSSettingActiveClass'] = 'mm-active';
+        $data['subContactUsCMSActiveClass'] = 'active';
+        return view('admin.setting.contact-us', $data);
+    }
 
-            $option = Setting::firstOrCreate(['option_key' => $key]);
-            $option->option_value = $value;
-            $option->save();
-            setEnvironmentValue($key, $value);
-        }
+    public function homeSettings()
+    {
+        $data['title'] = 'Home Setting';
+        $data['navSettingParentActiveClass'] = 'mm-active';
+        $data['subHomeSettingActiveClass'] = 'mm-active';
+        $data['subHomeActiveClass'] = 'active';
+        return view('admin.setting.home.home-settings', $data);
+    }
+
+    public function beAContributor()
+    {
+        $data['title'] = 'Be A Contributor CMS';
+        $data['navSettingParentActiveClass'] = 'mm-active';
+        $data['subNavBeAContributorActiveClass'] = 'active';
+        return view('admin.setting.be-a-contributor')->with($data);
     }
 
     public function cacheSettings()
     {
         $data['title'] = __('Cache Settings');
+        $data['pageTitle'] = __('Cache Settings');
         $data['showManageApplicationSetting'] = 'show';
         $data['activeApplicationSetting'] = 'active';
-        $data['subCacheActiveClass'] = 'active-color-one';
-        return view('admin.setting.cache-settings', $data);
+        $data['subCacheActiveClass'] = 'active';
+
+        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+            return view('sadmin.setting.cache-settings', $data);
+        } else {
+            return view('admin.setting.cache-settings', $data);
+        }
     }
 
     public function cacheUpdate($id)
@@ -424,9 +495,6 @@ class SettingController extends Controller
                 return redirect()->back()->with('error', $e->getMessage());
             }
         }
-        else {
-            Artisan::call($id);
-        }
         return redirect()->back();
     }
 
@@ -434,7 +502,6 @@ class SettingController extends Controller
     {
         try {
             if (file_exists(public_path('storage'))) {
-                //$this->deleteDir(public_path('storage'));
                 Artisan::call('storage:link');
                 return redirect()->back()->with('success', 'Created Storage Link Updated Successfully');
             } else {
@@ -454,7 +521,6 @@ class SettingController extends Controller
         return view('admin.setting.general_settings.cookie-settings', $data);
     }
 
-
     public function commonSettingUpdate(Request $request)
     {
         return $this->settingsService->commonSettingUpdate($request);
@@ -465,21 +531,17 @@ class SettingController extends Controller
         return $this->settingsService->cookieSettingUpdated($request);
     }
 
-
-    public function liveChatSettings()
-    {
-        $data['title'] = 'Live Chat Settings';
-        $data['navFeaturesParentActiveClass'] = 'mm-active';
-        $data['subLiveChatActiveClass'] = 'active';
-        return view('admin.setting.features_settings.live-chat-settings', $data);
-    }
-
     public function googleAnalyticsSetting()
     {
         $data['title'] = 'Api Settings';
         $data['navAPIParentActiveClass'] = 'mm-active';
         $data['subCoogleAnalyticsCompareApiActiveClass'] = 'active';
-        return view('admin.setting.general_settings.google_analytics_settings', $data);
+
+        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+            return view('sadmin.setting.general_settings.google_analytics_settings', $data);
+        } else {
+            return view('admin.setting.general_settings.google_analytics_settings', $data);
+        }
     }
 
     public function securitySettings()
@@ -490,4 +552,37 @@ class SettingController extends Controller
         return view('admin.setting.general_settings.security-settings', $data);
     }
 
+    public function customCSS()
+    {
+        $data['title'] = __('Custom CSS');
+        $data['showManageApplicationSetting'] = 'show';
+        $data['activeApplicationSetting'] = 'active';
+        $data['subCustomCssActiveClass'] = 'active-color-one';
+        $data['custom_css'] = getOption('custom_css');
+        return view('admin.setting.general_settings.custom-css', $data);
+    }
+    public function termsAndCondition()
+    {
+        $data['title'] = __('Terms and Condition');
+        $data['activeFrontendList'] = 'active';
+        $data['tcActiveClass'] = 'active';
+        $data['t_and_c'] = Setting::where('option_key', 'LIKE', 't_and_c%')->get();
+        return view('sadmin.setting.general_settings.terms_and_condition', $data);
+    }
+    public function privacyPolicy()
+    {
+        $data['title'] = __('Privacy Policy');
+        $data['activeFrontendList'] = 'active';
+        $data['ppActiveClass'] = 'active';
+        $data['privacy_policy'] = Setting::where('option_key', 'LIKE', 'privacy_policy%')->get();
+        return view('sadmin.setting.general_settings.privacy_policy', $data);
+    }
+    public function returnPolicy()
+    {
+        $data['title'] = __('Return Policy');
+        $data['activeFrontendList'] = 'active';
+        $data['rpActiveClass'] = 'active';
+        $data['return_policy'] = Setting::where('option_key', 'LIKE', 'return_policy%')->get();
+        return view('sadmin.setting.general_settings.return_policy', $data);
+    }
 }

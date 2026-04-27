@@ -1,0 +1,143 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Notification;
+use App\Models\NotificationSeen;
+use App\Models\NotificationTemplates;
+use App\Traits\ResponseTrait;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class NotificationController extends Controller
+{
+    use ResponseTrait;
+
+    public function notificationView($id)
+    {
+        $data['pageTitle'] = 'Notification View';
+        $data['title'] = 'Notification View';
+        $data['singleNotification'] = Notification::find($id);
+
+        if($data['singleNotification'] !=null){
+            $dataArray = [
+                'user_id'=> $data['singleNotification']->user_id,
+                'notification_id'=> $data['singleNotification']->id,
+            ];
+            NotificationSeen::firstOrCreate($dataArray);
+        }
+        return view('sadmin.notification.view', $data);
+    }
+    public function notificationDelete($id)
+    {
+        DB::beginTransaction();
+        try {
+            $data= Notification::where('id', $id)->firstOrFail();
+            if (!$data && $data == null) {
+                return $this->error([], SOMETHING_WENT_WRONG);
+            }
+            $data->delete();
+            DB::commit();
+            return redirect()->back()->with('success', DELETED_SUCCESSFULLY);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', SOMETHING_WENT_WRONG);
+        }
+    }
+
+    public function allNotification(){
+        $data['pageTitle'] = 'All Notification';
+        return view('sadmin.notification.all', $data);
+    }
+    public function notificationMarkAsRead($id){
+        DB::beginTransaction();
+        try {
+            $notificationData = Notification::where('id','=',$id)->first();
+            $dataArray = [
+                'user_id'=> $notificationData->user_id,
+                'notification_id'=> $notificationData->id,
+            ];
+            NotificationSeen::firstOrCreate($dataArray);
+
+            if($notificationData->link != NULL){
+                return redirect()->to($notificationData->link);
+            }
+            DB::commit();
+            return redirect()->back()->with('success', UPDATED_SUCCESSFULLY);
+        }catch (\Exception $exception){
+            DB::rollBack();
+            return redirect()->back()->with('error', SOMETHING_WENT_WRONG);
+        }
+
+    }
+    public function notificationMarkAllAsRead(){
+        DB::beginTransaction();
+        try {
+            foreach (userNotification('unseen') as $item){
+                $dataArray = [
+                    'user_id'=> auth()->id(),
+                    'notification_id'=> $item->id,
+                ];
+                NotificationSeen::firstOrCreate($dataArray);
+            }
+            DB::commit();
+            return redirect()->back()->with('success', UPDATED_SUCCESSFULLY);
+        }catch (\Exception $exception){
+            DB::rollBack();
+            return redirect()->back()->with('error', SOMETHING_WENT_WRONG);
+
+        }
+    }
+
+    public function notifyTemplate()
+    {
+        $data['title'] = __('Notification Template');
+        $data['showManageApplicationSetting'] = 'show';
+        $data['activeNotifySetting'] = 'active';
+
+        $data['notifyTemplates'] = NotificationTemplates::where('tenant_id', auth()->user()->tenant_id)->get();
+
+        // test notification
+        // setCommonNotification(1, 'subscription-cancel', 'subscription-cancel', '');
+
+        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
+            return view('sadmin.setting.notify_temp.notify-temp', $data);
+        } else {
+            return view('admin.setting.email_temp.email-temp', $data);
+        }
+    }
+
+    public function notifyTemplateConfig(Request $request)
+    {
+        try {
+            $data['template'] = NotificationTemplates::find($request->id);
+            $data['fields'] = customNotifyTempFields($data['template']->slug);
+
+
+            return $this->success($data);
+        } catch (Exception $e) {
+            return $this->error([], $e->getMessage());
+        }
+    }
+
+    public function notifyTemplateConfigUpdate(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $notifyTemplate = NotificationTemplates::findOrFail($request->id);
+            $notifyTemplate->title = $request->title;
+            $notifyTemplate->tenant_id = auth()->user()->tenant_id;
+            $notifyTemplate->body = $request->body;
+            $notifyTemplate->save();
+
+            DB::commit();
+            return $this->success([], __(UPDATED_SUCCESSFULLY));
+        } catch (Exception $e) {
+            DB::rollBack();
+            return $this->error([], $e->getMessage());
+        }
+    }
+
+}

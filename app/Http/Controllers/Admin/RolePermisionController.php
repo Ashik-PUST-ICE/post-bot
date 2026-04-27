@@ -28,7 +28,7 @@ class RolePermisionController extends Controller
         } else {
             $data['pageTitle'] = __('Roles & Permission');
             $data['activeRole'] = 'active';
-            return view('admin.role_permission.rolelist', $data);
+            return view('sadmin.role_permission.rolelist', $data);
         }
     }
 
@@ -38,12 +38,12 @@ class RolePermisionController extends Controller
         $data['pageTitle'] = __('Add Roles');
         $data['activeSetting'] = 'active';
         $data['activeRolePermission'] = 'active';
-        return view('admin.setting.role_permission.add-new', $data);
+        return view('sadmin.setting.role_permission.add-new', $data);
     }
     public function edit($id)
     {
         $data['roleData'] = Role::find(decrypt($id));
-        return view('admin.role_permission.edit', $data)->render();
+        return view('sadmin.role_permission.edit', $data)->render();
     }
     public function permission($id)
     {
@@ -52,7 +52,7 @@ class RolePermisionController extends Controller
         $data['rolePermissions'] = Permission::join("role_has_permissions","role_has_permissions.permission_id","=","permissions.id")
             ->where("role_has_permissions.role_id",decrypt($id))
             ->get();
-        return view('admin.role_permission.permission', $data)->render();
+        return view('sadmin.role_permission.permission', $data)->render();
     }
 
     public function store(Request $request)
