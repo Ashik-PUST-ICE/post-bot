@@ -22,10 +22,11 @@ class RedirectIfAuthenticated
         foreach ($guards as $guard) {
 
             if (Auth::guard($guard)->check()) {
-                if (Auth::user()->role == USER_ROLE_ADMIN) {
+                $role = Auth::user()->role;
+                if ($role == USER_ROLE_SUPER_ADMIN || $role == USER_ROLE_SUPER_ADMIN_STAFF) {
+                    return redirect(route('super-admin.dashboard'));
+                } else if ($role == USER_ROLE_ADMIN || $role == USER_ROLE_ADMIN_STAFF) {
                     return redirect(route('admin.dashboard'));
-                } else if (Auth::user()->role == USER_ROLE_USER) {
-                    return redirect(route('home'));
                 } else {
                     Auth::logout();
                     return redirect("login")->with('error', __('Invalid user'));
