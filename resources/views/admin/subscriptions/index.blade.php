@@ -93,7 +93,7 @@
         <div class="col-md-6">
             @if (!is_null($userPackage))
             <div class="p-sm-25 p-15 bd-one bd-c-stroke bd-ra-10 bg-white h-100">
-                <form action="{{ route('super-admin.subscriptions.cancel') }}" method="post">
+                <form action="{{ route('admin.subscription.cancel') }}" method="post">
                     @csrf
                     <button type="button"
                         class="theme-btn-red subscriptionCancel border-0 bg-red bd-ra-10 fs-16 fw-600 lh-19 text-white p-13 mb-20"
@@ -196,7 +196,6 @@
     </div>
 </div>
 <!-- Choose a plan Modal Start -->
-@if (isAddonInstalled('KPISAAS') > 0)
 <div class="modal fade" id="choosePackageModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content bd-c-stroke-color bd-ra-12 py-25 px-20">
@@ -254,7 +253,7 @@
                         </div>
                     </div>
                     <div class="payment-method-wrap px-5">
-                        <form class="" action="{{ route('super-admin.payment.subscription.checkout') }}" method="POST"
+                        <form class="" action="{{ route('admin.subscription.checkout') }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" id="package_id" name="package_id">
@@ -281,16 +280,15 @@
     </div>
 </div>
 <!-- Payment Method Modal End -->
-@endif
 @if (!is_null(request()->id))
 <input type="hidden" id="requestPlanId" value="{{ request()->id }}">
 <input type="hidden" id="gatewayResponse" value="{{ $gateways }}">
 @endif
 <input type="hidden" id="requestCurrentPlan" value="{{ request()->current_plan }}">
-<input type="hidden" id="chooseAPlanRoute" value="{{ route('super-admin.subscriptions.get.package') }}">
-<input type="hidden" id="getCurrencyByGatewayRoute" value="{{ route('super-admin.subscriptions.get.currency') }}">
+<input type="hidden" id="chooseAPlanRoute" value="{{ route('admin.subscription.get.package') }}">
+<input type="hidden" id="getCurrencyByGatewayRoute" value="{{ route('admin.subscription.get.currency') }}">
 @endsection
 
 @push('script')
-<script src="{{ asset('user/custom/js/subscription-admin.js?v=1.5') }}"></script>
+<script src="{{ asset('admin/custom/js/subscription-admin.js?v=1.5') }}"></script>
 @endpush

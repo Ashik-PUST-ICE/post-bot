@@ -69,7 +69,9 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-        $user = User::where('tenant_id', auth()->user()->tenant_id)->findOrFail($id);
+        try {
+            DB::beginTransaction();
+            $user = User::where('tenant_id', auth()->user()->tenant_id)->findOrFail($id);
             $user->name   = $request->name;
             $user->email  = $request->email;
             $user->mobile = $request->mobile;
