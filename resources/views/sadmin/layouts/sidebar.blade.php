@@ -5,19 +5,12 @@
     <!--  -->
     <div class="zSidebar-wrap h-100">
         <!-- Logo -->
-        @if (auth()->user()->role == USER_ROLE_ADMIN)
-        <a href="{{ route('super-admin.dashboard') }}" class="zSidebar-logo"><img class="max-h-35"
-                src="{{ getSettingImage('app_logo') }}" alt="{{ getOption('app_name') }}" /></a>
-        @else
-        <a href="{{ route('super-admin.dashboard') }}" class="zSidebar-logo"><img class="max-h-35"
-                src="{{ getSettingImage('app_logo') }}" alt="{{ getOption('app_name') }}" /></a>
-        @endif
+        <a href="{{ route('super-admin.dashboard') }}" class="zSidebar-logo">
+            <img class="max-h-35" src="{{ getSettingImage('app_logo') }}" alt="{{ getOption('app_name') }}" />
+        </a>
         <!-- Menu & Logout -->
         <div class="zSidebar-fixed">
             <ul class="zSidebar-menu" id="sidebarMenu">
-                <li class="sidebar-divider">
-                    <p class="fs-10 fw-600 lh-12 text-para-text">{{ __('MAIN') }}</p>
-                </li>
                 <li>
                     <a href="{{ route('super-admin.dashboard') }}"
                         class="d-flex align-items-center cg-21 {{ $activeDashboard ?? '' }}">
@@ -92,34 +85,6 @@
                     </a>
                 </li>
             
-                <li>
-                    <a href="{{ route('super-admin.setting.profile.index') }}"
-                        class="d-flex align-items-center cg-21 {{ $activeProfile ?? '' }}">
-                        <div class="d-flex">
-                            <svg width="17" height="17" viewBox="0 0 17 17" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M8.50016 0.833313C9.51683 0.833313 10.4918 1.23718 11.2107 1.95607C11.9296 2.67496 12.3335 3.64998 12.3335 4.66665C12.3335 5.68331 11.9296 6.65833 11.2107 7.37722C10.4918 8.09611 9.51683 8.49998 8.50016 8.49998C7.4835 8.49998 6.50848 8.09611 5.78959 7.37722C5.0707 6.65833 4.66683 5.68331 4.66683 4.66665C4.66683 3.64998 5.0707 2.67496 5.78959 1.95607C6.50848 1.23718 7.4835 0.833313 8.50016 0.833313ZM8.50016 10.4166C12.736 10.4166 16.1668 12.1321 16.1668 14.25V16.1666H0.833496V14.25C0.833496 12.1321 4.26433 10.4166 8.50016 10.4166Z"
-                                    fill="#6E6F81"></path>
-                            </svg>
-                        </div>
-                        <span class="">{{ __('Profile') }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('super-admin.user.list') }}"
-                        class="d-flex align-items-center cg-21 {{ $activeUserList ?? '' }}">
-                        <div class="d-flex">
-                            <svg width="19" height="15" viewBox="0 0 19 15" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M2.85 6.375C3.89797 6.375 4.75 5.42207 4.75 4.25C4.75 3.07793 3.89797 2.125 2.85 2.125C1.80203 2.125 0.95 3.07793 0.95 4.25C0.95 5.42207 1.80203 6.375 2.85 6.375ZM16.15 6.375C17.198 6.375 18.05 5.42207 18.05 4.25C18.05 3.07793 17.198 2.125 16.15 2.125C15.102 2.125 14.25 3.07793 14.25 4.25C14.25 5.42207 15.102 6.375 16.15 6.375ZM17.1 7.4375H15.2C14.6775 7.4375 14.2055 7.67324 13.8611 8.05508C15.0575 8.78887 15.9066 10.1137 16.0906 11.6875H18.05C18.5755 11.6875 19 11.2127 19 10.625V9.5625C19 8.39043 18.148 7.4375 17.1 7.4375ZM9.5 7.4375C11.3377 7.4375 12.825 5.77402 12.825 3.71875C12.825 1.66348 11.3377 0 9.5 0C7.66234 0 6.175 1.66348 6.175 3.71875C6.175 5.77402 7.66234 7.4375 9.5 7.4375ZM11.78 8.5H11.5336C10.9161 8.83203 10.2303 9.03125 9.5 9.03125C8.76969 9.03125 8.08687 8.83203 7.46641 8.5H7.22C5.33187 8.5 3.8 10.2133 3.8 12.325V13.2812C3.8 14.1611 4.43828 14.875 5.225 14.875H13.775C14.5617 14.875 15.2 14.1611 15.2 13.2812V12.325C15.2 10.2133 13.6681 8.5 11.78 8.5ZM5.13891 8.05508C4.79453 7.67324 4.3225 7.4375 3.8 7.4375H1.9C0.852031 7.4375 0 8.39043 0 9.5625V10.625C0 11.2127 0.424531 11.6875 0.95 11.6875H2.90641C3.09344 10.1137 3.9425 8.78887 5.13891 8.05508Z"
-                                    fill="#5D697A"></path>
-                            </svg>
-                        </div>
-                        <span class="">{{ __('Users') }}</span>
-                    </a>
-                </li>
                 <li>
                     <a href="{{ route('super-admin.roles.index') }}"
                         class="d-flex align-items-center cg-21 {{ $activeRole ?? '' }}">

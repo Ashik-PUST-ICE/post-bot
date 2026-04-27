@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('sadmin.layouts.app')
 @push('style')
     <style>
         /* The total progress gets shown by event listeners */

@@ -10,9 +10,6 @@
         <!-- Menu & Logout -->
         <div class="zSidebar-fixed">
             <ul class="zSidebar-menu" id="sidebarMenu">
-                <li class="sidebar-divider">
-                    <p class="fs-10 fw-600 lh-13 text-para-text ls-2">{{ __('MAIN PAGES') }}</p>
-                </li>
                 <li>
                     <a href="{{ route('admin.dashboard') }}"
                         class="d-flex align-items-center cg-21 {{ @$activeDashboard }}">
@@ -45,56 +42,18 @@
                 @endcan
                 <li>
                     <a href="{{ route('admin.setting.profile.index') }}"
-                        class="d-flex align-items-center cg-21 menu-svg-stroke">
+                        class="d-flex align-items-center cg-21 {{ @$activeProfile }}">
                         <div class="d-flex">
-                            <svg width="20" height="16" viewBox="0 0 20 16" fill="none"
+                            <svg width="17" height="17" viewBox="0 0 17 17" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
-                                    d="M9.94697 14.6667L5.68335 14.6667C4.45517 14.6667 3.32131 14.0081 2.7128 12.9412L2.55667 12.6675C2.51522 12.5948 2.48327 12.5171 2.46162 12.4363C2.36438 12.0734 2.48388 11.6869 2.76897 11.4422L3.20644 11.0667C4.41167 10.0322 3.88398 8.06282 2.32297 7.76952L1.88021 7.68634C1.43526 7.60274 1.07767 7.27137 0.960494 6.83406C0.43108 4.85826 1.60361 2.82738 3.57941 2.29796V2.29796C4.44597 2.06577 4.87924 1.94967 5.25938 1.99411C5.80628 2.05803 6.30263 2.3446 6.63144 2.78626C6.85999 3.09326 6.97609 3.52654 7.20828 4.3931L7.59172 5.8241L8.28031 8.49782M8.28031 14.6667H15.4099C17.4554 14.6667 19.1136 13.0085 19.1136 10.963C19.1136 10.5102 18.854 10.0976 18.4458 9.90167L18.0397 9.70673C16.6078 9.01941 16.6078 6.98058 18.0397 6.29326L18.4458 6.09831C18.854 5.9024 19.1136 5.48977 19.1136 5.03703C19.1136 2.99153 17.4554 1.33333 15.4099 1.33333H12.2803C10.3947 1.33333 9.45188 1.33333 8.86609 1.91911C8.28031 2.5049 8.28031 3.44771 8.28031 5.33333V8.83333"
-                                    stroke="#7881A4" stroke-width="1.4" stroke-linecap="round" />
-                                <path d="M8.28027 4.66666L8.28027 14.6667" stroke="#7881A4" stroke-width="1.2"
-                                    stroke-linecap="round" stroke-dasharray="2 3" />
+                                    d="M8.50016 0.833313C9.51683 0.833313 10.4918 1.23718 11.2107 1.95607C11.9296 2.67496 12.3335 3.64998 12.3335 4.66665C12.3335 5.68331 11.9296 6.65833 11.2107 7.37722C10.4918 8.09611 9.51683 8.49998 8.50016 8.49998C7.4835 8.49998 6.50848 8.09611 5.78959 7.37722C5.0707 6.65833 4.66683 5.68331 4.66683 4.66665C4.66683 3.64998 5.0707 2.67496 5.78959 1.95607C6.50848 1.23718 7.4835 0.833313 8.50016 0.833313ZM8.50016 10.4166C12.736 10.4166 16.1668 12.1321 16.1668 14.25V16.1666H0.833496V14.25C0.833496 12.1321 4.26433 10.4166 8.50016 10.4166Z"
+                                    fill="#6E6F81"></path>
                             </svg>
                         </div>
-                        <span class="">{{ __('Others Settings') }}</span>
+                        <span class="">{{ __('Profile') }}</span>
                     </a>
                 </li>
-
-                
-                    @if (auth()->user()->role == USER_ROLE_ADMIN)
-                        <li>
-                            <a href="{{ route('admin.version-update') }}"
-                                class="{{ $activeVersionUpdate ?? '' }} d-flex align-items-center cg-10">
-                                <div class="d-flex {{ $activeVersionUpdate ?? '' }}">
-                                    <svg width="25" height="25" viewBox="0 0 25 25" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <g clip-path="url(#clip0_953_924)">
-                                            <path d="M1.88647 4.98682V10.9868H7.88647" stroke="white"
-                                                stroke-opacity="0.7" stroke-width="2" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                            <path d="M23.8865 20.9868V14.9868H17.8865" stroke="white"
-                                                stroke-opacity="0.7" stroke-width="2" stroke-linecap="round"
-                                                stroke-linejoin="round" />
-                                            <path
-                                                d="M21.3765 9.98689C20.8693 8.55368 20.0073 7.27229 18.871 6.26231C17.7347 5.25233 16.361 4.54666 14.8782 4.21115C13.3954 3.87564 11.8517 3.92123 10.3913 4.34367C8.93085 4.7661 7.60122 5.55161 6.52647 6.62689L1.88647 10.9869M23.8865 14.9869L19.2465 19.3469C18.1717 20.4222 16.8421 21.2077 15.3817 21.6301C13.9212 22.0526 12.3776 22.0981 10.8948 21.7626C9.41194 21.4271 8.03827 20.7215 6.90194 19.7115C5.76561 18.7015 4.90364 17.4201 4.39647 15.9869"
-                                                stroke="white" stroke-opacity="0.7" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round" />
-                                        </g>
-                                        <defs>
-                                            <clipPath id="clip0_953_924">
-                                                <rect width="24" height="24" fill="white"
-                                                    transform="translate(0.886475 0.986816)" />
-                                            </clipPath>
-                                        </defs>
-                                    </svg>
-
-                                </div>
-                                <span class="">{{ __('Version Update') }}</span>
-                            </a>
-                        </li>
-                    @endif
-            
-
             </ul>
             <a href="{{ route('logout') }}" class="d-inline-flex align-items-center cg-15 pt-17 pb-30 px-30">
                 <!-- <img src="assets/images/icon/logout.svg" alt="" /> -->

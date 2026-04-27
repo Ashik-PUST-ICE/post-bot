@@ -15,9 +15,6 @@
         <!-- Menu & Logout -->
         <div class="zSidebar-fixed">
             <ul class="zSidebar-menu" id="sidebarMenu">
-                <li class="sidebar-divider">
-                    <p class="fs-10 fw-600 lh-12 text-para-text">{{ __('MAIN') }}</p>
-                </li>
                 <li>
                     <a href="{{ route('super-admin.dashboard') }}"
                         class="d-flex align-items-center cg-21 {{ $activeDashboard ?? '' }}">
@@ -90,7 +87,7 @@
                         <span class="">{{ __('All Orders') }}</span>
                     </a>
                 </li>
-                <!-- <li>
+                <li>
                     <a href="{{ route('super-admin.setting.profile.index') }}"
                         class="d-flex align-items-center cg-21 {{ $activeProfile ?? '' }}">
                         <div class="d-flex">
@@ -117,7 +114,7 @@
                         </div>
                         <span class="">{{ __('Users') }}</span>
                     </a>
-                </li> -->
+                </li>
 
                 <li>
                     <a href="{{ route('super-admin.setting.application-settings') }}"

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('sadmin.layouts.app')
 @push('title')
     {{ __('Version Update') }}
 @endpush
