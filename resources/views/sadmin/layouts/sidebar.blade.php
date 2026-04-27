@@ -33,7 +33,7 @@
                     </a>
                 </li>
 
-                @if (isAddonInstalled('KPISAAS') > 0)
+            
                 <li>
                     <a href="{{ route('super-admin.packages.index') }}"
                         class="d-flex align-items-center cg-21 {{ $activePackageIndex ?? '' }}">
@@ -91,7 +91,7 @@
                         <span class="">{{ __('All Orders') }}</span>
                     </a>
                 </li>
-                @endif
+            
                 <li>
                     <a href="{{ route('super-admin.setting.profile.index') }}"
                         class="d-flex align-items-center cg-21 {{ $activeProfile ?? '' }}">

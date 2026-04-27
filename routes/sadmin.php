@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\RolePermisionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PackageController;
+use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\AddonUpdateController;
 use App\Http\Controllers\VersionUpdateController;
 use App\Models\Language;
@@ -163,30 +164,41 @@ Route::group(['prefix' => 'roles', 'as' => 'roles.'], function () {
         Route::get('get-info', [PackageController::class, 'getInfo'])->name('get.info');
         Route::post('destroy/{id}', [PackageController::class, 'destroy'])->name('destroy');
         Route::get('user-package', [PackageController::class, 'userPackage'])->name('user');
+        Route::post('assign', [PackageController::class, 'assignPackage'])->name('assign');
     });
 
-//users
-Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
-    Route::get('list', [UserController::class, 'userList'])->name('list');
-    Route::get('add-new', [UserController::class, 'userAdd'])->name('add-new');
-    Route::post('store', [UserController::class, 'store'])->name('store');
-    Route::get('details-{id}', [UserController::class, 'userDetails'])->name('details');
-    Route::get('edit-{id}', [UserController::class, 'edit'])->name('edit');
-    Route::post('update-{id}', [UserController::class, 'update'])->name('update')->middleware('isDemo');
-    Route::get('suspend-{id}', [UserController::class, 'userSuspend'])->name('suspend');
-    Route::post('delete-{id}', [UserController::class, 'userDelete'])->name('delete');
-    Route::get('activity-{id}', [UserController::class, 'userActivity'])->name('activity');
-});
+    Route::group(['prefix' => 'subscriptions', 'as' => 'subscriptions.'], function () {
+        Route::get('/', [SubscriptionController::class, 'index'])->name('index');
+        Route::get('orders', [SubscriptionController::class, 'orders'])->name('orders');
+        Route::get('orders/get-info', [SubscriptionController::class, 'orderGetInfo'])->name('orders.get.info');
+        Route::post('orders/payment-status-change', [SubscriptionController::class, 'orderPaymentStatusChange'])->name('order.payment.status.change');
+        Route::get('orders-payment-status', [SubscriptionController::class, 'ordersStatus'])->name('orders.payment.status');
+        Route::get('order-details/{id}', [SubscriptionController::class, 'orderDetails'])->name('order-details');
+        Route::post('cancel', [SubscriptionController::class, 'cancel'])->name('cancel');
+        Route::get('get-package', [SubscriptionController::class, 'getPackage'])->name('get.package');
+        Route::get('get-currency', [SubscriptionController::class, 'getCurrencyByGateway'])->name('get.currency');
+    });
 
-Route::group(['prefix' => 'notification', 'as' => 'notification.'], function () {
-    Route::get('notification-mark-all-as-read', [NotificationController::class, 'notificationMarkAllAsRead'])->name('notification-mark-all-as-read');
-    Route::get('view/{id}', [NotificationController::class, 'notificationView'])->name('view');
-    Route::get('notification-mark-as-read/{id}', [NotificationController::class, 'notificationMarkAsRead'])->name('notification-mark-as-read');
-});
+    Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
+        Route::get('list', [UserController::class, 'userList'])->name('list');
+        Route::get('add-new', [UserController::class, 'userAdd'])->name('add-new');
+        Route::post('store', [UserController::class, 'store'])->name('store');
+        Route::get('details-{id}', [UserController::class, 'userDetails'])->name('details');
+        Route::get('edit-{id}', [UserController::class, 'edit'])->name('edit');
+        Route::post('update-{id}', [UserController::class, 'update'])->name('update')->middleware('isDemo');
+        Route::get('suspend-{id}', [UserController::class, 'userSuspend'])->name('suspend');
+        Route::post('delete-{id}', [UserController::class, 'userDelete'])->name('delete');
+        Route::get('activity-{id}', [UserController::class, 'userActivity'])->name('activity');
+    });
 
+    Route::group(['prefix' => 'notification', 'as' => 'notification.'], function () {
+        Route::get('notification-mark-all-as-read', [NotificationController::class, 'notificationMarkAllAsRead'])->name('notification-mark-all-as-read');
+        Route::get('view/{id}', [NotificationController::class, 'notificationView'])->name('view');
+        Route::get('notification-mark-as-read/{id}', [NotificationController::class, 'notificationMarkAsRead'])->name('notification-mark-as-read');
+    });
 
-Route::get('version-update', [VersionUpdateController::class, 'versionFileUpdate'])->name('file-version-update');
-Route::post('version-update', [VersionUpdateController::class, 'versionFileUpdateStore'])->name('file-version-update-store');
-Route::get('version-update-execute', [VersionUpdateController::class, 'versionUpdateExecute'])->name('file-version-update-execute');
-Route::get('version-delete', [VersionUpdateController::class, 'versionFileUpdateDelete'])->name('file-version-delete');
+    Route::get('version-update', [VersionUpdateController::class, 'versionFileUpdate'])->name('file-version-update');
+    Route::post('version-update', [VersionUpdateController::class, 'versionFileUpdateStore'])->name('file-version-update-store');
+    Route::get('version-update-execute', [VersionUpdateController::class, 'versionUpdateExecute'])->name('file-version-update-execute');
+    Route::get('version-delete', [VersionUpdateController::class, 'versionFileUpdateDelete'])->name('file-version-delete');
 

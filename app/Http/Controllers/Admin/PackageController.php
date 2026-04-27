@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\PackageRequest;
 use App\Http\Services\PackageService;
 use App\Traits\ResponseTrait;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PackageController extends Controller
@@ -56,10 +57,18 @@ class PackageController extends Controller
         if ($request->ajax()) {
             return $this->packageService->getUserPackagesData($request);
         } else {
-            $data['pageTitle'] = __('User Packages');
+            $data['title'] = __('User Packages');
+            $data['users'] = User::where('role', USER_ROLE_ADMIN)->get();
+            $data['packages'] = $this->packageService->getAll();
             $data['subNavUserPackagesActiveClass'] = 'mm-active';
             $data['navSubscriptionActiveClass'] = 'active';
-            return view('saas.admin.packages.user', $data);
+            return view('sadmin.package.user', $data);
         }
     }
+
+    public function assignPackage(Request $request)
+    {
+        return $this->packageService->assignPackage($request);
+    }
 }
+

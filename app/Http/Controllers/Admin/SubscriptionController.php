@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Services\Addon\Saas\SubscriptionService;
+use App\Http\Services\SubscriptionService;
 use App\Http\Services\GatewayService;
 use App\Http\Services\OrderService;
 use App\Models\Bank;
@@ -39,7 +39,7 @@ class SubscriptionController extends Controller
             $request->merge(['duration_type' => 1]);
             $data['gateways'] = $this->getGateway($request);
         }
-        return view('addon.saas.admin.subscriptions.index', $data);
+        return view('sadmin.subscriptions.index', $data);
     }
 
     public function getGateway(Request $request)
@@ -61,7 +61,7 @@ class SubscriptionController extends Controller
             } else {
                 $data['endDate'] = Carbon::now()->addYear();
             }
-            return view('addon.saas.admin.subscriptions.partials.gateway-list', $data)->render();
+            return view('sadmin.subscriptions.partials.gateway-list', $data)->render();
         } catch (Exception $e) {
             return $this->error([], $e->getMessage());
         }
@@ -71,7 +71,7 @@ class SubscriptionController extends Controller
     {
         $data['packages'] = $this->subscriptionService->getAllPackages();
         $data['currentPackage'] = $this->subscriptionService->getCurrentPackage();
-        return view('addon.saas.admin.subscriptions.partials.package-list', $data)->render();
+        return view('sadmin.subscriptions.partials.package-list', $data)->render();
     }
 
     public function getCurrencyByGateway(Request $request)
