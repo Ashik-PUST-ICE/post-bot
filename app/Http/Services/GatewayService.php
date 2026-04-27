@@ -35,9 +35,9 @@ class GatewayService
     {
         $data['gateway'] = $this->getInfo($id);
         if ($data['gateway']->slug == 'bank') {
-            $data['banks'] = $this->banks();
+            $data['banks'] = $this->banks(auth()->user()->tenant_id);
         }
-        $data['image'] = $data['gateway']->icon;
+        $data['image'] = asset($data['gateway']->image);
         $currencies = GatewayCurrency::where('gateway_id', decrypt($id))->get();
         foreach ($currencies as $currency) {
             $currency->symbol;
@@ -48,12 +48,12 @@ class GatewayService
 
     public function getInfo($id)
     {
-        return Gateway::where('user_id', auth()->id())->findOrFail(decrypt($id));
+        return Gateway::where('tenant_id', auth()->user()->tenant_id)->findOrFail(decrypt($id));
     }
 
     public function banks($tenant_id = null)
     {
-        $tenant_id = isset($tenant_id) ? $tenant_id : $tenant_id;
+        $tenant_id = $tenant_id ?? auth()->user()->tenant_id;
         return Bank::where('tenant_id', $tenant_id)->get();
     }
 
@@ -61,7 +61,7 @@ class GatewayService
     {
         DB::beginTransaction();
         try {
-            $gateway = Gateway::where('user_id', auth()->id())->findOrFail(decrypt($request->id));
+            $gateway = Gateway::where('tenant_id', auth()->user()->tenant_id)->findOrFail(decrypt($request->id));
             if ($gateway->slug == 'bank') {
                 $bankIds = [];
                 for ($i = 0; $i < count($request->bank['name']); $i++) {

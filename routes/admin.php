@@ -101,6 +101,7 @@ Route::group(['prefix' => 'setting', 'as' => 'setting.'], function () {
 
     Route::group(['prefix' => 'gateway', 'as' => 'gateway.', 'middleware' => ['can:Manage Application Setting']], function () {
         Route::get('/', [GatewayController::class, 'index'])->name('index');
+        Route::get('edit/{id}', [GatewayController::class, 'edit'])->name('edit');
         Route::post('store', [GatewayController::class, 'store'])->name('store')->middleware('isDemo');
         Route::get('get-info', [GatewayController::class, 'getInfo'])->name('get.info');
         Route::get('get-currency-by-gateway', [GatewayController::class, 'getCurrencyByGateway'])->name('get.currency');

@@ -21,12 +21,25 @@ class GatewayController extends Controller
 
     public function index(Request $request)
     {
-        $data['title'] = __('Gateway');
+        $data['pageTitle'] = __('Gateway');
         $data['showManageApplicationSetting'] = 'show';
         $data['activeGatewaySetting'] = 'active';
         $data['gateways'] = $this->gatewayService->getAll(auth()->user()->tenant_id);
 
-        return view('admin.setting.gateway', $data);
+        return view('admin.setting.gateway.index', $data);
+    }
+
+    public function edit($id)
+    {
+        $data['pageTitle'] = __('Gateway Edit');
+        $data['showManageApplicationSetting'] = 'show';
+        $data['activeGatewaySetting'] = 'active';
+        $data['gateway'] = \App\Models\Gateway::where('tenant_id', auth()->user()->tenant_id)->findOrFail(decrypt($id));
+        $data['gatewaySettings'] = gatewaySettings($data['gateway']->slug);
+        $data['gatewayCurrencies'] = \App\Models\GatewayCurrency::where('gateway_id', $data['gateway']->id)->get();
+        $data['gatewayBanks'] = \App\Models\Bank::where('gateway_id', $data['gateway']->id)->get();
+
+        return view('admin.setting.gateway.edit', $data);
     }
 
     public function store(GatewayRequest $request)

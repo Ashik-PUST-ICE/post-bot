@@ -6,12 +6,7 @@
 
 <div data-aos="fade-up" data-aos-duration="1000" class="p-sm-30 p-15">
     <div class="row rg-20">
-        <div class="col-xl-3">
-            <div class="bg-white p-sm-25 p-15 bd-one bd-c-stroke bd-ra-8">
-                @include('admin.setting.sidebar')
-            </div>
-        </div>
-        <div class="col-xl-9">
+        <div class="col-xl-12">
             <div class="">
                 <h4 class="fs-18 fw-600 lh-18 text-textBlack pb-16">{{ __($title) }}</h4>
                 <div class="bg-white p-sm-25 p-15 bd-one bd-c-stroke bd-ra-8">
