@@ -4,7 +4,8 @@
     <button type="button" class="border-0 p-0 bg-transparent text-para-text" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-times"></i></button>
 </div>
 <!--  -->
-<form class="ajax " action="{{route('admin.role-permission.permission-update')}}" method="POST"
+@php($routePrefix = auth()->user()->role == USER_ROLE_SUPER_ADMIN ? 'super-admin.' : 'admin.')
+<form class="ajax " action="{{route($routePrefix . 'roles.permission-update')}}" method="POST"
       enctype="multipart/form-data" data-handler="commonResponse">
     @csrf
     <div class="p-sm-25 p-15 bd-one bd-c-stroke bd-ra-10 bg-white mb-25">

@@ -120,6 +120,15 @@
                         <span class="">{{ __('Users') }}</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('super-admin.roles.index') }}"
+                        class="d-flex align-items-center cg-21 {{ $activeRole ?? '' }}">
+                        <div class="d-flex">
+                            <i class="fa-solid fa-user-shield text-para-text"></i>
+                        </div>
+                        <span class="">{{ __('Roles & Permission') }}</span>
+                    </a>
+                </li>
 
 
 

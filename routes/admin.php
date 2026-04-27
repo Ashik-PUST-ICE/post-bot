@@ -34,9 +34,9 @@ Route::group(['prefix' => 'roles', 'as' => 'roles.', 'middleware' => ['can:Manag
     Route::post('store', [RolePermisionController::class, 'store'])->name('store');
     Route::get('edit/{id}', [RolePermisionController::class, 'edit'])->name('edit');
     Route::post('update/{id}', [RolePermisionController::class, 'update'])->name('update');
-    Route::post('destroy/{id}', [RolePermisionController::class, 'destroy'])->name('destroy');
-    Route::get('permissions/{id}', [RolePermisionController::class, 'permissions'])->name('permissions');
-    Route::post('permissions/{id}', [RolePermisionController::class, 'updatePermissions'])->name('update.permissions');
+    Route::post('destroy/{id}', [RolePermisionController::class, 'delete'])->name('destroy');
+    Route::get('permission/{id}', [RolePermisionController::class, 'permission'])->name('permission');
+    Route::post('permission-update', [RolePermisionController::class, 'permissionUpdate'])->name('permission-update');
 });
 // Manage role Route end
 

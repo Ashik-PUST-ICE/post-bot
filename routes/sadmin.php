@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\LanguageController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\RolePermisionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AddonUpdateController;
 use App\Http\Controllers\VersionUpdateController;
@@ -141,6 +142,16 @@ Route::group(['prefix' => 'setting', 'as' => 'setting.'], function () {
         Route::post('password-update', [ProfileController::class, 'passwordUpdate'])->name('password.update')->middleware('isDemo');
     });
     });
+});
+
+Route::group(['prefix' => 'roles', 'as' => 'roles.'], function () {
+    Route::get('/', [RolePermisionController::class, 'list'])->name('index');
+    Route::get('add-new', [RolePermisionController::class, 'addNew'])->name('add-new');
+    Route::post('store', [RolePermisionController::class, 'store'])->name('store');
+    Route::get('edit/{id}', [RolePermisionController::class, 'edit'])->name('edit');
+    Route::post('destroy/{id}', [RolePermisionController::class, 'delete'])->name('destroy');
+    Route::get('permission/{id}', [RolePermisionController::class, 'permission'])->name('permission');
+    Route::post('permission-update', [RolePermisionController::class, 'permissionUpdate'])->name('permission-update');
 });
 
 

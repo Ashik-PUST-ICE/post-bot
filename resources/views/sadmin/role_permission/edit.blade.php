@@ -1,10 +1,11 @@
 <!-- Top -->
 <div class="d-flex justify-content-between align-items-center bd-b-one bd-c-light-border pb-20 mb-20">
-    <h4 class="fs-18 fw-600 lh-18 text-textBlack">{{__("Add Role")}}</h4>
+    <h4 class="fs-18 fw-600 lh-18 text-textBlack">{{__("Edit Role")}}</h4>
     <button type="button" class="border-0 p-0 bg-transparent text-para-text" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-times"></i></button>
 </div>
 <!--  -->
-<form class="ajax reset" action="{{route('admin.role-permission.store')}}" method="POST"
+@php($routePrefix = auth()->user()->role == USER_ROLE_SUPER_ADMIN ? 'super-admin.' : 'admin.')
+<form class="ajax reset" action="{{route($routePrefix . 'roles.store')}}" method="POST"
       enctype="multipart/form-data" data-handler="commonResponse">
     @csrf
     <div class="row rg-20 pb-25">
