@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SMSConfigRequest;
@@ -46,11 +46,7 @@ class SettingController extends Controller
         $data['subApplicationSettingActiveClass'] = 'active';
         $data['timezones'] = getTimeZone();
 
-        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-            return view('sadmin.setting.general_settings.application-settings')->with($data);
-        } else {
-            return view('admin.setting.general_settings.application-settings')->with($data);
-        }
+        return view('sadmin.setting.general_settings.application-settings')->with($data);
     }
 
     public function configurationSetting()
@@ -60,63 +56,27 @@ class SettingController extends Controller
         $data['showManageApplicationSetting'] = 'show';
         $data['activeConfigurationSetting'] = 'active';
 
-        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-            return view('sadmin.setting.general_settings.configuration')->with($data);
-        } else {
-            return view('admin.setting.general_settings.configuration')->with($data);
-        }
+        return view('sadmin.setting.general_settings.configuration')->with($data);
     }
 
     public function configurationSettingConfigure(Request $request)
     {
         if ($request->key == 'email_verification_status' || $request->key == 'app_mail_status') {
-            if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-                return view('sadmin.setting.general_settings.configuration.form.email_configuration');
-            } else {
-                return view('admin.setting.general_settings.configuration.form.email_configuration');
-            }
+            return view('sadmin.setting.general_settings.configuration.form.email_configuration');
         } else if ($request->key == 'app_sms_status') {
-            if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-                return view('sadmin.setting.general_settings.configuration.form.sms_configuration');
-            } else {
-                return view('admin.setting.general_settings.configuration.form.sms_configuration');
-            }
+            return view('sadmin.setting.general_settings.configuration.form.sms_configuration');
         } else if ($request->key == 'pusher_status') {
-            if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-                return view('sadmin.setting.general_settings.configuration.form.pusher_configuration');
-            } else {
-                return view('admin.setting.general_settings.configuration.form.pusher_configuration');
-            }
+            return view('sadmin.setting.general_settings.configuration.form.pusher_configuration');
         } else if ($request->key == 'google_login_status') {
-            if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-                return view('sadmin.setting.general_settings.configuration.form.social_login_google_configuration');
-            } else {
-                return view('admin.setting.general_settings.configuration.form.social_login_google_configuration');
-            }
+            return view('sadmin.setting.general_settings.configuration.form.social_login_google_configuration');
         } else if ($request->key == 'facebook_login_status') {
-            if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-                return view('sadmin.setting.general_settings.configuration.form.social_login_facebook_configuration');
-            } else {
-                return view('admin.setting.general_settings.configuration.form.social_login_facebook_configuration');
-            }
+            return view('sadmin.setting.general_settings.configuration.form.social_login_facebook_configuration');
         } else if ($request->key == 'google_recaptcha_status') {
-            if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-                return view('sadmin.setting.general_settings.configuration.form.google_recaptcha_configuration');
-            } else {
-                return view('admin.setting.general_settings.configuration.form.google_recaptcha_configuration');
-            }
+            return view('sadmin.setting.general_settings.configuration.form.google_recaptcha_configuration');
         } else if ($request->key == 'google_analytics_status') {
-            if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-                return view('sadmin.setting.general_settings.configuration.form.google_analytics_configuration');
-            } else {
-                return view('admin.setting.general_settings.configuration.form.google_analytics_configuration');
-            }
+            return view('sadmin.setting.general_settings.configuration.form.google_analytics_configuration');
         } else if ($request->key == 'cookie_status') {
-            if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-                return view('sadmin.setting.general_settings.configuration.form.cookie_configuration');
-            } else {
-                return view('admin.setting.general_settings.configuration.form.cookie_configuration');
-            }
+            return view('sadmin.setting.general_settings.configuration.form.cookie_configuration');
         }
     }
 
@@ -238,11 +198,7 @@ class SettingController extends Controller
         $data['subStorageSettingActiveClass'] = 'active';
         $data['timezones'] = getTimeZone();
 
-        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-            return view('sadmin.setting.general_settings.storage-setting')->with($data);
-        } else {
-            return view('admin.setting.general_settings.storage-setting')->with($data);
-        }
+        return view('sadmin.setting.general_settings.storage-setting')->with($data);
     }
 
     public function storageSettingsUpdate(Request $request)
@@ -310,11 +266,7 @@ class SettingController extends Controller
         $data['subNavGeneralSettingActiveClass'] = 'mm-active';
         $data['subSocialLoginSettingActiveClass'] = 'active';
 
-        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-            return view('sadmin.setting.general_settings.social-login-settings')->with($data);
-        } else {
-            return view('admin.setting.general_settings.social-login-settings')->with($data);
-        }
+        return view('sadmin.setting.general_settings.social-login-settings')->with($data);
     }
 
     public function logoSettings()
@@ -326,11 +278,7 @@ class SettingController extends Controller
         $data['activeApplicationSetting'] = 'active';
         $data['subLogoSettingActiveClass'] = 'active';
 
-        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-            return view('sadmin.setting.general_settings.logo-settings')->with($data);
-        } else {
-            return view('admin.setting.general_settings.logo-settings')->with($data);
-        }
+        return view('sadmin.setting.general_settings.logo-settings')->with($data);
     }
 
     public function googleRecaptchaSetting()
@@ -339,7 +287,7 @@ class SettingController extends Controller
         $data['navSettingParentActiveClass'] = 'mm-active';
         $data['subNavGeneralSettingActiveClass'] = 'mm-active';
         $data['subGoogleRecaptchaSettingActiveClass'] = 'active';
-        return view('admin.setting.general_settings.google-recaptcha-settings')->with($data);
+        return view('sadmin.setting.general_settings.google-recaptcha-settings')->with($data);
     }
 
     public function mailConfiguration()
@@ -348,7 +296,7 @@ class SettingController extends Controller
         $data['navSettingParentActiveClass'] = 'mm-active';
         $data['subNavGeneralSettingActiveClass'] = 'mm-active';
         $data['subMailConfigurationActiveClass'] = 'active';
-        return view('admin.setting.general_settings.mail-configuration', $data);
+        return view('sadmin.setting.general_settings.mail-configuration', $data);
     }
 
     public function mailTest(Request $request)
@@ -369,11 +317,7 @@ class SettingController extends Controller
         $data['activeApplicationSetting'] = 'active';
         $data['subMaintenanceModeActiveClass'] = 'active';
 
-        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-            return view('sadmin.setting.general_settings.maintenance-mode', $data);
-        } else {
-            return view('admin.setting.general_settings.maintenance-mode', $data);
-        }
+        return view('sadmin.setting.general_settings.maintenance-mode', $data);
     }
 
     public function maintenanceModeChange(Request $request)
@@ -433,7 +377,7 @@ class SettingController extends Controller
         $data['navSettingParentActiveClass'] = 'mm-active';
         $data['subContactUsCMSSettingActiveClass'] = 'mm-active';
         $data['subContactUsCMSActiveClass'] = 'active';
-        return view('admin.setting.contact-us', $data);
+        return view('sadmin.setting.contact-us', $data);
     }
 
     public function homeSettings()
@@ -442,7 +386,7 @@ class SettingController extends Controller
         $data['navSettingParentActiveClass'] = 'mm-active';
         $data['subHomeSettingActiveClass'] = 'mm-active';
         $data['subHomeActiveClass'] = 'active';
-        return view('admin.setting.home.home-settings', $data);
+        return view('sadmin.setting.home.home-settings', $data);
     }
 
     public function beAContributor()
@@ -450,7 +394,7 @@ class SettingController extends Controller
         $data['title'] = 'Be A Contributor CMS';
         $data['navSettingParentActiveClass'] = 'mm-active';
         $data['subNavBeAContributorActiveClass'] = 'active';
-        return view('admin.setting.be-a-contributor')->with($data);
+        return view('sadmin.setting.be-a-contributor')->with($data);
     }
 
     public function cacheSettings()
@@ -461,11 +405,7 @@ class SettingController extends Controller
         $data['activeApplicationSetting'] = 'active';
         $data['subCacheActiveClass'] = 'active';
 
-        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-            return view('sadmin.setting.cache-settings', $data);
-        } else {
-            return view('admin.setting.cache-settings', $data);
-        }
+        return view('sadmin.setting.cache-settings', $data);
     }
 
     public function cacheUpdate($id)
@@ -518,7 +458,7 @@ class SettingController extends Controller
         $data['title'] = __('Features Settings');
         $data['subNavGeneralSettingActiveClass'] = 'mm-active';
         $data['subCookieActiveClass'] = 'active';
-        return view('admin.setting.general_settings.cookie-settings', $data);
+        return view('sadmin.setting.general_settings.cookie-settings', $data);
     }
 
     public function commonSettingUpdate(Request $request)
@@ -537,11 +477,7 @@ class SettingController extends Controller
         $data['navAPIParentActiveClass'] = 'mm-active';
         $data['subCoogleAnalyticsCompareApiActiveClass'] = 'active';
 
-        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-            return view('sadmin.setting.general_settings.google_analytics_settings', $data);
-        } else {
-            return view('admin.setting.general_settings.google_analytics_settings', $data);
-        }
+        return view('sadmin.setting.general_settings.google_analytics_settings', $data);
     }
 
     public function securitySettings()
@@ -549,7 +485,7 @@ class SettingController extends Controller
         $data['title'] = 'Security Settings';
         $data['subNavGeneralSettingActiveClass'] = 'mm-active';
         $data['subSecurityGatewayActiveClass'] = 'active';
-        return view('admin.setting.general_settings.security-settings', $data);
+        return view('sadmin.setting.general_settings.security-settings', $data);
     }
 
     public function customCSS()
@@ -559,7 +495,7 @@ class SettingController extends Controller
         $data['activeApplicationSetting'] = 'active';
         $data['subCustomCssActiveClass'] = 'active-color-one';
         $data['custom_css'] = getOption('custom_css');
-        return view('admin.setting.general_settings.custom-css', $data);
+        return view('sadmin.setting.general_settings.custom-css', $data);
     }
     public function termsAndCondition()
     {

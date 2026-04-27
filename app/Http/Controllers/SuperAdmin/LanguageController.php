@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\LanguageRequest;
@@ -32,11 +32,7 @@ class LanguageController extends Controller
         $data['showManageApplicationSetting'] = 'show';
         $data['activeLanguagesSetting'] = 'active';
 
-        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-            return view('sadmin.setting.languages.index', $data);
-        } else {
-            return view('admin.setting.languages.index', $data);
-        }
+        return view('sadmin.setting.languages.index', $data);
     }
 
     public function store(LanguageRequest $request)
@@ -48,11 +44,7 @@ class LanguageController extends Controller
     {
         $data['language'] = Language::findOrFail($id);
 
-        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-            return view('sadmin.setting.languages.edit-form', $data);
-        } else {
-            return view('admin.setting.languages.edit-form', $data);
-        }
+        return view('sadmin.setting.languages.edit-form', $data);
     }
 
     public function update(Request $request, $id)

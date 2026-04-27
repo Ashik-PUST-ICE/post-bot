@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Logger;
@@ -55,7 +55,7 @@ class AddonUpdateController extends Controller
             $data['uploadedFile'] = '';
         }
 
-        return view('admin.version_update.addon.create', $data);
+        return view('sadmin.version_update.addon.create', $data);
     }
 
     public function addonFileStore(Request $request)

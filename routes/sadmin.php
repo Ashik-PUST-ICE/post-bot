@@ -1,19 +1,19 @@
 <?php
 
-use App\Http\Controllers\Admin\CurrencyController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\EmailTemplateController;
-use App\Http\Controllers\Admin\GatewayController;
-use App\Http\Controllers\Admin\LanguageController;
-use App\Http\Controllers\Admin\NotificationController;
-use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\Admin\SettingController;
-use App\Http\Controllers\Admin\RolePermisionController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\PackageController;
-use App\Http\Controllers\Admin\SubscriptionController;
-use App\Http\Controllers\AddonUpdateController;
-use App\Http\Controllers\VersionUpdateController;
+use App\Http\Controllers\SuperAdmin\CurrencyController;
+use App\Http\Controllers\SuperAdmin\DashboardController;
+use App\Http\Controllers\SuperAdmin\EmailTemplateController;
+use App\Http\Controllers\SuperAdmin\GatewayController;
+use App\Http\Controllers\SuperAdmin\LanguageController;
+use App\Http\Controllers\SuperAdmin\NotificationController;
+use App\Http\Controllers\SuperAdmin\ProfileController;
+use App\Http\Controllers\SuperAdmin\SettingController;
+use App\Http\Controllers\SuperAdmin\RolePermisionController;
+use App\Http\Controllers\SuperAdmin\UserController;
+use App\Http\Controllers\SuperAdmin\PackageController;
+use App\Http\Controllers\SuperAdmin\SubscriptionController;
+use App\Http\Controllers\SuperAdmin\AddonUpdateController;
+use App\Http\Controllers\SuperAdmin\VersionUpdateController;
 use App\Models\Language;
 use Illuminate\Support\Facades\Route;
 

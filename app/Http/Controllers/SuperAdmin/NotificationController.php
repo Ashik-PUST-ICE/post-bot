@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Notification;
@@ -27,7 +27,7 @@ class NotificationController extends Controller
             ];
             NotificationSeen::firstOrCreate($dataArray);
         }
-        return view('admin.notification.view', $data);
+        return view('sadmin.notification.view', $data);
     }
     public function notificationDelete($id)
     {
@@ -48,7 +48,7 @@ class NotificationController extends Controller
 
     public function allNotification(){
         $data['pageTitle'] = 'All Notification';
-        return view('admin.notification.all', $data);
+        return view('sadmin.notification.all', $data);
     }
     public function notificationMarkAsRead($id){
         DB::beginTransaction();
@@ -98,11 +98,7 @@ class NotificationController extends Controller
 
         $data['notifyTemplates'] = NotificationTemplates::where('tenant_id', auth()->user()->tenant_id)->get();
 
-        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-            return view('sadmin.setting.notify_temp.notify-temp', $data);
-        } else {
-            return view('admin.setting.notify_temp.notify-temp', $data);
-        }
+        return view('sadmin.setting.notify_temp.notify-temp', $data);
     }
 
     public function notifyTemplateConfig(Request $request)

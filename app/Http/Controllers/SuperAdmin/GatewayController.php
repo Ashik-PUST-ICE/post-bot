@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\GatewayRequest;
@@ -26,11 +26,7 @@ class GatewayController extends Controller
         $data['activeGatewaySetting'] = 'active';
         $data['gateways'] = $this->gatewayService->getAll();
 
-        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-            return view('sadmin.setting.gateway', $data);
-        } else {
-            return view('admin.setting.gateway', $data);
-        }
+        return view('sadmin.setting.gateway', $data);
     }
 
     public function store(GatewayRequest $request)

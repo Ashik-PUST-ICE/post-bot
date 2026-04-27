@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Logger;
@@ -139,7 +139,7 @@ class VersionUpdateController extends Controller
         }
 
 
-        return view('admin.version_update.create', $data);
+        return view('sadmin.version_update.create', $data);
     }
 
     public function versionFileUpdateStore(Request $request)
@@ -305,7 +305,7 @@ class VersionUpdateController extends Controller
     {
         $data['title'] = __('Version Update');
 
-        return view('admin.version_update.update-path-file', $data);
+        return view('sadmin.version_update.update-path-file', $data);
 
     }
 

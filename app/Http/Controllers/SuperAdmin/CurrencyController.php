@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CurrencyRequest;
@@ -30,22 +30,14 @@ class CurrencyController extends Controller
         $data['showManageApplicationSetting'] = 'show';
         $data['activeCurrenciesSetting'] = 'active';
 
-        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-            return view('sadmin.setting.currencies.index', $data);
-        } else {
-            return view('admin.setting.currencies.index', $data);
-        }
+        return view('sadmin.setting.currencies.index', $data);
     }
 
     public function edit($id)
     {
         $data['currency'] = Currency::findOrFail($id);
 
-        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-            return view('sadmin.setting.currencies.edit-form', $data);
-        } else {
-            return view('admin.setting.currencies.edit-form', $data);
-        }
+        return view('sadmin.setting.currencies.edit-form', $data);
     }
 
 

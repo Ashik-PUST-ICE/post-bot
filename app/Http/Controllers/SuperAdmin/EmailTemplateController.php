@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Services\SettingsService;
@@ -25,11 +25,7 @@ class EmailTemplateController extends Controller
         $data['activeEmailSetting'] = 'active';
 
         $data['emailTemplates'] = $this->settingsService->getEmailTemplate(auth()->user()->tenant_id);
-        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-            return view('sadmin.setting.email_temp.email-temp', $data);
-        } else {
-            return view('admin.setting.email_temp.email-temp', $data);
-        }
+        return view('sadmin.setting.email_temp.email-temp', $data);
     }
 
     public function emailTemplateConfig(Request $request)

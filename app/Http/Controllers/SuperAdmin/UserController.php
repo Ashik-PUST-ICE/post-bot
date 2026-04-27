@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -18,23 +18,16 @@ class UserController extends Controller
 
     public function index()
     {
-        if (auth()->user()->role != USER_ROLE_ADMIN) {
-            abort(403, 'Unauthorized');
-        }
-
         $data['title'] = __('Users');
         $data['showManageModerator'] = 'show';
         $data['activeUsers'] = 'active';
         $data['users'] = User::where('role', USER_ROLE_USER)->with('roles')->orderBy('id', 'DESC')->get();
         $data['roles'] = Role::where('status', STATUS_ACTIVE)->get();
-        return view('admin.moderators.index', $data);
+        return view('sadmin.moderators.index', $data);
     }
 
     public function store(Request $request)
     {
-        if (auth()->user()->role != USER_ROLE_ADMIN) {
-            abort(403, 'Unauthorized');
-        }
 
         $request->validate([
             'name'     => 'required|string|max:255',
@@ -75,54 +68,14 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-
-        // Super admin editing a user
-        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-            return view('sadmin.user.edit-user', [
-                'user'  => $user,
-                'title' => __('Edit User'),
-            ]);
-        }
-
-        if (auth()->user()->role != USER_ROLE_ADMIN) {
-            abort(403, 'Unauthorized');
-        }
-
-        $roles = Role::where('status', STATUS_ACTIVE)->get();
-        return view('admin.moderators.edit-form', compact('user', 'roles'));
+        return view('sadmin.user.edit-user', [
+            'user'  => $user,
+            'title' => __('Edit User'),
+        ]);
     }
 
     public function update(Request $request, $id)
     {
-        // Super admin update — simpler validation (no roles field in sadmin form)
-        if (auth()->user()->role == USER_ROLE_SUPER_ADMIN) {
-            $request->validate([
-                'name'   => 'required|string|max:255',
-                'email'  => 'required|email|unique:users,email,' . $id,
-                'mobile' => 'required|string|unique:users,mobile,' . $id,
-            ]);
-
-            try {
-                $user         = User::findOrFail($id);
-                $user->name   = $request->name;
-                $user->email  = $request->email;
-                $user->mobile = $request->mobile;
-
-                if ($request->filled('country'))                  $user->country = $request->country;
-                if ($request->filled('address'))                  $user->address = $request->address;
-                if ($request->has('email_verification_status'))   $user->email_verification_status = $request->email_verification_status;
-                if ($request->has('phone_verification_status'))   $user->phone_verification_status = $request->phone_verification_status;
-
-                $user->save();
-                return redirect()->route('super-admin.user.list')->with('success', __(UPDATED_SUCCESSFULLY));
-            } catch (\Exception $e) {
-                return redirect()->back()->withInput()->with('error', __('Something went wrong'));
-            }
-        }
-
-        if (auth()->user()->role != USER_ROLE_ADMIN) {
-            abort(403, 'Unauthorized');
-        }
 
         $request->validate([
             'name'    => 'required|string|max:255',
@@ -157,9 +110,6 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        if (auth()->user()->role != USER_ROLE_ADMIN) {
-            abort(403, 'Unauthorized');
-        }
 
         try {
             DB::beginTransaction();

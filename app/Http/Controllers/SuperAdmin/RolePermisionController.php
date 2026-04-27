@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Services\RolePermissionService;
@@ -28,8 +28,7 @@ class RolePermisionController extends Controller
         } else {
             $data['pageTitle'] = __('Roles & Permission');
             $data['activeRole'] = 'active';
-            $viewPath = auth()->user()->role == USER_ROLE_SUPER_ADMIN ? 'sadmin' : 'admin';
-            return view($viewPath . '.role_permission.rolelist', $data);
+            return view('sadmin.role_permission.rolelist', $data);
         }
     }
 
@@ -39,14 +38,12 @@ class RolePermisionController extends Controller
         $data['pageTitle'] = __('Add Roles');
         $data['activeSetting'] = 'active';
         $data['activeRolePermission'] = 'active';
-        $viewPath = auth()->user()->role == USER_ROLE_SUPER_ADMIN ? 'sadmin' : 'admin';
-        return view($viewPath . '.role_permission.add-new', $data);
+        return view('sadmin.role_permission.add-new', $data);
     }
     public function edit($id)
     {
         $data['roleData'] = Role::find(decrypt($id));
-        $viewPath = auth()->user()->role == USER_ROLE_SUPER_ADMIN ? 'sadmin' : 'admin';
-        return view($viewPath . '.role_permission.edit', $data)->render();
+        return view('sadmin.role_permission.edit', $data)->render();
     }
     public function permission($id)
     {
@@ -55,8 +52,7 @@ class RolePermisionController extends Controller
         $data['rolePermissions'] = Permission::join("role_has_permissions","role_has_permissions.permission_id","=","permissions.id")
             ->where("role_has_permissions.role_id",decrypt($id))
             ->get();
-        $viewPath = auth()->user()->role == USER_ROLE_SUPER_ADMIN ? 'sadmin' : 'admin';
-        return view($viewPath . '.role_permission.permission', $data)->render();
+        return view('sadmin.role_permission.permission', $data)->render();
     }
 
     public function store(Request $request)

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\FileManager;
@@ -14,7 +14,7 @@ class PaymentGatewayController extends Controller
         $data['pageTitle'] = 'Paypal Payment';
         $data['subNavPaypalActiveClass'] = 'active';
         $data['gateway'] = Gateway::where('gateway_name', 'paypal')->first();
-        return view('admin.gateways.paypal')->with($data);
+        return view('sadmin.gateways.paypal')->with($data);
     }
 
     public function paypalUpdate(Request $request)
@@ -62,7 +62,7 @@ class PaymentGatewayController extends Controller
         $data['pageTitle'] = 'Stripe Payment';
         $data['subNavStripeActiveClass'] = 'active';
         $data['gateway'] = Gateway::where('gateway_name', 'stripe')->first();
-        return view('admin.gateways.stripe')->with($data);
+        return view('sadmin.gateways.stripe')->with($data);
     }
 
     public function stripeUpdate(Request $request)
@@ -112,7 +112,7 @@ class PaymentGatewayController extends Controller
         $data['pageTitle'] = 'Razorpay Payment';
         $data['subNavRazorpayActiveClass'] = 'active';
         $data['gateway'] = Gateway::where('gateway_name', 'razorpay')->first();
-        return view('admin.gateways.razorpay')->with($data);
+        return view('sadmin.gateways.razorpay')->with($data);
     }
 
     public function razorpayUpdate(Request $request)
@@ -160,7 +160,7 @@ class PaymentGatewayController extends Controller
         $data['pageTitle'] = 'Instamojo Payment';
         $data['subNavInstamojoActiveClass'] = 'active';
         $data['gateway'] = Gateway::where('gateway_name', 'instamojo')->first();
-        return view('admin.gateways.instamojo')->with($data);
+        return view('sadmin.gateways.instamojo')->with($data);
     }
 
     public function instamojoUpdate(Request $request)
@@ -210,7 +210,7 @@ class PaymentGatewayController extends Controller
         $data['pageTitle'] = 'Mollie Payment';
         $data['subNavMollieActiveClass'] = 'active';
         $data['gateway'] = Gateway::where('gateway_name', 'mollie')->first();
-        return view('admin.gateways.mollie')->with($data);
+        return view('sadmin.gateways.mollie')->with($data);
     }
 
     public function mollieUpdate(Request $request)
@@ -258,7 +258,7 @@ class PaymentGatewayController extends Controller
         $data['pageTitle'] = 'Paystack Payment';
         $data['subNavPaystackActiveClass'] = 'active';
         $data['gateway'] = Gateway::where('gateway_name', 'paystack')->first();
-        return view('admin.gateways.paystack')->with($data);
+        return view('sadmin.gateways.paystack')->with($data);
     }
 
     public function paystackUpdate(Request $request)
@@ -305,7 +305,7 @@ class PaymentGatewayController extends Controller
         $data['pageTitle'] = 'SSLCOMMERZ Payment';
         $data['subNavSSLCOMMERZActiveClass'] = 'active';
         $data['gateway'] = Gateway::where('gateway_name', 'sslcommerz')->first();
-        return view('admin.gateways.sslcommerz')->with($data);
+        return view('sadmin.gateways.sslcommerz')->with($data);
     }
 
     public function sslcommerzUpdate(Request $request)
@@ -355,7 +355,7 @@ class PaymentGatewayController extends Controller
         $data['pageTitle'] = 'Bank Payment';
         $data['subNavBankActiveClass'] = 'active';
         $data['gateway'] = Gateway::where('gateway_name', 'bank')->first();
-        return view('admin.gateways.bank')->with($data);
+        return view('sadmin.gateways.bank')->with($data);
     }
 
     public function bankUpdate(Request $request)
@@ -404,7 +404,7 @@ class PaymentGatewayController extends Controller
         $data['pageTitle'] = 'Wallet Payment';
         $data['subNavWalletActiveClass'] = 'active';
         $data['gateway'] = Gateway::where('gateway_name', 'wallet')->first();
-        return view('admin.gateways.wallet')->with($data);
+        return view('sadmin.gateways.wallet')->with($data);
     }
 
     public function walletUpdate(Request $request)
