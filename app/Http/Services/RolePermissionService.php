@@ -14,21 +14,17 @@ class RolePermissionService
 
     public function getAll()
     {
-        return Role::where('user_id', auth()->id())->get();
+        return Role::where('tenant_id', auth()->user()->tenant_id)->get();
     }
 
     public function getRoleList()
     {
-        $data = Role::where('user_id', auth()->id())
-            ->withCount('users')->get();
+        $data = Role::where('tenant_id', auth()->user()->tenant_id)->get();
 
         return datatables($data)
             ->addIndexColumn()
             ->editColumn('role_name', function ($data) {
                 return "<p>$data->name</p>";
-            })
-            ->editColumn('userCount', function ($data) {
-                return "<p>$data->users_count</p>";
             })
             ->editColumn('status', function ($data) {
                 if ($data->status == STATUS_ACTIVE) {
@@ -38,8 +34,14 @@ class RolePermissionService
                 }
             })
             ->addColumn('action', function ($data) {
-                $routeNamePrefix = str_contains(request()->route()->getName(), 'super-admin') ? 'super-admin.roles.' : 'admin.roles.';
-                if ($data->id == 1) {
+                $currentRouteName = request()->route() ? request()->route()->getName() : '';
+                $routeNamePrefix = str_contains($currentRouteName, 'super-admin') ? 'super-admin.roles.' : 'admin.roles.';
+                if (str_contains($currentRouteName, 'super-admin')) {
+                    $systemRoles = [USER_ROLE_SUPER_ADMIN, USER_ROLE_SUPER_ADMIN_STAFF];
+                } else {
+                    $systemRoles = [USER_ROLE_ADMIN, USER_ROLE_ADMIN_STAFF];
+                }
+                if (in_array($data->id, $systemRoles)) {
                     return '<div class="dropdown dropdown-one">
                            <button class="dropdown-toggle p-0 bg-transparent w-22 h-22 ms-auto bd-one bd-c-light-border rounded-circle fs-13 text-textBlack d-flex justify-content-center align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis"></i></button>
                            <ul class="dropdown-menu dropdownItem-one">
@@ -90,7 +92,7 @@ class RolePermissionService
                 }
 
             })
-            ->rawColumns(['role_name', 'userCount', 'action', 'status'])
+            ->rawColumns(['role_name', 'action', 'status'])
             ->make(true);
 
     }
@@ -100,6 +102,14 @@ class RolePermissionService
         DB::beginTransaction();
         try {
             if ($request->id) {
+                if (str_contains(request()->route()->getName(), 'super-admin')) {
+                    $systemRoles = [USER_ROLE_SUPER_ADMIN, USER_ROLE_SUPER_ADMIN_STAFF];
+                } else {
+                    $systemRoles = [USER_ROLE_ADMIN, USER_ROLE_ADMIN_STAFF];
+                }
+                if (in_array($request->id, $systemRoles)) {
+                    return $this->error([], __("System roles cannot be edited."));
+                }
                 $dataObj = Role::find($request->id);
                 $msg = getMessage(UPDATED_SUCCESSFULLY);
             } else {
@@ -127,9 +137,10 @@ class RolePermissionService
     {
         try {
             $role = Role::find(decrypt($request->role));
-            if ($role->name != 'Admin') {
-                $role->syncPermissions($request->permission);
+            if ($role->id == USER_ROLE_SUPER_ADMIN) {
+                 return $this->error([], __("Super Admin permissions are fixed."));
             }
+            $role->syncPermissions($request->permission);
             return $this->success([], UPDATED_SUCCESSFULLY);
         } catch (Exception $exception) {
             return $this->error([], SOMETHING_WENT_WRONG);

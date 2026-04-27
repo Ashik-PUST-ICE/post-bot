@@ -1,6 +1,6 @@
 @extends('sadmin.layouts.app')
 @push('title')
-    {{$pageTitle}}
+    {{ $pageTitle ?? __('Roles & Permission') }}
 @endpush
 
 @section('content')
@@ -20,8 +20,8 @@
             <table class="table zTable zTable-last-item-right" id="rolePremissionListTable">
                 <thead>
                 <tr>
+                    <th><div>{{__("SL")}}</div></th>
                     <th><div class="text-nowrap">{{__("Role Name")}}</div></th>
-                    <th><div class="text-nowrap">{{__("Number of Users")}}</div></th>
                     <th><div>{{__("Status")}}</div></th>
                     <th><div>{{__("Action")}}</div></th>
                 </tr>
@@ -112,6 +112,6 @@
 @endsection
 
 @push('script')
-    <script src="{{ asset('admin/custom/js/role_permission.js') }}"></script>
+    <script src="{{ asset('sadmin/custom/js/role_permission.js') }}"></script>
 @endpush
 

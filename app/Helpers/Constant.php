@@ -22,10 +22,12 @@ const DURATION_YEAR = 2;
 // User Role Type
 const USER_STATUS_ACTIVE = 1;
 const USER_STATUS_INACTIVE = 0;
-const USER_ROLE_ADMIN = 2;
-const USER_ROLE_USER = 3;
-const USER_ROLE_EMPLOYEE = 4;
+
 const USER_ROLE_SUPER_ADMIN = 1;
+const USER_ROLE_ADMIN = 2;
+const USER_ROLE_SUPER_ADMIN_STAFF = 3;
+const USER_ROLE_ADMIN_STAFF = 4;
+
 
 // shipping
 const SHIPPING_METHOD_FREE = 1;

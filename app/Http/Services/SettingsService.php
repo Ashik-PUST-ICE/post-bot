@@ -74,7 +74,7 @@ class SettingsService
     public function emailTemplateConfig($request)
     {
         try {
-            $data['template'] = EmailTemplate::find($request->id);
+            $data['template'] = EmailTemplate::where('tenant_id', auth()->user()->tenant_id)->find($request->id);
             $data['fields'] = \customNotifyTempFields($data['template']->slug);
             return $this->success($data);
         } catch (Exception $e) {
@@ -84,7 +84,7 @@ class SettingsService
 
     public function findById($id)
     {
-        return EmailTemplate::findOrFail($id);
+        return EmailTemplate::where('tenant_id', auth()->user()->tenant_id)->findOrFail($id);
     }
 
     public function sendPreviewEmail($request, $id)
@@ -105,7 +105,7 @@ class SettingsService
     {
         DB::beginTransaction();
         try {
-            $emailTemplate = EmailTemplate::findOrFail($request->id);
+            $emailTemplate = EmailTemplate::where('tenant_id', auth()->user()->tenant_id)->findOrFail($request->id);
             $emailTemplate->title = $request->title;
             $emailTemplate->subject = $request->subject;
             $emailTemplate->body = $request->body;

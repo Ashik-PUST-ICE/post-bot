@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\SuperAdmin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Services\RolePermissionService;
@@ -26,38 +26,44 @@ class RolePermisionController extends Controller
         if ($request->ajax()) {
             return $this->rolePermissionServices->getRoleList();
         } else {
-            $data['pageTitle'] = __('Roles & Permission');
+            $data['pageTitle'] = __('Role & Permission');
+            $data['showManageModerator'] = 'show';
             $data['activeRole'] = 'active';
-            return view('sadmin.role_permission.rolelist', $data);
+            $data['roleList'] = Role::where('tenant_id', auth()->user()->tenant_id)->orderBy('id', 'DESC')->get();
+            return view('admin.role_permission.rolelist', $data);
         }
     }
 
     public function addNew()
     {
-        $data['pageTitleParent'] = __('Roles & Permission');
-        $data['pageTitle'] = __('Add Roles');
-        $data['activeSetting'] = 'active';
-        $data['activeRolePermission'] = 'active';
-        return view('sadmin.role_permission.add-new', $data);
+        $data['pageTitle'] = __('Add New Role');
+        $data['showManageModerator'] = 'show';
+        $data['activeRole'] = 'active';
+        return view('admin.role_permission.add-new', $data);
     }
+
     public function edit($id)
     {
         $roleId = decrypt($id);
-        $systemRoles = [USER_ROLE_SUPER_ADMIN, USER_ROLE_SUPER_ADMIN_STAFF];
+        $systemRoles = [USER_ROLE_ADMIN, USER_ROLE_ADMIN_STAFF];
         if (in_array($roleId, $systemRoles)) {
             return $this->error([], __("System roles cannot be edited."));
         }
-        $data['roleData'] = Role::find($roleId);
-        return view('sadmin.role_permission.edit', $data)->render();
+        $data['pageTitle'] = __('Edit Role');
+        $data['showManageModerator'] = 'show';
+        $data['activeRole'] = 'active';
+        $data['roleData'] = Role::where('tenant_id', auth()->user()->tenant_id)->find($roleId);
+        return view('admin.role_permission.edit', $data);
     }
+
     public function permission($id)
     {
-        $data['roleData'] = Role::find(decrypt($id));
+        $data['roleData'] = Role::where('tenant_id', auth()->user()->tenant_id)->find(decrypt($id));
         $data['permissionList'] = Permission::all();
         $data['rolePermissions'] = Permission::join("role_has_permissions","role_has_permissions.permission_id","=","permissions.id")
             ->where("role_has_permissions.role_id",decrypt($id))
             ->get();
-        return view('sadmin.role_permission.permission', $data)->render();
+        return view('admin.role_permission.permission', $data)->render();
     }
 
     public function store(Request $request)
@@ -73,11 +79,11 @@ class RolePermisionController extends Controller
         try {
             DB::beginTransaction();
             $roleId = decrypt($id);
-            $systemRoles = [USER_ROLE_SUPER_ADMIN, USER_ROLE_SUPER_ADMIN_STAFF];
+            $systemRoles = [USER_ROLE_ADMIN, USER_ROLE_ADMIN_STAFF];
             if (in_array($roleId, $systemRoles)) {
                 return $this->error([], __("System roles cannot be deleted."));
             }
-            $data = Role::find($roleId);
+            $data = Role::where('tenant_id', auth()->user()->tenant_id)->find($roleId);
             $data->delete();
             DB::commit();
             $message = getMessage(DELETED_SUCCESSFULLY);

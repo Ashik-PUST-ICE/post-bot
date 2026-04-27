@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 @push('title')
-    {{$pageTitle}}
+    {{ $pageTitle ?? __('Roles & Permission') }}
 @endpush
 
 @section('content')
@@ -20,8 +20,8 @@
             <table class="table zTable zTable-last-item-right" id="rolePremissionListTable">
                 <thead>
                 <tr>
+                    <th><div>{{__("SL")}}</div></th>
                     <th><div class="text-nowrap">{{__("Role Name")}}</div></th>
-                    <th><div class="text-nowrap">{{__("Number of Employee")}}</div></th>
                     <th><div>{{__("Status")}}</div></th>
                     <th><div>{{__("Action")}}</div></th>
                 </tr>
@@ -40,7 +40,7 @@
                     <button type="button" class="border-0 p-0 bg-transparent text-para-text" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-times"></i></button>
                 </div>
                 <!--  -->
-                <form class="ajax reset" action="{{route('admin.role-permission.store')}}" method="POST"
+                <form class="ajax reset" action="{{route('admin.roles.store')}}" method="POST"
                       enctype="multipart/form-data" data-handler="commonResponse">
                     @csrf
                     <div class="row rg-20 pb-25">
@@ -107,7 +107,7 @@
         </div>
     </div>
 
-    <input type="hidden" id="roleListRoute" value="{{route('admin.role-permission.list')}}">
+    <input type="hidden" id="roleListRoute" value="{{route('admin.roles.index')}}">
 @endsection
 
 @push('script')

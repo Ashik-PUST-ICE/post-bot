@@ -4,7 +4,7 @@
     <button type="button" class="border-0 p-0 bg-transparent text-para-text" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-times"></i></button>
 </div>
 <!--  -->
-<form class="ajax " action="{{route('admin.role-permission.permission-update')}}" method="POST"
+<form class="ajax " action="{{route('admin.roles.permission-update')}}" method="POST"
       enctype="multipart/form-data" data-handler="commonResponse">
     @csrf
     <div class="p-sm-25 p-15 bd-one bd-c-stroke bd-ra-10 bg-white mb-25">
