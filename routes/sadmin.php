@@ -83,14 +83,6 @@ Route::group(['prefix' => 'setting', 'as' => 'setting.'], function () {
         Route::get('google-recaptcha-settings', [SettingController::class, 'googleRecaptchaSetting'])->name('google-recaptcha');
         Route::get('google-analytics-settings', [SettingController::class, 'googleAnalyticsSetting'])->name('google.analytics');
 
-        Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
-            Route::get('/', [UserController::class, 'index'])->name('index');
-            Route::get('create', [UserController::class, 'create'])->name('create');
-            Route::post('store', [UserController::class, 'store'])->name('store')->middleware('isDemo');
-            Route::get('edit/{id}', [UserController::class, 'edit'])->name('edit');
-            Route::post('update/{id}', [UserController::class, 'update'])->name('update')->middleware('isDemo');
-            Route::get('delete/{id}', [UserController::class, 'delete'])->name('delete')->middleware('isDemo');
-        });
 
 
 
@@ -156,6 +148,15 @@ Route::group(['prefix' => 'roles', 'as' => 'roles.'], function () {
     Route::post('permission-update', [RolePermisionController::class, 'permissionUpdate'])->name('permission-update');
 });
 
+
+    Route::group(['prefix' => 'staff', 'as' => 'staff.'], function () {
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::get('create', [UserController::class, 'create'])->name('create');
+        Route::post('store', [UserController::class, 'store'])->name('store')->middleware('isDemo');
+        Route::get('edit/{id}', [UserController::class, 'edit'])->name('edit');
+        Route::post('update/{id}', [UserController::class, 'update'])->name('update')->middleware('isDemo');
+        Route::get('delete/{id}', [UserController::class, 'delete'])->name('delete')->middleware('isDemo');
+    });
 
     Route::group(['prefix' => 'packages', 'as' => 'packages.'], function () {
         Route::get('/', [PackageController::class, 'index'])->name('index');

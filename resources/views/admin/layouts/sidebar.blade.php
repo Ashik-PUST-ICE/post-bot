@@ -68,6 +68,15 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('admin.users.index') }}"
+                        class="d-flex align-items-center cg-21 {{ @$activeUsers }}">
+                        <div class="d-flex">
+                            <i class="fa-solid fa-users text-para-text"></i>
+                        </div>
+                        <span class="">{{ __('Team Member') }}</span>
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('admin.setting.profile.index') }}"
                         class="d-flex align-items-center cg-21 {{ @$activeProfile }}">
                         <div class="d-flex">

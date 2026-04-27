@@ -12,12 +12,46 @@ use Yajra\DataTables\DataTables;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data['title'] = __('Users');
+        if ($request->ajax()) {
+            $users = User::where('tenant_id', auth()->user()->tenant_id)->where('role', USER_ROLE_ADMIN_STAFF)->with('roles')->orderBy('id', 'DESC')->get();
+            return DataTables::of($users)
+                ->addIndexColumn()
+                ->addColumn('roles', function ($row) {
+                    $roles = '';
+                    foreach ($row->roles as $role) {
+                        $roles .= '<span class="badge bg-primary me-1">' . $role->name . '</span>';
+                    }
+                    return $roles;
+                })
+                ->addColumn('status', function ($row) {
+                    if ($row->status == STATUS_ACTIVE) {
+                        return '<span class="zBadge zBadge-active">' . __('Active') . '</span>';
+                    } else {
+                        return '<span class="zBadge zBadge-inactive">' . __('Inactive') . '</span>';
+                    }
+                })
+                ->addColumn('action', function ($row) {
+                    return '<ul class="d-flex align-items-center cg-5 justify-content-end">
+                            <li class="d-flex">
+                                <button onclick="getEditModal(\'' . route('admin.users.edit', $row->id) . '\', \'#editModeratorModal\')" class="d-flex justify-content-center align-items-center w-30 h-30 rounded-circle bd-one bd-c-stroke-color bg-white" title="' . __('Edit') . '">
+                                    <i class="fa-solid fa-pen-to-square text-para-text"></i>
+                                </button>
+                            </li>
+                            <li class="d-flex">
+                                <button onclick="deleteItem(\'' . route('admin.users.destroy', $row->id) . '\', \'moderatorTable\')" class="d-flex justify-content-center align-items-center w-30 h-30 rounded-circle bd-one bd-c-stroke-color bg-white" title="' . __('Delete') . '">
+                                    <i class="fa-solid fa-trash text-para-text"></i>
+                                </button>
+                            </li>
+                        </ul>';
+                })
+                ->rawColumns(['roles', 'status', 'action'])
+                ->make(true);
+        }
+        $data['title'] = __('Team Members');
         $data['showManageModerator'] = 'show';
         $data['activeUsers'] = 'active';
-        $data['users'] = User::where('tenant_id', auth()->user()->tenant_id)->where('role', USER_ROLE_USER)->with('roles')->orderBy('id', 'DESC')->get();
         $data['roles'] = Role::where('status', STATUS_ACTIVE)->get();
         return view('admin.moderators.index', $data);
     }
@@ -29,7 +63,7 @@ class UserController extends Controller
             'email'    => 'required|email|unique:users,email',
             'mobile'   => 'required|string|unique:users,mobile',
             'password' => 'required|string|min:6',
-            'status'   => 'required|in:0,1',
+            'status'   => 'required',
             'roles'    => 'required|array',
             'roles.*'  => 'exists:roles,name',
         ]);
@@ -42,7 +76,8 @@ class UserController extends Controller
             $user->email                    = $request->email;
             $user->mobile                   = $request->mobile;
             $user->password                 = Hash::make($request->password);
-            $user->role                     = USER_ROLE_USER;
+            $user->role                     = USER_ROLE_ADMIN_STAFF;
+            $user->tenant_id                = auth()->user()->tenant_id;
             $user->status                   = $request->status;
             $user->email_verification_status  = STATUS_ACTIVE;
             $user->phone_verification_status  = STATUS_ACTIVE;
@@ -69,6 +104,14 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email,' . $id,
+            'mobile'   => 'required|string|unique:users,mobile,' . $id,
+            'status'   => 'required',
+            'roles'    => 'required|array',
+            'roles.*'  => 'exists:roles,name',
+        ]);
         try {
             DB::beginTransaction();
             $user = User::where('tenant_id', auth()->user()->tenant_id)->findOrFail($id);

@@ -94,6 +94,15 @@
                         <span class="">{{ __('Roles & Permission') }}</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('super-admin.staff.index') }}"
+                        class="d-flex align-items-center cg-21 {{ @$activeUsers }}">
+                        <div class="d-flex">
+                            <i class="fa-solid fa-users text-para-text"></i>
+                        </div>
+                        <span class="">{{ __('Team Member') }}</span>
+                    </a>
+                </li>
 
 
 
