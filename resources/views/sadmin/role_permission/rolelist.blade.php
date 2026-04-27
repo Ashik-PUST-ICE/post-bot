@@ -21,7 +21,7 @@
                 <thead>
                 <tr>
                     <th><div class="text-nowrap">{{__("Role Name")}}</div></th>
-                    <th><div class="text-nowrap">{{__("Number of Employee")}}</div></th>
+                    <th><div class="text-nowrap">{{__("Number of Users")}}</div></th>
                     <th><div>{{__("Status")}}</div></th>
                     <th><div>{{__("Action")}}</div></th>
                 </tr>

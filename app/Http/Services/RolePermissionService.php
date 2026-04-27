@@ -115,14 +115,6 @@ class RolePermissionService
 
             DB::commit();
 
-            $role = Role::find($dataObj->id);
-            $role->syncPermissions([
-                'dashboard',
-                'mykpi',
-                'goal-approval',
-                'appraisement'
-            ]);
-
             return $this->success([], $msg);
 
         } catch (Exception $exception) {
@@ -133,17 +125,10 @@ class RolePermissionService
 
     public function permissionUpdate($request)
     {
-        $commonPermissionArray = [
-            'dashboard',
-            'mykpi',
-            'goal-approval',
-            'appraisement'
-        ];
-        $permissionList = array_merge($request->permission, $commonPermissionArray);
         try {
             $role = Role::find(decrypt($request->role));
             if ($role->name != 'Admin') {
-                $role->syncPermissions($permissionList);
+                $role->syncPermissions($request->permission);
             }
             return $this->success([], UPDATED_SUCCESSFULLY);
         } catch (Exception $exception) {

@@ -24,7 +24,7 @@
                         @if($rolePermisonItem->name == $item->name)
                             <li>
                                 <div class="zForm-wrap-checkbox-2">
-                                    <input type="checkbox" class="form-check-input" id="projectManager{{$key}}" value="{{$item->name}}" name="permission[]" checked {{$roleData->id == 1?'disabled':''}} {{in_array($item->name,['dashboard','mykpi','goal-approval','appraisement'])?'disabled':''}}/>
+                                    <input type="checkbox" class="form-check-input" id="projectManager{{$key}}" value="{{$item->name}}" name="permission[]" checked {{$roleData->id == 1?'disabled':''}} />
                                     <label for="projectManager{{$key}}">{{$item->name}}</label>
                                 </div>
                             </li>
