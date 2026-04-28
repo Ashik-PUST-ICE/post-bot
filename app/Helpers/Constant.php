@@ -92,6 +92,8 @@ const PAYMOB = 'paymob';
 const AUTHORIZE = 'authorize';
 const XENDIT = 'xendit';
 const PADDLE = 'paddle';
+const BKASH = 'bkash';
+const NAGAD = 'nagad';
 
 
 const DEFAULT_COLOR = 1;
@@ -99,3 +101,69 @@ const CUSTOM_COLOR = 2;
 
 const LINK_SAAS_ADDON = "";
 const RECURRING_GATEWAY = ['stripe', 'paypal'];
+
+// ─── SocialAgent: Platform Types ─────────────────────────────────────────────
+const PLATFORM_FACEBOOK_PAGE = 1;
+const PLATFORM_MESSENGER     = 2;
+const PLATFORM_WHATSAPP      = 3;
+const PLATFORM_INSTAGRAM     = 4;
+
+// ─── SocialAgent: Conversation Statuses ──────────────────────────────────────
+const CONVERSATION_STATUS_OPEN      = 1;
+const CONVERSATION_STATUS_RESOLVED  = 2;
+const CONVERSATION_STATUS_PENDING   = 3;
+const CONVERSATION_STATUS_ESCALATED = 4;
+
+// ─── SocialAgent: Message Direction ──────────────────────────────────────────
+const MESSAGE_DIRECTION_INBOUND  = 1;
+const MESSAGE_DIRECTION_OUTBOUND = 2;
+
+// ─── SocialAgent: Message Sender Types ───────────────────────────────────────
+const MESSAGE_SENDER_CUSTOMER    = 1;
+const MESSAGE_SENDER_AI          = 2;
+const MESSAGE_SENDER_HUMAN_ADMIN = 3;
+
+// ─── SocialAgent: Message Statuses ───────────────────────────────────────────
+const MESSAGE_STATUS_SENT      = 1;
+const MESSAGE_STATUS_DELIVERED = 2;
+const MESSAGE_STATUS_READ      = 3;
+const MESSAGE_STATUS_FAILED    = 4;
+
+// ─── SocialAgent: Keyword Match Types ────────────────────────────────────────
+const KEYWORD_MATCH_CONTAINS    = 1;
+const KEYWORD_MATCH_EXACT       = 2;
+const KEYWORD_MATCH_STARTS_WITH = 3;
+
+// ─── SocialAgent: AI Providers ──────────────────────────────────────────────
+const AI_PROVIDER_CLAUDE   = 'claude';
+const AI_PROVIDER_OPENAI   = 'openai';
+const AI_PROVIDER_GEMINI   = 'gemini';
+const AI_PROVIDER_GROK     = 'grok';
+const AI_PROVIDER_DEEPSEEK = 'deepseek';
+
+// ─── SocialAgent: Claude Models ──────────────────────────────────────────────
+const AI_MODEL_CLAUDE_SONNET = 'claude-sonnet-4-5';
+const AI_MODEL_CLAUDE_OPUS   = 'claude-opus-4-5';
+const AI_MODEL_CLAUDE_HAIKU  = 'claude-haiku-4-5';
+
+// ─── SocialAgent: OpenAI / ChatGPT Models ────────────────────────────────────
+const AI_MODEL_GPT4O         = 'gpt-4o';
+const AI_MODEL_GPT4O_MINI    = 'gpt-4o-mini';
+const AI_MODEL_GPT41         = 'gpt-4.1';
+const AI_MODEL_O3_MINI       = 'o3-mini';
+
+// ─── SocialAgent: Google Gemini Models ───────────────────────────────────────
+const AI_MODEL_GEMINI_25_FLASH   = 'gemini-2.5-flash-preview-04-17';
+const AI_MODEL_GEMINI_25_PRO     = 'gemini-2.5-pro-preview-05-06';
+const AI_MODEL_GEMINI_20_FLASH   = 'gemini-2.0-flash';
+
+// ─── SocialAgent: xAI Grok Models ────────────────────────────────────────────
+const AI_MODEL_GROK3       = 'grok-3';
+const AI_MODEL_GROK3_MINI  = 'grok-3-mini';
+
+// ─── SocialAgent: DeepSeek Models ────────────────────────────────────────────
+const AI_MODEL_DEEPSEEK_CHAT     = 'deepseek-chat';
+const AI_MODEL_DEEPSEEK_REASONER = 'deepseek-reasoner';
+
+// ─── SocialAgent: Language Mode ──────────────────────────────────────────────
+const AI_LANGUAGE_AUTO = 'auto';

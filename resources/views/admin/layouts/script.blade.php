@@ -24,7 +24,7 @@
 <script src="{{asset('assets/js/chart.js')}}"></script>
 <script src="{{asset('assets/js/main.js')}}"></script>
 <script src="{{ asset('common/js/common.js') }}?ver={{ env('VERSION', 0) }}"></script>
-
+<script src="{{ asset('admin/custom/js/queue-settings.js') }}"></script>
 
 @stack('script')
 

@@ -1162,6 +1162,16 @@ if (!function_exists('gatewaySettings')) {
                 ["label" => "Vendor Id", "name" => "url", "is_show" => 1],
                 ["label" => "Vendor Auth Key", "name" => "key", "is_show" => 1],
                 ["label" => "Secret", "name" => "secret", "is_show" => 0]
+            ],
+            "bkash" => [
+                ["label" => "Username | Password (pipe-separated)", "name" => "url", "is_show" => 1],
+                ["label" => "App Key", "name" => "key", "is_show" => 1],
+                ["label" => "App Secret", "name" => "secret", "is_show" => 1]
+            ],
+            "nagad" => [
+                ["label" => "Nagad Public Key (Base64)", "name" => "url", "is_show" => 1],
+                ["label" => "Merchant ID", "name" => "key", "is_show" => 1],
+                ["label" => "Merchant Private Key (Base64)", "name" => "secret", "is_show" => 1]
             ]
         ];
 
@@ -1222,7 +1232,9 @@ if (!function_exists("getGatewaySupportedCurrencies")) {
                 'KRW', 'THB'
             ],
             XENDIT => ['IDR', 'PHP', 'USD', 'VND', 'THB', 'MYR','SGD'],
-            PADDLE => ['USD','EUR','GBP','AUD','CAD']
+            PADDLE => ['USD','EUR','GBP','AUD','CAD'],
+            BKASH  => ['BDT'],
+            NAGAD  => ['BDT'],
         );
 
         if (is_null($gateway)) {
@@ -1248,6 +1260,8 @@ if (!function_exists('setUserGateway')) {
             ['user_id' => $userId, 'tenant_id' => $tenantId, 'title' => 'Mercadopago', 'slug' => 'mercadopago', 'image' => 'assets/images/gateway-icon/mercadopago.png', 'status' => ACTIVE, 'mode' => GATEWAY_MODE_SANDBOX, 'url' => '', 'key' => '', 'secret' => ''],
             ['user_id' => $userId, 'tenant_id' => $tenantId, 'title' => 'Bank', 'slug' => 'bank', 'image' => 'assets/images/gateway-icon/bank.png', 'status' => ACTIVE, 'mode' => GATEWAY_MODE_SANDBOX, 'url' => '', 'key' => '', 'secret' => ''],
             ['user_id' => $userId, 'tenant_id' => $tenantId, 'title' => 'Cash', 'slug' => 'cash', 'image' => 'assets/images/gateway-icon/cash.png', 'status' => ACTIVE, 'mode' => GATEWAY_MODE_SANDBOX, 'url' => '', 'key' => '', 'secret' => ''],
+            ['user_id' => $userId, 'tenant_id' => $tenantId, 'title' => 'bKash', 'slug' => 'bkash', 'image' => 'assets/images/gateway-icon/bkash.png', 'status' => ACTIVE, 'mode' => GATEWAY_MODE_SANDBOX, 'url' => '', 'key' => '', 'secret' => ''],
+            ['user_id' => $userId, 'tenant_id' => $tenantId, 'title' => 'Nagad', 'slug' => 'nagad', 'image' => 'assets/images/gateway-icon/nagad.png', 'status' => ACTIVE, 'mode' => GATEWAY_MODE_SANDBOX, 'url' => '', 'key' => '', 'secret' => ''],
         ];
         Gateway::insert($data);
     }

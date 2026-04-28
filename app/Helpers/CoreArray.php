@@ -1309,3 +1309,402 @@ if (!function_exists('emailTempFields')) {
         return customNotifyTempFields();
     }
 }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SocialAgent Helper Functions
+// ═══════════════════════════════════════════════════════════════════════════════
+
+if (!function_exists('platformTypes')) {
+    /**
+     * Return an array of platform type integers → human-readable labels.
+     * Pass an integer to get a single label.
+     */
+    function platformTypes($input = null)
+    {
+        $output = [
+            PLATFORM_FACEBOOK_PAGE => __('Facebook Page'),
+            PLATFORM_MESSENGER     => __('Messenger'),
+            PLATFORM_WHATSAPP      => __('WhatsApp Business'),
+            PLATFORM_INSTAGRAM     => __('Instagram'),
+        ];
+        return is_null($input) ? $output : ($output[$input] ?? __('Unknown'));
+    }
+}
+
+if (!function_exists('platformIcons')) {
+    /**
+     * Return Font Awesome icon class for a platform type.
+     */
+    function platformIcons($input = null)
+    {
+        $output = [
+            PLATFORM_FACEBOOK_PAGE => 'fa-brands fa-facebook',
+            PLATFORM_MESSENGER     => 'fa-brands fa-facebook-messenger',
+            PLATFORM_WHATSAPP      => 'fa-brands fa-whatsapp',
+            PLATFORM_INSTAGRAM     => 'fa-brands fa-instagram',
+        ];
+        return is_null($input) ? $output : ($output[$input] ?? 'fa-solid fa-link');
+    }
+}
+
+if (!function_exists('platformColors')) {
+    /**
+     * Return a CSS hex colour for each platform.
+     */
+    function platformColors($input = null)
+    {
+        $output = [
+            PLATFORM_FACEBOOK_PAGE => '#1877F2',
+            PLATFORM_MESSENGER     => '#0084FF',
+            PLATFORM_WHATSAPP      => '#25D366',
+            PLATFORM_INSTAGRAM     => '#E1306C',
+        ];
+        return is_null($input) ? $output : ($output[$input] ?? '#6B7280');
+    }
+}
+
+if (!function_exists('conversationStatuses')) {
+    /**
+     * Return conversation status labels. Pass integer to get single label.
+     */
+    function conversationStatuses($input = null)
+    {
+        $output = [
+            CONVERSATION_STATUS_OPEN      => __('Open'),
+            CONVERSATION_STATUS_RESOLVED  => __('Resolved'),
+            CONVERSATION_STATUS_PENDING   => __('Pending'),
+            CONVERSATION_STATUS_ESCALATED => __('Escalated'),
+        ];
+        return is_null($input) ? $output : ($output[$input] ?? __('Unknown'));
+    }
+}
+
+if (!function_exists('conversationStatusBadge')) {
+    /**
+     * Return a CSS badge class for a conversation status.
+     */
+    function conversationStatusBadge($input)
+    {
+        $map = [
+            CONVERSATION_STATUS_OPEN      => 'zBadge-active',
+            CONVERSATION_STATUS_RESOLVED  => 'zBadge-inactive',
+            CONVERSATION_STATUS_PENDING   => 'zBadge-warning',
+            CONVERSATION_STATUS_ESCALATED => 'zBadge-danger',
+        ];
+        return $map[$input] ?? '';
+    }
+}
+
+if (!function_exists('messageSenderTypes')) {
+    /**
+     * Return human-readable sender type labels.
+     */
+    function messageSenderTypes($input = null)
+    {
+        $output = [
+            MESSAGE_SENDER_CUSTOMER    => __('Customer'),
+            MESSAGE_SENDER_AI          => __('AI Agent'),
+            MESSAGE_SENDER_HUMAN_ADMIN => __('Human Admin'),
+        ];
+        return is_null($input) ? $output : ($output[$input] ?? __('Unknown'));
+    }
+}
+
+if (!function_exists('keywordMatchTypes')) {
+    /**
+     * Return keyword rule match type labels.
+     */
+    function keywordMatchTypes($input = null)
+    {
+        $output = [
+            KEYWORD_MATCH_CONTAINS    => __('Contains'),
+            KEYWORD_MATCH_EXACT       => __('Exact Match'),
+            KEYWORD_MATCH_STARTS_WITH => __('Starts With'),
+        ];
+        return is_null($input) ? $output : ($output[$input] ?? __('Unknown'));
+    }
+}
+
+if (!function_exists('aiProviders')) {
+    /**
+     * Return all supported AI provider labels.
+     */
+    function aiProviders($input = null)
+    {
+        $output = [
+            AI_PROVIDER_CLAUDE   => 'Claude (Anthropic)',
+            AI_PROVIDER_OPENAI   => 'ChatGPT (OpenAI)',
+            AI_PROVIDER_GEMINI   => 'Gemini (Google)',
+            AI_PROVIDER_GROK     => 'Grok (xAI)',
+            AI_PROVIDER_DEEPSEEK => 'DeepSeek',
+        ];
+        return is_null($input) ? $output : ($output[$input] ?? $input);
+    }
+}
+
+if (!function_exists('aiProviderColors')) {
+    function aiProviderColors($input = null)
+    {
+        $output = [
+            AI_PROVIDER_CLAUDE   => '#D97706',  // amber
+            AI_PROVIDER_OPENAI   => '#10b981',  // green
+            AI_PROVIDER_GEMINI   => '#3b82f6',  // blue
+            AI_PROVIDER_GROK     => '#1a1a1a',  // black
+            AI_PROVIDER_DEEPSEEK => '#6366f1',  // indigo
+        ];
+        return is_null($input) ? $output : ($output[$input] ?? '#6B7280');
+    }
+}
+
+if (!function_exists('aiProviderIcons')) {
+    function aiProviderIcons($input = null)
+    {
+        $output = [
+            AI_PROVIDER_CLAUDE   => 'fa-solid fa-a',
+            AI_PROVIDER_OPENAI   => 'fa-solid fa-robot',
+            AI_PROVIDER_GEMINI   => 'fa-brands fa-google',
+            AI_PROVIDER_GROK     => 'fa-brands fa-x-twitter',
+            AI_PROVIDER_DEEPSEEK => 'fa-solid fa-microchip',
+        ];
+        return is_null($input) ? $output : ($output[$input] ?? 'fa-solid fa-brain');
+    }
+}
+
+if (!function_exists('aiProviderApiDocs')) {
+    /**
+     * Return the API key docs URL for each provider.
+     */
+    function aiProviderApiDocs($input = null)
+    {
+        $output = [
+            AI_PROVIDER_CLAUDE   => 'https://console.anthropic.com/settings/keys',
+            AI_PROVIDER_OPENAI   => 'https://platform.openai.com/api-keys',
+            AI_PROVIDER_GEMINI   => 'https://aistudio.google.com/apikey',
+            AI_PROVIDER_GROK     => 'https://console.x.ai',
+            AI_PROVIDER_DEEPSEEK => 'https://platform.deepseek.com/api_keys',
+        ];
+        return is_null($input) ? $output : ($output[$input] ?? '#');
+    }
+}
+
+if (!function_exists('aiModelsForProvider')) {
+    /**
+     * Return available model slugs for a given provider.
+     * Pass provider constant to get its models array.
+     */
+    function aiModelsForProvider(string $provider): array
+    {
+        return match ($provider) {
+            AI_PROVIDER_CLAUDE => [
+                AI_MODEL_CLAUDE_SONNET => 'Claude Sonnet 4.5 ✦ Recommended',
+                AI_MODEL_CLAUDE_OPUS   => 'Claude Opus 4.5 ✦ Most Powerful',
+                AI_MODEL_CLAUDE_HAIKU  => 'Claude Haiku 4.5 ✦ Fastest',
+            ],
+            AI_PROVIDER_OPENAI => [
+                AI_MODEL_GPT4O      => 'GPT-4o ✦ Recommended',
+                AI_MODEL_GPT4O_MINI => 'GPT-4o mini ✦ Cheap & Fast',
+                AI_MODEL_GPT41      => 'GPT-4.1',
+                AI_MODEL_O3_MINI    => 'o3-mini ✦ Reasoning',
+            ],
+            AI_PROVIDER_GEMINI => [
+                AI_MODEL_GEMINI_25_FLASH => 'Gemini 2.5 Flash ✦ Recommended',
+                AI_MODEL_GEMINI_25_PRO   => 'Gemini 2.5 Pro ✦ Most Powerful',
+                AI_MODEL_GEMINI_20_FLASH => 'Gemini 2.0 Flash',
+            ],
+            AI_PROVIDER_GROK => [
+                AI_MODEL_GROK3      => 'Grok 3 ✦ Recommended',
+                AI_MODEL_GROK3_MINI => 'Grok 3 Mini ✦ Faster',
+            ],
+            AI_PROVIDER_DEEPSEEK => [
+                AI_MODEL_DEEPSEEK_CHAT     => 'DeepSeek Chat ✦ Recommended',
+                AI_MODEL_DEEPSEEK_REASONER => 'DeepSeek Reasoner ✦ Deep Thinking',
+            ],
+            default => [],
+        };
+    }
+}
+
+if (!function_exists('aiModelOptions')) {
+    /**
+     * Flat list of all models across all providers (for simple selects).
+     */
+    function aiModelOptions($input = null)
+    {
+        $output = [];
+        foreach ([AI_PROVIDER_CLAUDE, AI_PROVIDER_OPENAI, AI_PROVIDER_GEMINI, AI_PROVIDER_GROK, AI_PROVIDER_DEEPSEEK] as $p) {
+            foreach (aiModelsForProvider($p) as $slug => $label) {
+                $output[$slug] = aiProviders($p) . ' — ' . $label;
+            }
+        }
+        return is_null($input) ? $output : ($output[$input] ?? $input);
+    }
+}
+
+if (!function_exists('aiLanguageModes')) {
+    /**
+     * Return available language mode options for AI agent.
+     */
+    function aiLanguageModes($input = null)
+    {
+        $output = [
+            'auto' => __('Auto Detect'),
+            'en'   => __('English'),
+            'bn'   => __('Bengali'),
+            'ar'   => __('Arabic'),
+            'es'   => __('Spanish'),
+            'fr'   => __('French'),
+            'de'   => __('German'),
+            'hi'   => __('Hindi'),
+            'zh'   => __('Chinese'),
+            'pt'   => __('Portuguese'),
+            'ru'   => __('Russian'),
+            'ja'   => __('Japanese'),
+            'ko'   => __('Korean'),
+            'tr'   => __('Turkish'),
+            'id'   => __('Indonesian'),
+        ];
+        return is_null($input) ? $output : ($output[$input] ?? $input);
+    }
+}
+
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SocialAgent — Platform Helpers
+// ═══════════════════════════════════════════════════════════════════════════════
+
+if (!function_exists('platformTypes')) {
+    /**
+     * Human-readable label for a platform type constant.
+     * Usage: platformTypes()              → full array
+     *        platformTypes(PLATFORM_WHATSAPP) → 'WhatsApp'
+     */
+    function platformTypes($input = null)
+    {
+        $output = [
+            PLATFORM_FACEBOOK_PAGE => __('Facebook Page'),
+            PLATFORM_MESSENGER     => __('Messenger'),
+            PLATFORM_WHATSAPP      => __('WhatsApp'),
+            PLATFORM_INSTAGRAM     => __('Instagram'),
+        ];
+        return is_null($input) ? $output : ($output[$input] ?? $input);
+    }
+}
+
+if (!function_exists('platformIcons')) {
+    /**
+     * Font Awesome class for a platform type.
+     */
+    function platformIcons($input = null)
+    {
+        $output = [
+            PLATFORM_FACEBOOK_PAGE => 'fa-brands fa-facebook',
+            PLATFORM_MESSENGER     => 'fa-brands fa-facebook-messenger',
+            PLATFORM_WHATSAPP      => 'fa-brands fa-whatsapp',
+            PLATFORM_INSTAGRAM     => 'fa-brands fa-instagram',
+        ];
+        return is_null($input) ? $output : ($output[$input] ?? 'fa-solid fa-message');
+    }
+}
+
+if (!function_exists('platformColors')) {
+    /**
+     * Brand hex color for each platform type.
+     */
+    function platformColors($input = null)
+    {
+        $output = [
+            PLATFORM_FACEBOOK_PAGE => '#1877F2',
+            PLATFORM_MESSENGER     => '#0084FF',
+            PLATFORM_WHATSAPP      => '#25D366',
+            PLATFORM_INSTAGRAM     => '#E1306C',
+        ];
+        return is_null($input) ? $output : ($output[$input] ?? '#6B7280');
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SocialAgent — Conversation Helpers
+// ═══════════════════════════════════════════════════════════════════════════════
+
+if (!function_exists('conversationStatuses')) {
+    /**
+     * Labels for conversation status constants.
+     */
+    function conversationStatuses($input = null)
+    {
+        $output = [
+            CONVERSATION_STATUS_OPEN      => __('Open'),
+            CONVERSATION_STATUS_RESOLVED  => __('Resolved'),
+            CONVERSATION_STATUS_PENDING   => __('Pending'),
+            CONVERSATION_STATUS_ESCALATED => __('Escalated'),
+        ];
+        return is_null($input) ? $output : ($output[$input] ?? __('Unknown'));
+    }
+}
+
+if (!function_exists('conversationStatusBadge')) {
+    /**
+     * Return an HTML badge span for a conversation status.
+     * Used in DataTables columns that need rawColumns.
+     */
+    function conversationStatusBadge($status)
+    {
+        $map = [
+            CONVERSATION_STATUS_OPEN      => ['label' => __('Open'),      'bg' => '#10b9811a', 'color' => '#10b981'],
+            CONVERSATION_STATUS_RESOLVED  => ['label' => __('Resolved'),  'bg' => '#6366f11a', 'color' => '#6366f1'],
+            CONVERSATION_STATUS_PENDING   => ['label' => __('Pending'),   'bg' => '#F59E0B1a', 'color' => '#F59E0B'],
+            CONVERSATION_STATUS_ESCALATED => ['label' => __('Escalated'), 'bg' => '#ef44441a', 'color' => '#ef4444'],
+        ];
+        $s = $map[$status] ?? ['label' => __('Unknown'), 'bg' => '#6b72801a', 'color' => '#6b7280'];
+        return '<span class="py-4 px-12 bd-ra-50 fs-11 fw-600" style="background:' . $s['bg'] . ';color:' . $s['color'] . ';">'
+            . $s['label'] . '</span>';
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SocialAgent — Keyword Rule Helpers
+// ═══════════════════════════════════════════════════════════════════════════════
+
+if (!function_exists('keywordMatchTypes')) {
+    /**
+     * Labels for keyword match type constants.
+     */
+    function keywordMatchTypes($input = null)
+    {
+        $output = [
+            KEYWORD_MATCH_CONTAINS    => __('Contains'),
+            KEYWORD_MATCH_EXACT       => __('Exact'),
+            KEYWORD_MATCH_STARTS_WITH => __('Starts With'),
+        ];
+        return is_null($input) ? $output : ($output[$input] ?? $input);
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SocialAgent — Message Helpers
+// ═══════════════════════════════════════════════════════════════════════════════
+
+if (!function_exists('messageSenderTypes')) {
+    function messageSenderTypes($input = null)
+    {
+        $output = [
+            MESSAGE_SENDER_CUSTOMER    => __('Customer'),
+            MESSAGE_SENDER_AI          => __('AI Agent'),
+            MESSAGE_SENDER_HUMAN_ADMIN => __('Agent'),
+        ];
+        return is_null($input) ? $output : ($output[$input] ?? __('Unknown'));
+    }
+}
+
+if (!function_exists('messageStatusLabels')) {
+    function messageStatusLabels($input = null)
+    {
+        $output = [
+            MESSAGE_STATUS_SENT      => __('Sent'),
+            MESSAGE_STATUS_DELIVERED => __('Delivered'),
+            MESSAGE_STATUS_READ      => __('Read'),
+            MESSAGE_STATUS_FAILED    => __('Failed'),
+        ];
+        return is_null($input) ? $output : ($output[$input] ?? __('Unknown'));
+    }
+}

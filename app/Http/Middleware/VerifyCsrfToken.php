@@ -12,6 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        '/sslcommerz-payment-success/*'
+        '/sslcommerz-payment-success/*',
+        'webhook/meta/*',   // Meta webhook POST — verified via X-Hub-Signature-256 instead
     ];
 }

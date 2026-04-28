@@ -1,18 +1,25 @@
 <?php
 
 use App\Http\Controllers\Admin\AddonUpdateController;
+use App\Http\Controllers\Admin\AiAgentController;
+use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\Admin\MetaAppController;
+use App\Http\Controllers\Admin\MetaOAuthController;
 use App\Http\Controllers\Admin\CurrencyController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GatewayController;
+use App\Http\Controllers\Admin\InboxController;
 use App\Http\Controllers\Admin\LanguageController;
 use App\Http\Controllers\Admin\EmailTemplateController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\PlatformController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\RolePermisionController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VersionUpdateController;
 use App\Http\Controllers\Admin\SubscriptionController;
+use App\Http\Controllers\Admin\QueueSettingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -112,4 +119,61 @@ Route::group(['prefix' => 'subscription', 'as' => 'subscription.'], function () 
     Route::post('checkout', [SubscriptionController::class, 'checkout'])->name('checkout');
     Route::get('verify', [SubscriptionController::class, 'verify'])->name('verify');
     Route::get('failed', [SubscriptionController::class, 'failed'])->name('failed');
+});
+
+// ─── Platform Connections ────────────────────────────────────────────────────
+Route::group(['prefix' => 'platforms', 'as' => 'platforms.'], function () {
+    Route::get('/', [PlatformController::class, 'index'])->name('index');
+    Route::get('get-data', [PlatformController::class, 'getData'])->name('get.data');
+    Route::post('store', [PlatformController::class, 'store'])->name('store');
+    Route::get('get-info', [PlatformController::class, 'getInfo'])->name('get.info');
+    Route::post('update/{id}', [PlatformController::class, 'update'])->name('update');
+    Route::post('toggle-auto-reply/{id}', [PlatformController::class, 'toggleAutoReply'])->name('toggle-auto-reply');
+    Route::post('destroy/{id}', [PlatformController::class, 'destroy'])->name('destroy');
+});
+
+// ─── Inbox / Conversations ───────────────────────────────────────────────────
+Route::group(['prefix' => 'inbox', 'as' => 'inbox.'], function () {
+    Route::get('/', [InboxController::class, 'index'])->name('index');
+    Route::get('get-data', [InboxController::class, 'getData'])->name('get.data');
+    Route::get('conversation/{id}', [InboxController::class, 'show'])->name('show');
+    Route::post('conversation/{id}/reply', [InboxController::class, 'reply'])->name('reply');
+    Route::post('conversation/{id}/status', [InboxController::class, 'updateStatus'])->name('update.status');
+});
+
+// ─── AI Agent Settings ───────────────────────────────────────────────────────
+Route::group(['prefix' => 'ai-agent', 'as' => 'ai-agent.'], function () {
+    Route::get('/', [AiAgentController::class, 'index'])->name('index');
+    Route::post('update', [AiAgentController::class, 'update'])->name('update');
+    Route::post('keyword/store', [AiAgentController::class, 'storeKeyword'])->name('keyword.store');
+    Route::post('keyword/destroy/{id}', [AiAgentController::class, 'destroyKeyword'])->name('keyword.destroy');
+    Route::post('test-connection', [AiAgentController::class, 'testConnection'])->name('test.connection');
+    Route::get('models-for-provider', [AiAgentController::class, 'modelsForProvider'])->name('models.for.provider');
+});
+
+// ─── Analytics ───────────────────────────────────────────────────────────────
+Route::get('analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
+
+// ─── Meta App Configuration (Facebook / WhatsApp / Instagram) ────────────────
+Route::group(['prefix' => 'meta-app', 'as' => 'meta-app.'], function () {
+    Route::get('/', [MetaAppController::class, 'index'])->name('index');
+    Route::post('update', [MetaAppController::class, 'update'])->name('update');
+    Route::post('regenerate-token', [MetaAppController::class, 'regenerateVerifyToken'])->name('regenerate-token');
+    Route::get('check-connection', [MetaAppController::class, 'checkConnection'])->name('check.connection');
+});
+
+// ─── Meta OAuth 2.0 Flow ────────────────────────────────────────────────────
+Route::group(['prefix' => 'meta-oauth', 'as' => 'meta-oauth.'], function () {
+    Route::get('redirect', [MetaOAuthController::class, 'redirect'])->name('redirect');
+    Route::get('callback', [MetaOAuthController::class, 'callback'])->name('callback');
+    Route::get('picker', [MetaOAuthController::class, 'picker'])->name('picker');
+    Route::post('save-page', [MetaOAuthController::class, 'savePage'])->name('save.page');
+});
+
+// ─── Queue Settings ─────────────────────────────────────────────────────
+Route::group(['prefix' => 'queue', 'as' => 'queue.'], function () {
+    Route::get('status', [QueueSettingController::class, 'status'])->name('status');
+    Route::post('save', [QueueSettingController::class, 'save'])->name('save');
+    Route::post('retry-failed', [QueueSettingController::class, 'retryFailed'])->name('retry.failed');
+    Route::post('flush-failed', [QueueSettingController::class, 'flushFailed'])->name('flush.failed');
 });

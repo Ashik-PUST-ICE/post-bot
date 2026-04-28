@@ -2,97 +2,197 @@
 <div data-aos="fade-right" data-aos-duration="1000" class="zSidebar"
     data-background="{{ asset('assets/images/sidebar-graphic.png') }}">
     <div class="zSidebar-overlay"></div>
-    <!--  -->
     <div class="zSidebar-wrap h-100">
+
         <!-- Logo -->
-        <a href="{{ route('admin.dashboard') }}" class="zSidebar-logo"><img src="{{ getSettingImage('app_logo') }}"
-                alt="" /></a>
+        <a href="{{ route('admin.dashboard') }}" class="zSidebar-logo">
+            <img src="{{ getSettingImage('app_logo') }}" alt="{{ getOption('app_name') }}" />
+        </a>
+
         <!-- Menu & Logout -->
         <div class="zSidebar-fixed">
             <ul class="zSidebar-menu" id="sidebarMenu">
+
+                {{-- ── Core ─────────────────────────────────────────────────── --}}
                 <li>
                     <a href="{{ route('admin.dashboard') }}"
                         class="d-flex align-items-center cg-21 {{ @$activeDashboard }}">
                         <div class="d-flex">
-                            <svg width="20" height="19" viewBox="0 0 20 19" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
+                            <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd"
-                                    d="M10.1757 0.044908C10.0586 0.0406133 9.94141 0.0406133 9.82434 0.044908C9.05153 0.0732586 8.35564 0.336049 7.59263 0.7735C6.84907 1.1998 5.99304 1.82175 4.90689 2.61089L4.84785 2.65379C3.76168 3.44293 2.90563 4.06488 2.27042 4.64031C1.6186 5.23079 1.15363 5.81142 0.887852 6.53765C0.847591 6.64766 0.811378 6.75911 0.779286 6.87178C0.567436 7.61553 0.602321 8.35857 0.78258 9.21941C0.958244 10.0583 1.28523 11.0646 1.70011 12.3415L3.14557 16.7902C3.45713 17.749 4.35067 18.3982 5.35888 18.3982C6.64415 18.3982 7.68608 17.3563 7.68608 16.071V13.7803C7.68608 13.2433 8.12135 12.8081 8.65827 12.8081H11.3417C11.8787 12.8081 12.3139 13.2433 12.3139 13.7803V16.071C12.3139 17.3563 13.3559 18.3982 14.6411 18.3982C15.6493 18.3982 16.5429 17.749 16.8544 16.7902L18.2999 12.3415C18.7148 11.0646 19.0418 10.0583 19.2174 9.21941C19.3977 8.35857 19.4326 7.61553 19.2207 6.87178C19.1886 6.75912 19.1524 6.64766 19.1122 6.53765C18.8464 5.81142 18.3814 5.23079 17.7296 4.64031C17.0944 4.06487 16.2383 3.44293 15.1522 2.65378L15.0931 2.61088C14.007 1.82174 13.1509 1.1998 12.4074 0.7735C11.6444 0.336049 10.9485 0.0732586 10.1757 0.044908ZM9.87017 1.29407C9.9567 1.29089 10.0433 1.29089 10.1298 1.29407C10.626 1.31227 11.1202 1.47641 11.7857 1.85792C12.4638 2.24671 13.2658 2.82832 14.3879 3.64362C15.5101 4.45892 16.311 5.0419 16.8904 5.56671C17.4588 6.08167 17.7677 6.50096 17.9383 6.96724C17.9681 7.04855 17.9948 7.13093 18.0185 7.21421C18.1546 7.69175 18.1512 8.21248 17.994 8.96322C17.8338 9.72832 17.5284 10.6708 17.0998 11.9899L15.6656 16.4039C15.5214 16.8477 15.1078 17.1482 14.6411 17.1482C14.0462 17.1482 13.5639 16.666 13.5639 16.071V13.7803C13.5639 12.553 12.569 11.5581 11.3417 11.5581H8.65827C7.43099 11.5581 6.43608 12.553 6.43608 13.7803V16.071C6.43608 16.666 5.9538 17.1482 5.35888 17.1482C4.8922 17.1482 4.47861 16.8477 4.3344 16.4039L2.90021 11.9899C2.47158 10.6708 2.16625 9.72832 2.00604 8.96322C1.84884 8.21248 1.84545 7.69175 1.98147 7.21421C2.00519 7.13093 2.03195 7.04856 2.06171 6.96724C2.23236 6.50096 2.54118 6.08167 3.10964 5.56671C3.68896 5.0419 4.48993 4.45892 5.61209 3.64362C6.73425 2.82832 7.53621 2.24671 8.21435 1.85792C8.87977 1.47641 9.37397 1.31227 9.87017 1.29407Z"
+                                    d="M10.1757 0.044908C10.0586 0.0406133 9.94141 0.0406133 9.82434 0.044908C9.05153 0.0732586 8.35564 0.336049 7.59263 0.7735C6.84907 1.1998 5.99304 1.82175 4.90689 2.61089L4.84785 2.65379C3.76168 3.44293 2.90563 4.06488 2.27042 4.64031C1.6186 5.23079 1.15363 5.81142 0.887852 6.53765C0.847591 6.64766 0.811378 6.75911 0.779286 6.87178C0.567436 7.61553 0.602321 8.35857 0.78258 9.21941C0.958244 10.0583 1.28523 11.0646 1.70011 12.3415L3.14557 16.7902C3.45713 17.749 4.35067 18.3982 5.35888 18.3982C6.64415 18.3982 7.68608 17.3563 7.68608 16.071V13.7803C7.68608 13.2433 8.12135 12.8081 8.65827 12.8081H11.3417C11.8787 12.8081 12.3139 13.2433 12.3139 13.7803V16.071C12.3139 17.3563 13.3559 18.3982 14.6411 18.3982C15.6493 18.3982 16.5429 17.749 16.8544 16.7902L18.2999 12.3415C18.7148 11.0646 19.0418 10.0583 19.2174 9.21941C19.3977 8.35857 19.4326 7.61553 19.2207 6.87178C19.1886 6.75912 19.1524 6.64766 19.1122 6.53765C18.8464 5.81142 18.3814 5.23079 17.7296 4.64031C17.0944 4.06487 16.2383 3.44293 15.1522 2.65378L15.0931 2.61088C14.007 1.82174 13.1509 1.1998 12.4074 0.7735C11.6444 0.336049 10.9485 0.0732586 10.1757 0.044908Z"
                                     fill="#7881A4" />
                             </svg>
                         </div>
-                        <span class="">{{ __('Dashboard') }}</span>
+                        <span>{{ __('Dashboard') }}</span>
                     </a>
                 </li>
+
+                {{-- ── Messaging ─────────────────────────────────────────────── --}}
+                <li class="zSidebar-label">
+                    <span>{{ __('Messaging') }}</span>
+                </li>
+
+                {{-- Platforms --}}
+                <li>
+                    <a href="{{ route('admin.platforms.index') }}"
+                        class="d-flex align-items-center cg-21 {{ @$activePlatforms }}">
+                        <div class="d-flex">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8.4 3H4.6C3.72 3 3 3.72 3 4.6V8.4C3 9.28 3.72 10 4.6 10H8.4C9.28 10 10 9.28 10 8.4V4.6C10 3.72 9.28 3 8.4 3Z" stroke="#7881A4" stroke-width="1.5"/>
+                                <path d="M19.4 3H15.6C14.72 3 14 3.72 14 4.6V8.4C14 9.28 14.72 10 15.6 10H19.4C20.28 10 21 9.28 21 8.4V4.6C21 3.72 20.28 3 19.4 3Z" stroke="#7881A4" stroke-width="1.5"/>
+                                <path d="M8.4 14H4.6C3.72 14 3 14.72 3 15.6V19.4C3 20.28 3.72 21 4.6 21H8.4C9.28 21 10 20.28 10 19.4V15.6C10 14.72 9.28 14 8.4 14Z" stroke="#7881A4" stroke-width="1.5"/>
+                                <path d="M17.5 14V21M14 17.5H21" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <span>{{ __('Platforms') }}</span>
+                    </a>
+                </li>
+
+                {{-- Inbox --}}
+                <li>
+                    <a href="{{ route('admin.inbox.index') }}"
+                        class="d-flex align-items-center cg-21 {{ @$activeInbox }}">
+                        <div class="d-flex">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 12H8.01M12 12H12.01M16 12H16.01M21 12C21 16.418 16.97 20 12 20C10.5 20 9.07 19.66 7.8 19.06L3 20L4.44 15.77C3.53 14.43 3 12.78 3 11C3 6.582 7.03 3 12 3C16.97 3 21 6.582 21 11C21 11.34 20.98 11.67 20.94 12H21Z" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span>{{ __('Inbox') }}</span>
+                    </a>
+                </li>
+
+                {{-- ── AI ────────────────────────────────────────────────────── --}}
+                <li class="zSidebar-label">
+                    <span>{{ __('AI Agent') }}</span>
+                </li>
+
+                {{-- AI Settings --}}
+                <li>
+                    <a href="{{ route('admin.ai-agent.index') }}"
+                        class="d-flex align-items-center cg-21 {{ @$activeAiAgent }}">
+                        <div class="d-flex">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2C8.13 2 5 5.13 5 9C5 11.38 6.19 13.47 8 14.74V17C8 17.55 8.45 18 9 18H15C15.55 18 16 17.55 16 17V14.74C17.81 13.47 19 11.38 19 9C19 5.13 15.87 2 12 2Z" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M9 21H15" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M9 18V19.5C9 20.33 9.67 21 10.5 21H13.5C14.33 21 15 20.33 15 19.5V18" stroke="#7881A4" stroke-width="1.5"/>
+                            </svg>
+                        </div>
+                        <span>{{ __('AI Configuration') }}</span>
+                    </a>
+                </li>
+
+                {{-- Analytics --}}
+                <li>
+                    <a href="{{ route('admin.analytics.index') }}"
+                        class="d-flex align-items-center cg-21 {{ @$activeAnalytics }}">
+                        <div class="d-flex">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M7 17L7 13M12 17V7M17 17V11" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="#7881A4" stroke-width="1.5"/>
+                            </svg>
+                        </div>
+                        <span>{{ __('Analytics') }}</span>
+                    </a>
+                </li>
+
+                {{-- ── Configuration ──────────────────────────────────────────── --}}
+                <li class="zSidebar-label">
+                    <span>{{ __('Configuration') }}</span>
+                </li>
+
+                {{-- Meta App Config (FB/IG/WA credentials) --}}
+                <li>
+                    <a href="{{ route('admin.meta-app.index') }}"
+                        class="d-flex align-items-center cg-21 {{ @$activeMetaApp }}">
+                        <div class="d-flex">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M7 7h.01" stroke="#7881A4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span>{{ __('Meta App Config') }}</span>
+                    </a>
+                </li>
+
+                {{-- ── Management ──────────────────────────────────────────────── --}}
+                <li class="zSidebar-label">
+                    <span>{{ __('Management') }}</span>
+                </li>
+
+                {{-- Team Members --}}
+                <li>
+                    <a href="{{ route('admin.users.index') }}"
+                        class="d-flex align-items-center cg-21 {{ @$activeUsers }}">
+                        <div class="d-flex">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89317 18.7122 8.75608 18.1676 9.45768C17.623 10.1593 16.8604 10.6597 16 10.88" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span>{{ __('Team Members') }}</span>
+                    </a>
+                </li>
+
+                {{-- Role & Permission --}}
                 @can('role-permission')
                     <li>
                         <a href="{{ route('admin.roles.index') }}"
                             class="d-flex align-items-center cg-21 {{ @$activeRole }}">
                             <div class="d-flex">
-                                <svg width="18" height="19" viewBox="0 0 18 19" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M14.7409 13.3333L14.1273 12.9966L14.7409 13.3333ZM3.25929 13.3333L2.64561 13.6701L3.25929 13.3333ZM1.52113 6.84055L0.822018 6.87584L1.52113 6.84055ZM13.3793 15.2329L13.9085 15.691L13.3793 15.2329ZM4.62097 15.2329L5.15025 14.7748L4.62097 15.2329ZM16.4859 6.36407L17.1854 6.39087L16.4859 6.36407ZM8.3 13.3333C8.3 13.7199 8.6134 14.0333 9 14.0333C9.3866 14.0333 9.7 13.7199 9.7 13.3333H8.3ZM15.7864 6.33727C15.7207 8.05308 15.386 10.7026 14.1273 12.9966L15.3546 13.6701C16.7655 11.0988 17.1162 8.19657 17.1854 6.39087L15.7864 6.33727ZM14.1273 12.9966C13.8065 13.5811 13.3612 14.1841 12.85 14.7748L13.9085 15.691C14.4596 15.0543 14.971 14.3692 15.3546 13.6701L14.1273 12.9966ZM5.15025 14.7748C4.63899 14.1841 4.19372 13.5811 3.87297 12.9966L2.64561 13.6701C3.02922 14.3692 3.54059 15.0543 4.0917 15.691L5.15025 14.7748ZM3.87297 12.9966C2.64843 10.765 2.29948 8.37485 2.22024 6.80525L0.822018 6.87584C0.906924 8.5577 1.28045 11.1822 2.64561 13.6701L3.87297 12.9966ZM3.30898 5.76943H3.56636V4.36943H3.30898V5.76943ZM14.1908 5.28332H14.6819V3.88332H14.1908V5.28332ZM12.0325 3.12499C12.0325 4.317 12.9988 5.28332 14.1908 5.28332V3.88332C13.772 3.88332 13.4325 3.54381 13.4325 3.12499H12.0325ZM3.56636 5.76943C4.89262 5.76943 5.96775 4.6943 5.96775 3.36805H4.56775C4.56775 3.9211 4.11942 4.36943 3.56636 4.36943V5.76943ZM6.96914 0.966657C5.64289 0.966657 4.56775 2.04179 4.56775 3.36805H5.96775C5.96775 2.81499 6.41609 2.36666 6.96914 2.36666V0.966657ZM2.22024 6.80525C2.19243 6.2545 2.64566 5.76943 3.30898 5.76943V4.36943C1.9588 4.36943 0.748302 5.41566 0.822018 6.87584L2.22024 6.80525ZM12.85 14.7748C12.0062 15.7496 11.4438 16.3934 10.8714 16.8127C10.3451 17.1983 9.80875 17.3923 9.00012 17.3923V18.7923C10.0957 18.7923 10.924 18.5097 11.6987 17.9421C12.4273 17.4084 13.1024 16.6224 13.9085 15.691L12.85 14.7748ZM4.0917 15.691C4.89784 16.6224 5.57292 17.4084 6.30149 17.9421C7.0762 18.5097 7.9045 18.7923 9.00012 18.7923V17.3923C8.19149 17.3923 7.65517 17.1983 7.12886 16.8127C6.5564 16.3934 5.99403 15.7496 5.15025 14.7748L4.0917 15.691ZM11.2741 2.36666C11.693 2.36666 12.0325 2.70617 12.0325 3.12499H13.4325C13.4325 1.93297 12.4662 0.966657 11.2741 0.966657V2.36666ZM17.1854 6.39087C17.241 4.93866 16.04 3.88332 14.6819 3.88332V5.28332C15.3426 5.28332 15.808 5.77223 15.7864 6.33727L17.1854 6.39087ZM6.96914 2.36666H11.2741V0.966657H6.96914V2.36666ZM8.3 9.99999V13.3333H9.7V9.99999H8.3ZM6.63333 8.33332C6.63333 9.6404 7.69293 10.7 9 10.7V9.29999C8.46612 9.29999 8.03333 8.8672 8.03333 8.33332H6.63333ZM9 10.7C10.3071 10.7 11.3667 9.6404 11.3667 8.33332H9.96667C9.96667 8.8672 9.53388 9.29999 9 9.29999V10.7ZM11.3667 8.33332C11.3667 7.02625 10.3071 5.96666 9 5.96666V7.36666C9.53388 7.36666 9.96667 7.79945 9.96667 8.33332H11.3667ZM9 5.96666C7.69293 5.96666 6.63333 7.02625 6.63333 8.33332H8.03333C8.03333 7.79945 8.46612 7.36666 9 7.36666V5.96666Z"
-                                        fill="#7881A4" />
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1Z" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </div>
-                            <span class="">{{ __('Role & Permission') }}</span>
+                            <span>{{ __('Role & Permission') }}</span>
                         </a>
                     </li>
                 @endcan
+
+                {{-- ── Billing ─────────────────────────────────────────────────── --}}
+                <li class="zSidebar-label">
+                    <span>{{ __('Billing') }}</span>
+                </li>
+
+                {{-- My Subscription --}}
                 <li>
                     <a href="{{ route('admin.subscription.index') }}"
                         class="d-flex align-items-center cg-21 {{ @$activeSubscription }}">
                         <div class="d-flex">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="#7881A4" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M8.25 10.5L10.5 12.75L15.75 7.5" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M7 16.5H17" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </div>
-                        <span class="">{{ __('My Subscription') }}</span>
+                        <span>{{ __('My Subscription') }}</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('admin.setting.gateway.index') }}"
-                        class="d-flex align-items-center cg-21 {{ @$activeGatewaySetting }}">
-                        <div class="d-flex">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M6 8H10" stroke="#7881A4" stroke-width="1.5" stroke-opacity="0.7" stroke-linecap="round" stroke-linejoin="round" />
-                                <path d="M20.8333 9H18.2308C16.4465 9 15 10.3431 15 12C15 13.6569 16.4465 15 18.2308 15H20.8333C20.9167 15 20.9583 15 20.9935 14.9979C21.5328 14.965 21.9623 14.5662 21.9977 14.0654C22 14.0327 22 13.994 22 13.9167V10.0833C22 10.006 22 9.96726 21.9977 9.9346C21.9623 9.43384 21.5328 9.03496 20.9935 9.00214C20.9583 9 20.9167 9 20.8333 9Z" stroke="#7881A4" stroke-width="1.5" stroke-opacity="0.7" />
-                                <path d="M20.965 9C20.8873 7.1277 20.6366 5.97975 19.8284 5.17157C18.6569 4 16.7712 4 13 4L10 4C6.22876 4 4.34315 4 3.17157 5.17157C2 6.34315 2 8.22876 2 12C2 15.7712 2 17.6569 3.17157 18.8284C4.34315 20 6.22876 20 10 20H13C16.7712 20 18.6569 20 19.8284 18.8284C20.6366 18.0203 20.8873 16.8723 20.965 15" stroke="#7881A4" stroke-width="1.5" stroke-opacity="0.7" />
-                                <path d="M17.9922 12H18.0012" stroke="#7881A4" stroke-opacity="0.7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                        </div>
-                        <span class="">{{ __('Payment Gateway') }}</span>
-                    </a>
+
+                {{-- ── Account ──────────────────────────────────────────────────── --}}
+                <li class="zSidebar-label">
+                    <span>{{ __('Account') }}</span>
                 </li>
-                <li>
-                    <a href="{{ route('admin.users.index') }}"
-                        class="d-flex align-items-center cg-21 {{ @$activeUsers }}">
-                        <div class="d-flex">
-                            <i class="fa-solid fa-users text-para-text"></i>
-                        </div>
-                        <span class="">{{ __('Team Member') }}</span>
-                    </a>
-                </li>
+
+                {{-- Profile --}}
                 <li>
                     <a href="{{ route('admin.setting.profile.index') }}"
                         class="d-flex align-items-center cg-21 {{ @$activeProfile }}">
                         <div class="d-flex">
-                            <svg width="17" height="17" viewBox="0 0 17 17" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M8.50016 0.833313C9.51683 0.833313 10.4918 1.23718 11.2107 1.95607C11.9296 2.67496 12.3335 3.64998 12.3335 4.66665C12.3335 5.68331 11.9296 6.65833 11.2107 7.37722C10.4918 8.09611 9.51683 8.49998 8.50016 8.49998C7.4835 8.49998 6.50848 8.09611 5.78959 7.37722C5.0707 6.65833 4.66683 5.68331 4.66683 4.66665C4.66683 3.64998 5.0707 2.67496 5.78959 1.95607C6.50848 1.23718 7.4835 0.833313 8.50016 0.833313ZM8.50016 10.4166C12.736 10.4166 16.1668 12.1321 16.1668 14.25V16.1666H0.833496V14.25C0.833496 12.1321 4.26433 10.4166 8.50016 10.4166Z"
-                                    fill="#6E6F81"></path>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </div>
-                        <span class="">{{ __('Profile') }}</span>
+                        <span>{{ __('My Profile') }}</span>
                     </a>
                 </li>
+
             </ul>
+
             <a href="{{ route('logout') }}" class="d-inline-flex align-items-center cg-15 pt-17 pb-30 px-30">
-                <!-- <img src="assets/images/icon/logout.svg" alt="" /> -->
                 <p class="fs-14 fw-600 lh-14 text-sidebar-text">{{ __('Logout') }}</p>
             </a>
         </div>

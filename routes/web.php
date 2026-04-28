@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\VersionUpdateController;
+use App\Http\Controllers\Webhook\MetaWebhookController;
 use App\Models\Language;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -54,3 +55,25 @@ Route::get('auth/facebook/callback', [FacebookController::class, 'handleFacebook
 
 Route::get('version-update', [VersionUpdateController::class, 'versionUpdate'])->name('version-update')->withoutMiddleware(['version.update']);
 Route::post('process-update', [VersionUpdateController::class, 'processUpdate'])->name('process-update')->withoutMiddleware(['version.update']);
+
+/*
+|--------------------------------------------------------------------------
+| Meta Webhook Routes (Public — no auth, no CSRF)
+|--------------------------------------------------------------------------
+| Meta calls these URLs directly from their servers.
+| URL format: /webhook/meta/{userId}
+|
+| GET  → Verification challenge (hub.challenge handshake)
+| POST → Incoming events (Messenger, WhatsApp, FB comments, Instagram)
+|
+| These are excluded from CSRF in App\Http\Middleware\VerifyCsrfToken.
+*/
+Route::prefix('webhook')->name('webhook.')->group(function () {
+    // Verification handshake (GET) — Meta calls this when you save the webhook URL
+    Route::get('meta/{userId}', [MetaWebhookController::class, 'verify'])
+        ->name('meta.verify');
+
+    // Receive events (POST) — Meta calls this for every incoming message/comment
+    Route::post('meta/{userId}', [MetaWebhookController::class, 'receive'])
+        ->name('meta.receive');
+});

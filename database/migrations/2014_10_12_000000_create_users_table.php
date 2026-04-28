@@ -38,7 +38,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->unsignedBigInteger('image')->nullable();
-            $table->tinyInteger('role')->default(USER_ROLE_EMPLOYEE);
+            $table->tinyInteger('role')->default(USER_ROLE_ADMIN);
             $table->tinyInteger('email_verification_status')->default(0);
             $table->tinyInteger('phone_verification_status')->default(0);
             $table->tinyInteger('google_auth_status')->default(0);

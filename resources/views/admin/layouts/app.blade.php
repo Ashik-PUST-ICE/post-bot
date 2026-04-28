@@ -30,6 +30,19 @@
         @include('cookie-consent::index')
     </div>
     @endif
+
+    {{-- Queue Settings Modal (auto-opens first visit, always accessible) --}}
+    @include('admin.layouts.partial.queue-settings-modal')
+
+    {{-- Floating Queue Status Button (bottom-right corner) --}}
+    <button type="button"
+        data-bs-toggle="modal" data-bs-target="#queueSettingsModal"
+        title="{{ __('Queue Settings') }}"
+        class="position-fixed d-flex align-items-center justify-content-center border-0 bd-ra-50 shadow"
+        style="bottom:24px;right:24px;width:46px;height:46px;background:#6366f1;color:#fff;z-index:1050;">
+        <i class="fa-solid fa-layer-group fs-16"></i>
+    </button>
+
     @include('admin.layouts.script')
 </body>
 
