@@ -37,7 +37,11 @@ class GatewaySeeder extends Seeder
             ['user_id' => 2, 'tenant_id' => 'zainiklab', 'title' => 'Flutterwave', 'slug' => 'flutterwave', 'image' => 'assets/images/gateway-icon/flutterwave.png', 'status' => ACTIVE, 'mode' => GATEWAY_MODE_SANDBOX, 'url' => '', 'key' => '', 'secret' => ''],
             ['user_id' => 2, 'tenant_id' => 'zainiklab', 'title' => 'Mercadopago', 'slug' => 'mercadopago', 'image' => 'assets/images/gateway-icon/mercadopago.png', 'status' => ACTIVE, 'mode' => GATEWAY_MODE_SANDBOX, 'url' => '', 'key' => '', 'secret' => ''],
             ['user_id' => 2, 'tenant_id' => 'zainiklab', 'title' => 'Bank', 'slug' => 'bank', 'image' => 'assets/images/gateway-icon/bank.png', 'status' => ACTIVE, 'mode' => GATEWAY_MODE_SANDBOX, 'url' => '', 'key' => '', 'secret' => ''],
-            ['user_id' => 2, 'tenant_id' => 'zainiklab', 'title' => 'Cash', 'slug' => 'cash', 'image' => 'assets/images/gateway-icon/cash.png', 'status' => ACTIVE, 'mode' => GATEWAY_MODE_SANDBOX, 'url' => '', 'key' => '', 'secret' => '',],
+            ['user_id' => 2, 'tenant_id' => 'zainiklab', 'title' => 'Cash', 'slug' => 'cash', 'image' => 'assets/images/gateway-icon/cash.png', 'status' => ACTIVE, 'mode' => GATEWAY_MODE_SANDBOX, 'url' => '', 'key' => '', 'secret' => ''],
+            ['user_id' => 1, 'tenant_id' => null, 'title' => 'bKash', 'slug' => 'bkash', 'image' => 'assets/images/gateway-icon/bikash.png', 'status' => ACTIVE, 'mode' => GATEWAY_MODE_SANDBOX, 'url' => '', 'key' => '', 'secret' => ''],
+            ['user_id' => 1, 'tenant_id' => null, 'title' => 'Nagad', 'slug' => 'nagad', 'image' => 'assets/images/gateway-icon/nagad1.jpg', 'status' => ACTIVE, 'mode' => GATEWAY_MODE_SANDBOX, 'url' => '', 'key' => '', 'secret' => ''],
+            ['user_id' => 2, 'tenant_id' => 'zainiklab', 'title' => 'bKash', 'slug' => 'bkash', 'image' => 'assets/images/gateway-icon/bikash.png', 'status' => ACTIVE, 'mode' => GATEWAY_MODE_SANDBOX, 'url' => '', 'key' => '', 'secret' => ''],
+            ['user_id' => 2, 'tenant_id' => 'zainiklab', 'title' => 'Nagad', 'slug' => 'nagad', 'image' => 'assets/images/gateway-icon/nagad1.jpg', 'status' => ACTIVE, 'mode' => GATEWAY_MODE_SANDBOX, 'url' => '', 'key' => '', 'secret' => ''],
         ];
         Gateway::insert($data);
 
@@ -64,6 +68,10 @@ class GatewaySeeder extends Seeder
             ['user_id' => 2, 'tenant_id' => 'zainiklab', 'gateway_id' => 20, 'currency' => 'BRL', 'conversion_rate' => 5],
             ['user_id' => 2, 'tenant_id' => 'zainiklab', 'gateway_id' => 21, 'currency' => 'USD', 'conversion_rate' => 1],
             ['user_id' => 2, 'tenant_id' => 'zainiklab', 'gateway_id' => 22, 'currency' => 'USD', 'conversion_rate' => 1],
+            ['user_id' => 1, 'tenant_id' => null, 'gateway_id' => 23, 'currency' => 'BDT', 'conversion_rate' => 100],
+            ['user_id' => 1, 'tenant_id' => null, 'gateway_id' => 24, 'currency' => 'BDT', 'conversion_rate' => 100],
+            ['user_id' => 2, 'tenant_id' => 'zainiklab', 'gateway_id' => 25, 'currency' => 'BDT', 'conversion_rate' => 100],
+            ['user_id' => 2, 'tenant_id' => 'zainiklab', 'gateway_id' => 26, 'currency' => 'BDT', 'conversion_rate' => 100],
         ]);
     }
 }

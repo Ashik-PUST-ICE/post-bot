@@ -255,7 +255,7 @@
                         <span class="">{{ __('Notification Template') }}</span>
                     </a>
                 </li>
-                @if (isAddonInstalled('KPISAAS') > 0)
+            
                 <li>
                     <a href="{{ route('super-admin.file-version-update') }}"
                         class="d-flex align-items-center cg-21 {{ $activeVersionUpdate ?? '' }}">
@@ -284,7 +284,7 @@
                         <span class="">{{ __('Version Update') }}</span>
                     </a>
                 </li>
-                @endif
+                
             </ul>
             <a href="{{ route('logout') }}"
                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();"

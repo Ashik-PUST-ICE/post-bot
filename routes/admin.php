@@ -74,21 +74,6 @@ Route::group(['prefix' => 'setting', 'as' => 'setting.'], function () {
         Route::get('syncs', [GatewayController::class, 'syncs'])->name('syncs');
     });
 
-    //common setting update
-    Route::post('common-settings-update', [SettingController::class, 'commonSettingUpdate'])->name('common.settings.update')->middleware('isDemo');
-
-
-
-    Route::get('email-template', [EmailTemplateController::class, 'emailTemplate'])->name('email-template');
-    Route::get('email-template-config', [EmailTemplateController::class, 'emailTemplateConfig'])->name('email.template.config');
-    Route::post('email-template-config-update', [EmailTemplateController::class, 'emailTemplateConfigUpdate'])->name('email.template.config.update');
-    Route::get('preview-test-mail/{id}', [EmailTemplateController::class, 'previewMailTest'])->name('preview-test-mail');
-    Route::post('send-test-mail/{id}', [EmailTemplateController::class, 'sendTestMail'])->name('send-test-mail');
-
-    Route::get('notify-template', [NotificationController::class, 'notifyTemplate'])->name('notify-template');
-    Route::get('notify-template-config', [NotificationController::class, 'notifyTemplateConfig'])->name('notify.template.config');
-    Route::post('notify-template-config-update', [NotificationController::class, 'notifyTemplateConfigUpdate'])->name('notify.template.config.update');
-
     Route::group(['prefix' => 'profile', 'as' => 'profile.'], function () {
         Route::get('/', [ProfileController::class, 'index'])->name('index');
         Route::post('update', [ProfileController::class, 'update'])->name('update')->middleware('isDemo');
