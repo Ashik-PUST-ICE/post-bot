@@ -2,6 +2,15 @@
 @push('title')
     {{ $pageTitle }}
 @endpush
+@push('style')
+    <style>
+        .gateway-image {
+            max-width: 150px;
+            max-height: 60px;
+            object-fit: contain;
+        }
+    </style>
+@endpush
 @section('content')
     <div data-aos="fade-up" data-aos-duration="1000" class="p-sm-30 p-15">
         <div class="row rg-20">
@@ -13,7 +22,7 @@
                     <div class="p-sm-25 p-15 bd-one bd-c-stroke bd-ra-10 bg-white mb-25">
                         <div class="row rg-20">
                             <div class="col-12">
-                                <div><img src="{{ asset($gateway->image) }}" /></div>
+                                <div><img src="{{ asset($gateway->image) }}" class="gateway-image" /></div>
                             </div>
                             <div class="col-6">
                                 <label class="zForm-label">{{ __('Title') }}</label>

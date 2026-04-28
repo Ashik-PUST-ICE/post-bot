@@ -3,6 +3,20 @@
     @push('title')
         {{ $pageTitle }}
     @endpush
+    @push('style')
+        <style>
+            .gateway-image {
+                max-width: 100px;
+                max-height: 40px;
+                object-fit: contain;
+            }
+            .modal-inner-form-box .image {
+                max-width: 150px;
+                max-height: 60px;
+                object-fit: contain;
+            }
+        </style>
+    @endpush
     <!-- Page content area start -->
     <div data-aos="fade-up" data-aos-duration="1000" class="p-sm-30 p-15">
         <h4 class="fs-18 fw-600 lh-18 text-textBlack pb-16">{{ __($pageTitle) }}</h4>

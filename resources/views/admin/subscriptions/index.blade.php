@@ -2,6 +2,15 @@
 @push('title')
 {{ $title }}
 @endpush
+@push('style')
+<style>
+    .gateway-image {
+        max-width: 100px;
+        max-height: 40px;
+        object-fit: contain;
+    }
+</style>
+@endpush
 @section('content')
 <div data-aos="fade-up" data-aos-duration="1000" class="p-sm-30 p-15">
     <div class="row rg-20">

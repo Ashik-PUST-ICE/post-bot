@@ -88,7 +88,7 @@
                                 class="py-8 p-sm-20 p-10 bd-ra-20 mb-20 bg-body-bg text-center fs-14 fw-400 lh-16 text-para-text">
                                 {{ $singleGateway->title }}</h6>
                             <div class="text-center mb-20">
-                                <img src="{{ asset($singleGateway->image) }}" alt="" />
+                                <img src="{{ asset($singleGateway->image) }}" class="gateway-image" alt="" />
                             </div>
                             <button type="button" data-gateway="{{ $singleGateway->slug }}"
                                 data-id="{{ $singleGateway->id }}" data-package_id={{ $package->id }}
