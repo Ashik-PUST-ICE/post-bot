@@ -1,31 +1,23 @@
 <?php
 
-use App\Http\Controllers\Frontend\AlumniController;
-use App\Http\Controllers\Frontend\ContactUsController;
-use App\Http\Controllers\Frontend\EventController;
-use App\Http\Controllers\Frontend\HomeController;
-use App\Http\Controllers\Frontend\JobController;
-use App\Http\Controllers\Frontend\MembershipController;
-use App\Http\Controllers\Frontend\NewsController;
-use App\Http\Controllers\Frontend\NewsSubscriptionLetterController;
-use App\Http\Controllers\Frontend\NoticeController;
+use App\Http\Controllers\Frontend\LandingController;
 use App\Http\Controllers\Frontend\NotificationController;
-use App\Http\Controllers\Frontend\StoryController;
-use App\Http\Controllers\Frontend\TicketVerifyController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Frontend / Public Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
 */
 
-Route::get('/', [HomeController::class, 'index'])->name('index');
+// ── Landing pages ────────────────────────────────────────────────────────────
+Route::get('/',                     [LandingController::class, 'index'])->name('frontend');
+Route::get('/about-us',             [LandingController::class, 'aboutUs'])->name('about_us');
+Route::get('/privacy-policy',       [LandingController::class, 'privacyPolicy'])->name('privacy_policy');
+Route::get('/return-policy',        [LandingController::class, 'returnPolicy'])->name('return_policy');
+Route::get('/terms-and-conditions', [LandingController::class, 'termsAndConditions'])->name('terms_and_condition');
+Route::post('/contact-us',          [LandingController::class, 'contactStore'])->name('contact-us.store');
 
-// Notification routes
+// ── Notifications ────────────────────────────────────────────────────────────
 Route::get('notification/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notification.mark-all-as-read');
 Route::get('notification/mark-as-read/{id}', [NotificationController::class, 'markAsRead'])->name('notification.mark-as-read');

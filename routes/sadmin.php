@@ -13,6 +13,7 @@ use App\Http\Controllers\SuperAdmin\UserController;
 use App\Http\Controllers\SuperAdmin\PackageController;
 use App\Http\Controllers\SuperAdmin\SubscriptionController;
 use App\Http\Controllers\SuperAdmin\AddonUpdateController;
+use App\Http\Controllers\SuperAdmin\FrontendController;
 use App\Http\Controllers\SuperAdmin\VersionUpdateController;
 use App\Models\Language;
 use Illuminate\Support\Facades\Route;
@@ -196,6 +197,35 @@ Route::group(['prefix' => 'roles', 'as' => 'roles.'], function () {
         Route::get('notification-mark-all-as-read', [NotificationController::class, 'notificationMarkAllAsRead'])->name('notification-mark-all-as-read');
         Route::get('view/{id}', [NotificationController::class, 'notificationView'])->name('view');
         Route::get('notification-mark-as-read/{id}', [NotificationController::class, 'notificationMarkAsRead'])->name('notification-mark-as-read');
+    });
+
+    // ── Frontend Settings ────────────────────────────────────────────────────
+    Route::group(['prefix' => 'frontend', 'as' => 'frontend.'], function () {
+        // Sections (hero heading, features heading, etc.)
+        Route::get('sections',                     [FrontendController::class, 'sections'])->name('sections');
+        Route::post('sections/update/{id}',        [FrontendController::class, 'updateSection'])->name('sections.update');
+
+        // Repeatable content items
+        Route::get('features',                     [FrontendController::class, 'features'])->name('features');
+        Route::get('services',                     [FrontendController::class, 'services'])->name('services');
+        Route::get('core-features',                [FrontendController::class, 'coreFeatures'])->name('core-features');
+        Route::get('choose-us',                    [FrontendController::class, 'chooseUs'])->name('choose-us');
+        Route::get('faqs',                         [FrontendController::class, 'faqs'])->name('faqs');
+        Route::get('testimonials',                 [FrontendController::class, 'testimonials'])->name('testimonials');
+
+        // Shared content CRUD (AJAX)
+        Route::post('contents/store',              [FrontendController::class, 'storeContent'])->name('contents.store');
+        Route::post('contents/update/{id}',        [FrontendController::class, 'updateContent'])->name('contents.update');
+        Route::post('contents/delete/{id}',        [FrontendController::class, 'deleteContent'])->name('contents.delete');
+        Route::get('contents/info/{id}',           [FrontendController::class, 'getContentInfo'])->name('contents.info');
+
+        // About page
+        Route::get('about',                        [FrontendController::class, 'about'])->name('about');
+        Route::post('about/update',                [FrontendController::class, 'updateAbout'])->name('about.update');
+
+        // Policy pages
+        Route::get('policies',                     [FrontendController::class, 'policies'])->name('policies');
+        Route::post('policies/update',             [FrontendController::class, 'updatePolicies'])->name('policies.update');
     });
 
     Route::get('version-update', [VersionUpdateController::class, 'versionFileUpdate'])->name('file-version-update');

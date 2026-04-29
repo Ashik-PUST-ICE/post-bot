@@ -281,6 +281,96 @@
                     </a>
                 </li>
             
+                {{-- ── Frontend ─────────────────────────────────────────────── --}}
+                <li class="zSidebar-label">
+                    <span>{{ __('Frontend') }}</span>
+                </li>
+                <li>
+                    <a href="{{ route('super-admin.frontend.sections') }}"
+                        class="d-flex align-items-center cg-21 {{ $activeFrontendSection ?? '' }}">
+                        <div class="d-flex">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3 9H21M3 15H21M9 3V21M15 3V21M3 3H21V21H3V3Z" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span>{{ __('Sections') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('super-admin.frontend.features') }}"
+                        class="d-flex align-items-center cg-21 {{ $activeFrontendFeatures ?? '' }}">
+                        <div class="d-flex">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span>{{ __('Features') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('super-admin.frontend.services') }}"
+                        class="d-flex align-items-center cg-21 {{ $activeFrontendServices ?? '' }}">
+                        <div class="d-flex">
+                            <i class="fa-solid fa-layer-group text-para-text"></i>
+                        </div>
+                        <span>{{ __('Services') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('super-admin.frontend.core-features') }}"
+                        class="d-flex align-items-center cg-21 {{ $activeFrontendCore ?? '' }}">
+                        <div class="d-flex">
+                            <i class="fa-solid fa-cubes text-para-text"></i>
+                        </div>
+                        <span>{{ __('Core Features') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('super-admin.frontend.choose-us') }}"
+                        class="d-flex align-items-center cg-21 {{ $activeFrontendChooseUs ?? '' }}">
+                        <div class="d-flex">
+                            <i class="fa-solid fa-thumbs-up text-para-text"></i>
+                        </div>
+                        <span>{{ __('Why Choose Us') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('super-admin.frontend.faqs') }}"
+                        class="d-flex align-items-center cg-21 {{ $activeFrontendFaqs ?? '' }}">
+                        <div class="d-flex">
+                            <i class="fa-solid fa-circle-question text-para-text"></i>
+                        </div>
+                        <span>{{ __('FAQs') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('super-admin.frontend.testimonials') }}"
+                        class="d-flex align-items-center cg-21 {{ $activeFrontendTestimonials ?? '' }}">
+                        <div class="d-flex">
+                            <i class="fa-solid fa-comments text-para-text"></i>
+                        </div>
+                        <span>{{ __('Testimonials') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('super-admin.frontend.about') }}"
+                        class="d-flex align-items-center cg-21 {{ $activeFrontendAbout ?? '' }}">
+                        <div class="d-flex">
+                            <i class="fa-solid fa-address-card text-para-text"></i>
+                        </div>
+                        <span>{{ __('About Page') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('super-admin.frontend.policies') }}"
+                        class="d-flex align-items-center cg-21 {{ $activeFrontendPolicies ?? '' }}">
+                        <div class="d-flex">
+                            <i class="fa-solid fa-file-shield text-para-text"></i>
+                        </div>
+                        <span>{{ __('Policy Pages') }}</span>
+                    </a>
+                </li>
+
                 {{-- ── System ─────────────────────────────────────────────── --}}
                 <li class="zSidebar-label">
                     <span>{{ __('System') }}</span>

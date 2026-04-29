@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="no-js" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-@include('frontend.layouts.header')
+@include('layouts.header')
 
 <body class="{{ selectedLanguage()->rtl == 1 ? 'direction-rtl' : 'direction-ltr' }}">
-<input type="hidden" id="lang_code" value="{{session('local')}}">
+
 @if (getOption('app_preloader_status', 0) == STATUS_ACTIVE)
     <div id="preloader">
         <div id="preloader_status">
@@ -13,10 +13,8 @@
     </div>
 @endif
 
-@include('frontend.layouts.nav')
-
+@include('frontend.layouts.header')
 @yield('content')
-
 @include('frontend.layouts.footer')
 
 @if (!empty(getOption('cookie_status')) && getOption('cookie_status') == STATUS_ACTIVE)
@@ -24,7 +22,8 @@
         @include('cookie-consent::index')
     </div>
 @endif
-@include('frontend.layouts.script')
+
+@include('layouts.script')
 </body>
 
 </html>
