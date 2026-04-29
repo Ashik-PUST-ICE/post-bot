@@ -14,6 +14,11 @@
             <ul class="zSidebar-menu" id="sidebarMenu">
 
                 {{-- ── Core ─────────────────────────────────────────────────── --}}
+
+                {{-- ── Overview  ─────────────────────────────────────────────── --}}
+                <li class="zSidebar-label">
+                    <span>{{ __('Overview ') }}</span>
+                </li>
                 <li>
                     <a href="{{ route('admin.dashboard') }}"
                         class="d-flex align-items-center cg-21 {{ @$activeDashboard }}">
