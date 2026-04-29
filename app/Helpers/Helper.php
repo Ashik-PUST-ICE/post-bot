@@ -1046,7 +1046,7 @@ if (!function_exists('gatewaySettings')) {
             "stripe" => [
                 ["label" => "Url", "name" => "url", "is_show" => 0],
                 ["label" => "Public Key", "name" => "key", "is_show" => 1],
-                ["label" => "Secret Key", "name" => "secret", "is_show" => 0]
+                ["label" => "Secret Key", "name" => "secret", "is_show" => 1]
             ],
             "razorpay" => [
                 ["label" => "Url", "name" => "url", "is_show" => 0],
