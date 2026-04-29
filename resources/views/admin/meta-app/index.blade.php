@@ -72,27 +72,74 @@
 
         {{-- Tab Nav --}}
         <div class="bd-one bd-c-stroke bd-ra-10 bg-white mb-4">
-            <ul class="nav d-flex flex-nowrap overflow-auto" id="metaConfigTabs" role="tablist"
-                style="border-bottom:1px solid #e5e7eb; padding: 0 20px; gap:4px;">
+            <style>
+                #metaConfigTabs {
+                    background: #f9fafb;
+                    padding: 10px 15px !important;
+                    border-bottom: 1px solid #e5e7eb;
+                    gap: 8px !important;
+                    border-radius: 10px 10px 0 0;
+                }
+                .meta-tab-link {
+                    border-radius: 8px !important;
+                    transition: all 0.2s ease;
+                    border: 1px solid transparent !important;
+                    color: #4b5563 !important;
+                    position: relative;
+                    white-space: nowrap;
+                }
+                .meta-tab-link:hover {
+                    background: #f3f4f6;
+                    color: #111827 !important;
+                }
+                .meta-tab-link:focus {
+                    outline: none;
+                    box-shadow: none !important;
+                }
+                .meta-tab-link.active {
+                    background: white !important;
+                    border-color: #e5e7eb !important;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                    color: var(--main-color, #6366f1) !important;
+                    font-weight: 600 !important;
+                }
+                .meta-tab-link.active i {
+                    transform: scale(1.1);
+                }
+                .status-dot {
+                    width: 7px;
+                    height: 7px;
+                    border-radius: 50%;
+                    background: #d1d5db;
+                    position: absolute;
+                    top: 10px;
+                    right: 8px;
+                }
+                .status-dot.active {
+                    background: #10b981;
+                    box-shadow: 0 0 0 2px #10b98133;
+                }
+            </style>
+            <ul class="nav d-flex flex-nowrap overflow-auto" id="metaConfigTabs" role="tablist">
                 @php
                     $tabs = [
-                        ['id' => 'tab-app',       'label' => __('Meta App'),   'icon' => 'fa-brands fa-meta',       'color' => '#1877F2', 'active' => true],
-                        ['id' => 'tab-facebook',  'label' => __('Facebook'),   'icon' => 'fa-brands fa-facebook',   'color' => '#1877F2', 'active' => false],
-                        ['id' => 'tab-whatsapp',  'label' => __('WhatsApp'),   'icon' => 'fa-brands fa-whatsapp',   'color' => '#25D366', 'active' => false],
-                        ['id' => 'tab-instagram', 'label' => __('Instagram'),  'icon' => 'fa-brands fa-instagram',  'color' => '#E1306C', 'active' => false],
-                        ['id' => 'tab-webhook',   'label' => __('Webhook'),    'icon' => 'fa-solid fa-plug',        'color' => '#6366f1', 'active' => false],
+                        ['id' => 'tab-app',       'label' => __('Meta App'),   'icon' => 'fa-brands fa-meta',       'color' => '#1877F2', 'active' => true,  'ok' => ($config->fb_app_id && $config->fb_app_secret)],
+                        ['id' => 'tab-facebook',  'label' => __('Facebook'),   'icon' => 'fa-brands fa-facebook',   'color' => '#1877F2', 'active' => false, 'ok' => $config->hasFacebook()],
+                        ['id' => 'tab-whatsapp',  'label' => __('WhatsApp'),   'icon' => 'fa-brands fa-whatsapp',   'color' => '#25D366', 'active' => false, 'ok' => $config->hasWhatsApp()],
+                        ['id' => 'tab-instagram', 'label' => __('Instagram'),  'icon' => 'fa-brands fa-instagram',  'color' => '#E1306C', 'active' => false, 'ok' => $config->hasInstagram()],
+                        ['id' => 'tab-webhook',   'label' => __('Webhook'),    'icon' => 'fa-solid fa-plug',        'color' => '#6366f1', 'active' => false, 'ok' => !empty($config->webhook_verify_token)],
                     ];
                 @endphp
                 @foreach($tabs as $tab)
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link d-flex align-items-center cg-7 py-16 px-14 border-0 bg-transparent fs-13 fw-500 {{ $tab['active'] ? 'active' : '' }}"
+                    <button class="nav-link meta-tab-link d-flex align-items-center cg-7 py-12 px-18 border-0 bg-transparent fs-13 fw-500 {{ $tab['active'] ? 'active' : '' }}"
                         id="{{ $tab['id'] }}-btn"
                         data-bs-toggle="tab"
                         data-bs-target="#{{ $tab['id'] }}"
-                        type="button" role="tab"
-                        style="border-bottom: 2px solid transparent; border-radius:0; white-space:nowrap;">
-                        <i class="{{ $tab['icon'] }}" style="color:{{ $tab['color'] }}"></i>
+                        type="button" role="tab">
+                        <i class="{{ $tab['icon'] }} fs-15" style="color:{{ $tab['color'] }}"></i>
                         {{ $tab['label'] }}
+                        <span class="status-dot {{ $tab['ok'] ? 'active' : '' }}" title="{{ $tab['ok'] ? __('Configured') : __('Not set') }}"></span>
                     </button>
                 </li>
                 @endforeach
@@ -379,19 +426,4 @@
 
 @push('script')
 <script src="{{ asset('admin/custom/js/meta-app.js') }}"></script>
-<script>
-    // Active tab border highlight
-    document.querySelectorAll('#metaConfigTabs .nav-link').forEach(btn => {
-        btn.addEventListener('shown.bs.tab', () => {
-            document.querySelectorAll('#metaConfigTabs .nav-link').forEach(b => b.style.borderBottomColor = 'transparent');
-            btn.style.borderBottomColor = 'var(--main-color, #6366f1)';
-            btn.style.color = 'var(--main-color, #6366f1)';
-        });
-        // set initial state for active tab
-        if (btn.classList.contains('active')) {
-            btn.style.borderBottomColor = 'var(--main-color, #6366f1)';
-            btn.style.color = 'var(--main-color, #6366f1)';
-        }
-    });
-</script>
 @endpush
