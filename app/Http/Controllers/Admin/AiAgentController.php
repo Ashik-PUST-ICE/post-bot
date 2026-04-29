@@ -17,16 +17,9 @@ class AiAgentController extends Controller
      */
     public function index()
     {
-        $data['title']        = __('AI Agent Configuration');
+        $data['title']        = __('AI Configuration');
         $data['activeAiAgent'] = 'active';
         $data['settings']     = AiAgentSetting::forUser(auth()->id());
-        $data['keywordRules'] = KeywordRule::where('user_id', auth()->id())
-            ->with('platformConnection')
-            ->orderByDesc('priority')
-            ->orderByDesc('id')
-            ->get();
-        $data['platforms'] = PlatformConnection::where('user_id', auth()->id())
-            ->where('status', STATUS_ACTIVE)->get();
 
         // Pass all provider/model data for the view
         $data['allProviders']      = aiProviders();
@@ -39,6 +32,25 @@ class AiAgentController extends Controller
         }
 
         return view('admin.ai-agent.index', $data);
+    }
+
+    /**
+     * Show Agent Knowledge page.
+     */
+    public function knowledge()
+    {
+        $data['title']            = __('Agent Knowledge');
+        $data['activeAiKnowledge'] = 'active';
+        $data['settings']         = AiAgentSetting::forUser(auth()->id());
+        $data['keywordRules']     = KeywordRule::where('user_id', auth()->id())
+            ->with('platformConnection')
+            ->orderByDesc('priority')
+            ->orderByDesc('id')
+            ->get();
+        $data['platforms'] = PlatformConnection::where('user_id', auth()->id())
+            ->where('status', STATUS_ACTIVE)->get();
+
+        return view('admin.ai-agent.knowledge', $data);
     }
 
     /**

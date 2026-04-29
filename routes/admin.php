@@ -129,6 +129,7 @@ Route::group(['prefix' => 'inbox', 'as' => 'inbox.'], function () {
 // ─── AI Agent Settings ───────────────────────────────────────────────────────
 Route::group(['prefix' => 'ai-agent', 'as' => 'ai-agent.'], function () {
     Route::get('/', [AiAgentController::class, 'index'])->name('index');
+    Route::get('knowledge', [AiAgentController::class, 'knowledge'])->name('knowledge');
     Route::post('update', [AiAgentController::class, 'update'])->name('update');
     Route::post('keyword/store', [AiAgentController::class, 'storeKeyword'])->name('keyword.store');
     Route::post('keyword/destroy/{id}', [AiAgentController::class, 'destroyKeyword'])->name('keyword.destroy');
