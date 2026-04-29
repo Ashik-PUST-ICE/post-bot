@@ -8,7 +8,7 @@
     function getInfoRes(response) {
         const selector = $('#payStatusChangeModal');
         selector.find('input[name=id]').val(response.data.id)
-        selector.find('select[name=status]').val(response.data.payment_status)
+        selector.find('select[name=payment_status]').val(response.data.payment_status)
         selector.modal('show')
     }
 

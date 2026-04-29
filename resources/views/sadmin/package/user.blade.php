@@ -3,7 +3,7 @@
 {{ $title }}
 @endpush
 @section('content')
-<div data-aos="fade-up" data-aos-duration="1000" class="p-sm-30 p-15">
+<div data-aos="fade-up" data-aos-duration="1000" class="p-sm-40 p-15">
     <h3 class="fs-18 fw-600 lh-18 text-textBlack pb-16">{{ $title }}</h3>
     <div class="table-wrap-one">
         <div
@@ -43,6 +43,9 @@
                     </th>
                     <th class="desktop">
                         <div class="text-nowrap">{{ __('Status') }}</div>
+                    </th>
+                    <th class="desktop">
+                        <div class="text-nowrap">{{ __('Action') }}</div>
                     </th>
                 </tr>
             </thead>

@@ -76,19 +76,36 @@ class OrderService
                 }
             })
             ->addColumn('action', function ($data) {
-                $html = '<div class="d-flex justify-content-end align-items-center g-10">';
+                $html = '<div class="dropdown dropdown-one">
+                           <button class="dropdown-toggle p-0 bg-transparent w-22 h-22 ms-auto bd-one bd-c-light-border rounded-circle fs-13 text-textBlack d-flex justify-content-center align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis"></i></button>
+                           <ul class="dropdown-menu dropdownItem-one">';
 
-                $html .= '<button onclick="getEditModal(\'' . route('super-admin.subscriptions.order-details', $data->id) . '\'' . ', \'#edit-modal\')"      class="d-flex justify-content-center align-items-center w-30 h-30 rounded-circle bd-one bd-c-stroke rtl-button" title="Show">
-                <img src="' . asset('assets/images/icon/eye.svg') . '" alt="edit" />
-                    </button>';
+                $html .= '<li>
+                            <button onclick="getEditModal(\'' . route('super-admin.subscriptions.order-details', $data->id) . '\'' . ', \'#edit-modal\')" class="d-flex align-items-center cg-8 border-0 bg-transparent px-15 py-10">
+                                <div class="d-flex"><i class="fa-solid fa-eye text-para-text fs-14"></i></div>
+                                <p class="fs-14 fw-500 lh-19 text-textBlack text-nowrap">' . __("Details") . '</p>
+                            </button>
+                         </li>';
 
                 if ($data->payment_status == PAYMENT_STATUS_PENDING) {
-                    $html .= "<button type='button' class='d-flex justify-content-center align-items-center w-30 h-30 rounded-circle bd-one bd-c-stroke rtl-button orderPayStatus' title='Status' data-id='$data->id'><img src='" . asset('assets/images/icon/settings.svg') . "'></button>";
+                    $html .= '<li>
+                                <button type="button" class="d-flex align-items-center cg-8 border-0 bg-transparent px-15 py-10 orderPayStatus" data-id="' . $data->id . '">
+                                    <div class="d-flex"><i class="fa-solid fa-circle-check text-para-text fs-14"></i></div>
+                                    <p class="fs-14 fw-500 lh-19 text-textBlack text-nowrap">' . __("Change Status") . '</p>
+                                </button>
+                             </li>';
                 }
-                if ($data->gatewaySlug == PAYMENT_STATUS_BANK) {
-                    $html .= '<a href="' . getFileUrl($data->bank_deposit_slip_id) . '"  class="d-flex justify-content-center align-items-center w-30 h-30 rounded-circle bd-one bd-c-stroke rtl-button" title="Bank slip download" download><img src="' . asset("assets/images/icon/download.svg") . '"></a>';
+
+                if ($data->gatewaySlug == 'bank') {
+                    $html .= '<li>
+                                <a href="' . getFileUrl($data->bank_deposit_slip_id) . '" class="d-flex align-items-center cg-8 border-0 bg-transparent px-15 py-10" download>
+                                    <div class="d-flex"><i class="fa-solid fa-download text-para-text fs-14"></i></div>
+                                    <p class="fs-14 fw-500 lh-19 text-textBlack text-nowrap">' . __("Download Slip") . '</p>
+                                </a>
+                             </li>';
                 }
-                $html .= '</div>';
+
+                $html .= '</ul></div>';
                 return $html;
             })
             ->rawColumns(['package', 'status', 'gateway', 'action'])

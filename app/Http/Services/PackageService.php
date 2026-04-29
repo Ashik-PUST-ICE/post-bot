@@ -55,11 +55,23 @@ class PackageService
                 }
             })
             ->addColumn('action', function ($package) {
-                return '<div class="d-inline-flex justify-content-end align-items-center g-10">
-                    <button type="button" class="d-flex justify-content-center align-items-center w-30 h-30 rounded-circle bd-one bd-c-stroke ms-auto edit" data-id="' . $package->id . '" title="' . __('Edit') . '"><i class="fa-regular fa-pen-to-square"></i></button>
-
-                    <button onclick="deleteItem(\'' . route('super-admin.packages.destroy', $package->id) . '\', \'packageDataTable\')" class="d-flex justify-content-center align-items-center w-30 h-30 rounded-circle bd-one bd-c-stroke ms-auto"   title="' . __('Delete') . '"><i class="fa-solid fa-trash"></i></button>
-                </div>';
+                return '<div class="dropdown dropdown-one">
+                           <button class="dropdown-toggle p-0 bg-transparent w-22 h-22 ms-auto bd-one bd-c-light-border rounded-circle fs-13 text-textBlack d-flex justify-content-center align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis"></i></button>
+                           <ul class="dropdown-menu dropdownItem-one">
+                              <li>
+                                 <button class="d-flex align-items-center cg-8 border-0 bg-transparent px-15 py-10 edit" data-id="' . $package->id . '">
+                                    <div class="d-flex"><i class="fa-solid fa-pen-to-square text-para-text fs-14"></i></div>
+                                    <p class="fs-14 fw-500 lh-19 text-textBlack text-nowrap">' . __("Edit") . '</p>
+                                 </button>
+                              </li>
+                              <li>
+                                 <button onclick="deleteItem(\'' . route('super-admin.packages.destroy', $package->id) . '\', \'packageDataTable\')" class="d-flex align-items-center cg-8 border-0 bg-transparent px-15 py-10">
+                                    <div class="d-flex"><i class="fa-solid fa-trash text-para-text fs-14"></i></div>
+                                    <p class="fs-14 fw-500 lh-19 text-textBlack text-nowrap">' . __("Delete") . '</p>
+                                 </button>
+                              </li>
+                           </ul>
+                        </div>';
             })
             ->rawColumns(['name', 'icon', 'status', 'trail', 'action'])
             ->make(true);
@@ -182,9 +194,17 @@ class PackageService
                     return '<div class="zBadge zBadge-inactive">Deactivate</div>';
                 }
             })->addColumn('action', function ($userPackage) {
-                return '<div class="tbl-action-btns d-inline-flex">
-                    <button type="button" class="p-1 tbl-action-btn edit" data-id="' . $userPackage->id . '" title="Edit"><span class="iconify" data-icon="clarity:note-edit-solid"></span></button>
-                </div>';
+                return '<div class="dropdown dropdown-one">
+                           <button class="dropdown-toggle p-0 bg-transparent w-22 h-22 ms-auto bd-one bd-c-light-border rounded-circle fs-13 text-textBlack d-flex justify-content-center align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis"></i></button>
+                           <ul class="dropdown-menu dropdownItem-one">
+                              <li>
+                                 <button class="d-flex align-items-center cg-8 border-0 bg-transparent px-15 py-10 edit" data-id="' . $userPackage->id . '">
+                                    <div class="d-flex"><i class="fa-solid fa-pen-to-square text-para-text fs-14"></i></div>
+                                    <p class="fs-14 fw-500 lh-19 text-textBlack text-nowrap">' . __("Edit") . '</p>
+                                 </button>
+                              </li>
+                           </ul>
+                        </div>';
             })
             ->rawColumns(['user_name', 'package_name', 'payment_status', 'start_date', 'end_date', 'status', 'action'])
             ->make(true);

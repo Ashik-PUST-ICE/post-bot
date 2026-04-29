@@ -3,7 +3,7 @@
     @push('title')
         {{ $title }}
     @endpush
-    <div data-aos="fade-up" data-aos-duration="1000" class="p-sm-30 p-15">
+    <div data-aos="fade-up" data-aos-duration="1000" class="p-sm-40 p-15">
         <h4 class="fs-18 fw-600 lh-18 text-textBlack pb-16">{{ __($title) }}</h4>
         <div class="table-wrap-one">
             <div class="table-wrapTop d-flex align-items-center justify-content-center justify-content-md-between flex-wrap g-10 pb-18">
@@ -39,11 +39,11 @@
                     <th>
                         <div class="text-nowrap">{{ __('Yearly Price') }}</div>
                     </th>
-                    <th>
-                        <div>{{ __('Status') }}</div>
+                    <th class="desktop">
+                        <div class="text-nowrap">{{ __('Status') }}</div>
                     </th>
-                    <th>
-                        <div class="text-nowrap">{{ __('Is Trial') }}</div>
+                    <th class="desktop">
+                        <div class="text-nowrap">{{ __('Action') }}</div>
                     </th>
                     <th>
                         <div>{{ __('Action') }}</div>

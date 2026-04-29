@@ -152,7 +152,8 @@
             { data: "start_date", name: "user_packages.start_date" },
             { data: "end_date", name: "user_packages.end_date" },
             { data: "payment_status", name: "subscription_orders.payment_status" },
-            { data: "status", name: "user_packages.status" }
+            { data: "status", name: "user_packages.status" },
+            { data: "action", name: "action" }
         ],
     });
 
