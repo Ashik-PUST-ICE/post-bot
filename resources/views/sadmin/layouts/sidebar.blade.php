@@ -11,6 +11,10 @@
         <!-- Menu & Logout -->
         <div class="zSidebar-fixed">
             <ul class="zSidebar-menu" id="sidebarMenu">
+                {{-- ── Overview ─────────────────────────────────────────────── --}}
+                <li class="zSidebar-label">
+                    <span>{{ __('Overview') }}</span>
+                </li>
                 <li>
                     <a href="{{ route('super-admin.dashboard') }}"
                         class="d-flex align-items-center cg-21 {{ $activeDashboard ?? '' }}">
@@ -27,6 +31,10 @@
                 </li>
 
             
+                {{-- ── Subscription ─────────────────────────────────────────────── --}}
+                <li class="zSidebar-label">
+                    <span>{{ __('Subscription') }}</span>
+                </li>
                 <li>
                     <a href="{{ route('super-admin.packages.index') }}"
                         class="d-flex align-items-center cg-21 {{ $activePackageIndex ?? '' }}">
@@ -85,6 +93,10 @@
                     </a>
                 </li>
             
+                {{-- ── Management ─────────────────────────────────────────────── --}}
+                <li class="zSidebar-label">
+                    <span>{{ __('Management') }}</span>
+                </li>
                 <li>
                     <a href="{{ route('super-admin.roles.index') }}"
                         class="d-flex align-items-center cg-21 {{ $activeRole ?? '' }}">
@@ -106,6 +118,10 @@
 
 
 
+                {{-- ── Configuration ─────────────────────────────────────────────── --}}
+                <li class="zSidebar-label">
+                    <span>{{ __('Configuration') }}</span>
+                </li>
                 <li>
                     <a href="{{ route('super-admin.setting.application-settings') }}"
                         class="d-flex align-items-center cg-21 {{ $activeApplicationSetting ?? '' }}">
@@ -256,6 +272,10 @@
                     </a>
                 </li>
             
+                {{-- ── System ─────────────────────────────────────────────── --}}
+                <li class="zSidebar-label">
+                    <span>{{ __('System') }}</span>
+                </li>
                 <li>
                     <a href="{{ route('super-admin.file-version-update') }}"
                         class="d-flex align-items-center cg-21 {{ $activeVersionUpdate ?? '' }}">
