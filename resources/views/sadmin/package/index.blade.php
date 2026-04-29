@@ -66,7 +66,7 @@
                     </div>
 
                     <form class="ajax reset" action="{{ route('super-admin.packages.store') }}" method="post"
-                          data-handler="commonResponseForModal">
+                          data-handler="commonResponseForModal" enctype="multipart/form-data">
                         @csrf
 
                         <div class="row rg-20 pb-20">
@@ -77,9 +77,12 @@
                                        class="form-control zForm-control">
                             </div>
                             <div>
-                                <label for="icon" class="zForm-label">{{ __('Icon (FontAwesome/Image Path)') }}</label>
-                                <input type="text" name="icon" id="icon" placeholder="{{ __('Icon') }}"
-                                       class="form-control zForm-control">
+                                <label for="icon" class="zForm-label">{{ __('Icon') }}</label>
+                                <div class="upload-img-box">
+                                    <div class="icon"><img src="{{ asset('assets/images/icon/camera.svg') }}" alt=""/></div>
+                                    <img src="{{ asset('assets/images/no-image.jpg') }}"/>
+                                    <input type="file" name="icon" id="icon" accept="image/*" onchange="previewFile(this)"/>
+                                </div>
                             </div>
                             <div>
                                 <label for="page_limit" class="zForm-label">{{ __('Page Limit') }} <span
@@ -186,9 +189,12 @@
                                        class="form-control zForm-control">
                             </div>
                             <div>
-                                <label for="icon" class="zForm-label">{{ __('Icon (FontAwesome/Image Path)') }}</label>
-                                <input type="text" name="icon" id="icon" placeholder="{{ __('Icon') }}"
-                                       class="form-control zForm-control">
+                                <label for="icon" class="zForm-label">{{ __('Icon') }}</label>
+                                <div class="upload-img-box">
+                                    <div class="icon"><img src="{{ asset('assets/images/icon/camera.svg') }}" alt=""/></div>
+                                    <img src="{{ asset('assets/images/no-image.jpg') }}" class="icon-preview"/>
+                                    <input type="file" name="icon" id="icon" accept="image/*" onchange="previewFile(this)"/>
+                                </div>
                             </div>
                             <div>
                                 <label for="page_limit" class="zForm-label">{{ __('Page Limit') }} <span

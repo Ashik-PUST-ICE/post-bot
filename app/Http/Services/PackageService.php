@@ -95,7 +95,13 @@ class PackageService
 
             $package->name = $request->name;
             $package->slug = $request->slug;
-            $package->icon = $request->icon;
+            if ($request->hasFile('icon')) {
+                $newFile = new FileManager();
+                $uploaded = $newFile->upload('Package', $request->icon);
+                if ($uploaded) {
+                    $package->icon = 'storage/' . $uploaded->path;
+                }
+            }
             $package->page_limit = $request->page_limit;
             $package->message_limit = $request->message_limit;
 
@@ -125,7 +131,11 @@ class PackageService
 
     public function getInfo($id)
     {
-        return Package::find($id);
+        $package = Package::find($id);
+        if ($package) {
+            $package->icon_url = asset($package->icon);
+        }
+        return $package;
     }
 
     public function destroy($id)

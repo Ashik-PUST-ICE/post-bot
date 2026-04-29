@@ -31,6 +31,7 @@
                 otherHtmlFields += otherFiledTemplate(val)
             });
         }
+        selector.find('.icon-preview').attr('src', response.data.icon_url);
         selector.find('.otherFields').html(otherHtmlFields);
 
 
