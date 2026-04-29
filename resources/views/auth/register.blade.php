@@ -25,6 +25,7 @@
                     <!--  -->
                     <form action="{{ route('register') }}" enctype="multipart/form-data" method="post">
                         @csrf
+                        <input type="hidden" name="package" value="{{ request('package') }}" />
                         <div class="pb-20">
                             <label for="inputFullName" class="zForm-label">{{__("Full Name")}}</label>
                             <input type="text" class="form-control zForm-control" id="inputFullName" name="name"

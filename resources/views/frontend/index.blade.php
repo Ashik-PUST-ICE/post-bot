@@ -75,7 +75,7 @@
                             <p class="fs-18 fw-600 lh-26 text-para-text max-w-400 pb-20">{{ __($service->sub_title) }}
                             </p>
                             <ul class="lists">
-                                @foreach (json_decode($service->others) as $other)
+                                @foreach ($service->others as $other)
                                 <li>
                                     <div class="icon"><img
                                             src="{{ asset('assets/images/icon/features-check-icon.svg') }}" alt="" />
@@ -271,7 +271,11 @@
                             </li>
                             @endforeach
                         </ul>
-                        <a href="{{ route('register') }}" class="btn link" title="{{ __('Get Started') }}">{{ __('Get Started') }}</a>
+                        @auth
+                        <a href="{{ route('admin.subscription.index', ['id' => $package->id]) }}" class="btn link" title="{{ __('Get Started') }}">{{ __('Get Started') }}</a>
+                        @else
+                        <a href="{{ route('register', ['package' => $package->id]) }}" class="btn link" title="{{ __('Get Started') }}">{{ __('Get Started') }}</a>
+                        @endauth
                     </div>
                 </div>
             </div>

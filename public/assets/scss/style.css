@@ -7154,8 +7154,6 @@ input[type=number] {
   right: 0;
   width: 100%;
   height: 100%;
-  background-image: url(../images/price-plan-bg.png);
-  background-repeat: no-repeat;
 }
 .price-plan-one .price-body {
   padding-top: 1.4375rem;

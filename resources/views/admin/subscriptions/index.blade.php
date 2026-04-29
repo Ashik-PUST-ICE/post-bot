@@ -295,6 +295,7 @@
 @endif
 <input type="hidden" id="requestCurrentPlan" value="{{ request()->current_plan }}">
 <input type="hidden" id="chooseAPlanRoute" value="{{ route('admin.subscription.get.package') }}">
+<input type="hidden" id="getGatewayRoute" value="{{ route('admin.subscription.get.gateway') }}">
 <input type="hidden" id="getCurrencyByGatewayRoute" value="{{ route('admin.subscription.get.currency') }}">
 @endsection
 

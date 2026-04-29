@@ -51,10 +51,13 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        if (isAddonInstalled('KPISAAS') > 0) {
-            return view('auth.register');
-        } else {
-            return redirect()->back()->with('error', 'Registration is not possible!');
+        return view('auth.register');
+    }
+
+    protected function registered(\Illuminate\Http\Request $request, $user)
+    {
+        if ($request->filled('package')) {
+            return redirect()->route('admin.subscription.index', ['id' => $request->package]);
         }
     }
 

@@ -19,6 +19,10 @@ const STATUS_CANCELED = 2;
 const DURATION_MONTH = 1;
 const DURATION_YEAR = 2;
 
+// Payment types
+const PAYMENT_TYPE_ONETIME   = 1;
+const PAYMENT_TYPE_RECURRING = 2;
+
 // User Role Type
 const USER_STATUS_ACTIVE = 1;
 const USER_STATUS_INACTIVE = 0;
