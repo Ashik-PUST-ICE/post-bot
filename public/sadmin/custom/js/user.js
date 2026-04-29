@@ -30,6 +30,7 @@
         columns: [
             {"data": "name", "name": "name"},
             {"data": "email", "name": "email"},
+            {"data": "package", "name": "package"},
             {"data": "created_at", "name": "created_at"},
             {"data": "country", "name": "country"},
             {"data": "status", "name": "status"},

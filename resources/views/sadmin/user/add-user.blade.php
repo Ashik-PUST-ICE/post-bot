@@ -6,7 +6,7 @@
     <!-- Page content area start -->
     <div data-aos="fade-up" data-aos-duration="1000" class="p-sm-30 p-15">
         <h4 class="fs-18 fw-600 lh-18 text-textBlack pb-16">{{ $title }}</h4>
-        <form method="POST" enctype="multipart/form-data" action="{{ route('super-admin.setting.user.store') }}">
+        <form method="POST" enctype="multipart/form-data" action="{{ route('super-admin.user.store') }}">
             @csrf
 
             <div class="bg-white bd-one bd-c-stroke bd-ra-10 p-sm-30 p-15 mb-20">

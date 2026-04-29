@@ -4,7 +4,7 @@
 @endpush
 @section('content')
 <!-- Page content area start -->
-<div data-aos="fade-up" data-aos-duration="1000" class="p-sm-30 p-15">
+<div data-aos="fade-up" data-aos-duration="1000" class="p-sm-40 p-15">
     <h4 class="fs-18 fw-600 lh-18 text-textBlack pb-16">{{ $title }}</h4>
     <div class="table-wrap-one">
         <div
@@ -30,6 +30,9 @@
                     </th>
                     <th>
                         <div>{{ __('Emails') }}</div>
+                    </th>
+                    <th>
+                        <div>{{ __('Package') }}</div>
                     </th>
                     <th>
                         <div class="text-nowrap">{{ __('Created Date') }}</div>

@@ -96,4 +96,9 @@ class User extends Authenticatable
         return $this->hasOne(EmployeeDetails::class);
     }
 
+    public function package()
+    {
+        return $this->hasOne(UserPackage::class, 'user_id')->where('status', STATUS_ACTIVE);
+    }
+
 }

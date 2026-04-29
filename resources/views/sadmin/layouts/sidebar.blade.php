@@ -98,6 +98,15 @@
                     <span>{{ __('Management') }}</span>
                 </li>
                 <li>
+                    <a href="{{ route('super-admin.user.list') }}"
+                        class="d-flex align-items-center cg-21 {{ @$activeUserList }}">
+                        <div class="d-flex">
+                            <i class="fa-solid fa-user-group text-para-text"></i>
+                        </div>
+                        <span class="">{{ __('Customer List') }}</span>
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('super-admin.roles.index') }}"
                         class="d-flex align-items-center cg-21 {{ $activeRole ?? '' }}">
                         <div class="d-flex">

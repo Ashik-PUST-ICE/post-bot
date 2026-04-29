@@ -176,10 +176,13 @@ class UserController extends Controller
     public function userList(Request $request)
     {
         if ($request->ajax()) {
-            $users = User::where('role', USER_ROLE_ADMIN)->orderBy('id', 'DESC')->get();
+            $users = User::where('role', USER_ROLE_ADMIN)->with('package')->orderBy('id', 'DESC')->get();
 
             return DataTables::of($users)
                 ->addIndexColumn()
+                ->addColumn('package', function ($row) {
+                    return $row->package ? $row->package->name : '<span class="text-danger">' . __('No Package') . '</span>';
+                })
                 ->addColumn('status', function ($row) {
                     return $row->status == STATUS_ACTIVE
                         ? '<span class="zBadge zBadge-active">' . __('Active') . '</span>'
@@ -189,17 +192,39 @@ class UserController extends Controller
                     $detailsUrl = route('super-admin.user.details', $row->id);
                     $editUrl    = route('super-admin.user.edit', $row->id);
                     $suspendUrl = route('super-admin.user.suspend', $row->id);
-                    return '
-                        <a href="' . $detailsUrl . '" class="zBtn-green-sm">' . __('Details') . '</a>
-                        <a href="' . $editUrl . '" class="zBtn-warning-sm">' . __('Edit') . '</a>
-                        <a href="' . $suspendUrl . '" class="zBtn-danger-sm">' . __('Suspend') . '</a>';
+                    $suspendText = ($row->status == STATUS_ACTIVE) ? __("Suspend") : __("Activate");
+                    $suspendIcon = ($row->status == STATUS_ACTIVE) ? 'fa-ban' : 'fa-check-circle';
+                    
+                    return '<div class="dropdown dropdown-one">
+                           <button class="dropdown-toggle p-0 bg-transparent w-22 h-22 ms-auto bd-one bd-c-light-border rounded-circle fs-13 text-textBlack d-flex justify-content-center align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis"></i></button>
+                           <ul class="dropdown-menu dropdownItem-one">
+                              <li>
+                                 <a href="' . $detailsUrl . '" class="d-flex align-items-center cg-8 border-0 bg-transparent px-15 py-10">
+                                    <div class="d-flex"><i class="fa-solid fa-eye text-para-text fs-14"></i></div>
+                                    <p class="fs-14 fw-500 lh-19 text-textBlack text-nowrap">' . __("Details") . '</p>
+                                 </a>
+                              </li>
+                              <li>
+                                 <a href="' . $editUrl . '" class="d-flex align-items-center cg-8 border-0 bg-transparent px-15 py-10">
+                                    <div class="d-flex"><i class="fa-solid fa-pen-to-square text-para-text fs-14"></i></div>
+                                    <p class="fs-14 fw-500 lh-19 text-textBlack text-nowrap">' . __("Edit") . '</p>
+                                 </a>
+                              </li>
+                              <li>
+                                 <a href="' . $suspendUrl . '" class="d-flex align-items-center cg-8 border-0 bg-transparent px-15 py-10">
+                                    <div class="d-flex"><i class="fa-solid ' . $suspendIcon . ' text-para-text fs-14"></i></div>
+                                    <p class="fs-14 fw-500 lh-19 text-textBlack text-nowrap">' . $suspendText . '</p>
+                                 </a>
+                              </li>
+                           </ul>
+                        </div>';
                 })
-                ->rawColumns(['status', 'action'])
+                ->rawColumns(['package', 'status', 'action'])
                 ->make(true);
         }
 
         return view('sadmin.user.index', [
-            'title'          => __('User List'),
+            'title'          => __('Customer List'),
             'activeUserList' => 'active',
         ]);
     }
