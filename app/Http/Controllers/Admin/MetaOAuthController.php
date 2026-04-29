@@ -181,27 +181,33 @@ class MetaOAuthController extends Controller
         try {
             DB::beginTransaction();
 
-            // For WA: also update the access token in MetaAppConfig for future API calls
-            if ((int) $request->platform_type === PLATFORM_WHATSAPP) {
-                MetaAppConfig::forUser(auth()->id())->update([
-                    'wa_phone_number_id' => $request->phone_number_id,
-                    'wa_access_token'    => $request->access_token,
+            $metaConfig = MetaAppConfig::forUser(auth()->id());
+
+            // Facebook Page: save page ID + page access token into MetaAppConfig.
+            // Page access tokens are long-lived (never expire unless revoked).
+            if ((int) $request->platform_type === PLATFORM_FACEBOOK_PAGE) {
+                $metaConfig->update([
+                    'fb_page_id'           => $request->page_id,
+                    'fb_page_access_token' => $request->access_token,
                 ]);
             }
 
-            // For Instagram: also save IG token in MetaAppConfig
+            // Instagram: save IG user ID + page token into MetaAppConfig.
+            // The page token is used to reply to Instagram DMs via the Messenger API.
             if ((int) $request->platform_type === PLATFORM_INSTAGRAM) {
-                MetaAppConfig::forUser(auth()->id())->update([
-                    'ig_user_id'     => $request->ig_user_id ?: $request->page_id,
+                $metaConfig->update([
+                    'ig_user_id'      => $request->ig_user_id ?: $request->page_id,
                     'ig_access_token' => $request->access_token,
                 ]);
             }
 
-            // For Facebook Page: save page token in MetaAppConfig too
-            if ((int) $request->platform_type === PLATFORM_FACEBOOK_PAGE) {
-                MetaAppConfig::forUser(auth()->id())->update([
-                    'fb_page_id'           => $request->page_id,
-                    'fb_page_access_token' => $request->access_token,
+            // WhatsApp: only save the Phone Number ID from OAuth.
+            // ⚠️ We intentionally do NOT save the OAuth user token as wa_access_token here.
+            // The OAuth token is a ~60-day user token; WhatsApp messaging requires
+            // a permanent System User token. Admins must set that manually in Meta App Config.
+            if ((int) $request->platform_type === PLATFORM_WHATSAPP) {
+                $metaConfig->update([
+                    'wa_phone_number_id' => $request->phone_number_id,
                 ]);
             }
 
@@ -227,10 +233,22 @@ class MetaOAuthController extends Controller
             Session::forget('meta_oauth_data');
 
             DB::commit();
+
+            $redirectRoute = route('admin.platforms.index');
+
+            // WhatsApp: remind admin to set a permanent System User token
+            if ((int) $request->platform_type === PLATFORM_WHATSAPP) {
+                return response()->json([
+                    'status'   => true,
+                    'message'  => __('WhatsApp number connected! Please set a permanent System User Token in Meta App Config to enable messaging.'),
+                    'redirect' => route('admin.meta-app.index'),
+                ]);
+            }
+
             return response()->json([
                 'status'   => true,
                 'message'  => __('Platform connected successfully via OAuth!'),
-                'redirect' => route('admin.platforms.index'),
+                'redirect' => $redirectRoute,
             ]);
         } catch (\Exception $e) {
             DB::rollBack();

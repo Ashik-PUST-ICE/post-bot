@@ -109,11 +109,23 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 bd-ra-4 p-20">
             <div class="d-flex justify-content-between align-items-center bd-b-one bd-c-light-border pb-20 mb-20">
-                <h4 class="fs-18 fw-600 text-textBlack">{{ __('Connect New Platform') }}</h4>
+                <h4 class="fs-18 fw-600 text-textBlack">{{ __('Add Platform Manually') }}</h4>
                 <button type="button" class="border-0 p-0 bg-transparent text-para-text" data-bs-dismiss="modal">
                     <i class="fa-solid fa-times"></i>
                 </button>
             </div>
+
+            {{-- Manual vs OAuth tip --}}
+            <div class="bd-one bd-ra-8 p-12 mb-20 d-flex align-items-start cg-10"
+                style="background:#fffbeb; border-color:#fde68a;">
+                <i class="fa-solid fa-circle-info fs-13 mt-1 flex-shrink-0" style="color:#d97706"></i>
+                <p class="fs-12 text-para-text mb-0">
+                    {{ __('Use this form only if you have a token from') }}
+                    <a href="https://business.facebook.com/settings/system-users" target="_blank" class="text-main-color">{{ __('Meta Business System Users') }}</a>.
+                    {{ __("For the easiest setup, use the 'Connect via Meta OAuth' button above — it fills everything automatically.") }}
+                </p>
+            </div>
+
             <form class="ajax reset" action="{{ route('admin.platforms.store') }}" method="POST"
                 data-handler="commonResponse">
                 @csrf
@@ -145,20 +157,21 @@
                         <label class="zForm-label">{{ __('WABA ID') }}</label>
                         <input type="text" name="waba_id" class="form-control zForm-control"
                             placeholder="{{ __('WhatsApp Business Account ID') }}">
+                        <p class="fs-12 text-para-text mt-5">{{ __('Found in: Meta App Dashboard → WhatsApp → API Setup → WhatsApp Business Account ID.') }}</p>
                     </div>
                     <div>
                         <label class="zForm-label">{{ __('Access Token') }}</label>
                         <div class="position-relative">
                             <input type="password" name="access_token" id="addAccessToken"
                                 class="form-control zForm-control"
-                                placeholder="{{ __('Paste page or system user access token') }}">
+                                placeholder="{{ __('Paste System User token (not needed for OAuth')  }}">
                             <button type="button" class="border-0 bg-transparent position-absolute top-50 translate-middle-y toggle-token-vis"
                                 data-target="addAccessToken" style="right:12px;">
                                 <i class="fa-solid fa-eye fs-13 text-para-text"></i>
                             </button>
                         </div>
                         <p class="fs-12 text-para-text mt-5">
-                            {{ __('Go to') }}
+                            {{ __('Skip this if you connected via OAuth above. For manual entry, generate at') }}
                             <a href="https://business.facebook.com/settings/system-users" target="_blank" class="text-main-color">
                                 {{ __('Meta Business Settings → System Users → Generate Token') }}
                             </a>

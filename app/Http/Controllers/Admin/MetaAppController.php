@@ -25,12 +25,22 @@ class MetaAppController extends Controller
     }
 
     /**
-     * Save Meta App credentials.
-     * Tokens are validated before saving; secrets are stored encrypted server-side only.
+     * Save Meta App credentials — section-aware (tab-based).
+     *
+     * The blade sends a hidden `section` field identifying which tab's Save was clicked:
+     *   'app'       → Meta App ID + Secret
+     *   'facebook'  → Facebook Page ID + Page Access Token
+     *   'whatsapp'  → WA Phone Number ID + WABA ID + System User Token
+     *   'instagram' → IG Business Account ID + Token
+     *
+     * Only that section's fields are updated — other columns are never touched.
      */
     public function update(Request $request)
     {
+        $section = $request->input('section', 'app');
+
         $request->validate([
+            'section'               => 'nullable|string|in:app,facebook,whatsapp,instagram',
             'fb_app_id'             => 'nullable|string|max:50',
             'fb_app_secret'         => 'nullable|string|max:255',
             'fb_page_access_token'  => 'nullable|string',
@@ -45,31 +55,41 @@ class MetaAppController extends Controller
         try {
             DB::beginTransaction();
 
-            $config = MetaAppConfig::forUser(auth()->id());
+            $config     = MetaAppConfig::forUser(auth()->id());
+            $updateData = [];
 
-            $updateData = [
-                'fb_app_id'              => $request->fb_app_id,
-                'fb_page_id'             => $request->fb_page_id,
-                'wa_phone_number_id'     => $request->wa_phone_number_id,
-                'wa_business_account_id' => $request->wa_business_account_id,
-                'ig_user_id'             => $request->ig_user_id,
-            ];
-
-            // Only update secrets/tokens if explicitly provided (non-empty)
-            if ($request->filled('fb_app_secret')) {
-                $updateData['fb_app_secret'] = $request->fb_app_secret;
-            }
-            if ($request->filled('fb_page_access_token')) {
-                $updateData['fb_page_access_token'] = $request->fb_page_access_token;
-            }
-            if ($request->filled('wa_access_token')) {
-                $updateData['wa_access_token'] = $request->wa_access_token;
-            }
-            if ($request->filled('ig_access_token')) {
-                $updateData['ig_access_token'] = $request->ig_access_token;
+            if ($section === 'app') {
+                $updateData['fb_app_id'] = $request->fb_app_id;
+                if ($request->filled('fb_app_secret')) {
+                    $updateData['fb_app_secret'] = $request->fb_app_secret;
+                }
             }
 
-            $config->update($updateData);
+            if ($section === 'facebook') {
+                $updateData['fb_page_id'] = $request->fb_page_id;
+                if ($request->filled('fb_page_access_token')) {
+                    $updateData['fb_page_access_token'] = $request->fb_page_access_token;
+                }
+            }
+
+            if ($section === 'whatsapp') {
+                $updateData['wa_phone_number_id']     = $request->wa_phone_number_id;
+                $updateData['wa_business_account_id'] = $request->wa_business_account_id;
+                if ($request->filled('wa_access_token')) {
+                    $updateData['wa_access_token'] = $request->wa_access_token;
+                }
+            }
+
+            if ($section === 'instagram') {
+                $updateData['ig_user_id'] = $request->ig_user_id;
+                if ($request->filled('ig_access_token')) {
+                    $updateData['ig_access_token'] = $request->ig_access_token;
+                }
+            }
+
+            if (!empty($updateData)) {
+                $config->update($updateData);
+            }
 
             DB::commit();
             return response()->json(['status' => true, 'message' => __(UPDATED_SUCCESSFULLY)]);
@@ -78,6 +98,7 @@ class MetaAppController extends Controller
             return response()->json(['status' => 'error', 'message' => getErrorMessage($e, $e->getMessage())]);
         }
     }
+
 
     /**
      * Regenerate the webhook verify token.
