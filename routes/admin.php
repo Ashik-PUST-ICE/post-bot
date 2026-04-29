@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VersionUpdateController;
 use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\Admin\QueueSettingController;
+use App\Http\Controllers\Admin\AdminMailController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -172,6 +173,17 @@ Route::group(['prefix' => 'reply-templates', 'as' => 'reply-templates.'], functi
     Route::get('get-info', [ReplyTemplateController::class, 'getInfo'])->name('get.info');
     Route::post('destroy/{id}', [ReplyTemplateController::class, 'destroy'])->name('destroy');
     Route::get('for-inbox', [ReplyTemplateController::class, 'forInbox'])->name('for.inbox');
+});
+
+// ─── Mail / Email ────────────────────────────────────────────────────────────
+Route::group(['prefix' => 'mail', 'as' => 'mail.'], function () {
+    Route::get('config',             [AdminMailController::class, 'configIndex'])->name('config');
+    Route::post('config/save',       [AdminMailController::class, 'configSave'])->name('config.save');
+    Route::post('config/test',       [AdminMailController::class, 'configTest'])->name('config.test');
+    Route::get('templates',          [AdminMailController::class, 'templates'])->name('templates');
+    Route::get('templates/get',      [AdminMailController::class, 'getTemplate'])->name('templates.get');
+    Route::post('templates/update',  [AdminMailController::class, 'updateTemplate'])->name('templates.update');
+    Route::post('send',              [AdminMailController::class, 'sendToCustomer'])->name('send');
 });
 
 // ─── Notifications ───────────────────────────────────────────────────────────

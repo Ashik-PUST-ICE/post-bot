@@ -162,4 +162,67 @@
         }
     });
 
+    // ─── Send Email to Customer ──────────────────────────────────────────────
+
+    var sendMailRoute   = $('#sendMailRoute').val();
+    var forInboxRoute   = $('#forInboxRoute').val();
+    var emailTemplates  = [];
+
+    // Open modal: load templates for the dropdown
+    $('#openSendEmailBtn').on('click', function () {
+        // Populate template dropdown via existing for-inbox route
+        $.get(forInboxRoute, function (res) {
+            var $sel = $('#custEmailTemplate');
+            $sel.find('option:not(:first)').remove();
+            if (res.status && res.data && res.data.length) {
+                emailTemplates = res.data;
+                $.each(res.data, function (i, t) {
+                    $sel.append(
+                        $('<option>').val(t.id)
+                            .data('subject', t.title)
+                            .data('body', t.content)
+                            .text(t.title)
+                    );
+                });
+            }
+        });
+        new bootstrap.Modal($('#sendCustomerEmailModal')[0]).show();
+    });
+
+    // Auto-fill subject + body when a template is chosen
+    $('#custEmailTemplate').on('change', function () {
+        var $opt = $(this).find(':selected');
+        if ($opt.val()) {
+            $('#custEmailSubject').val($opt.data('subject'));
+            $('#custEmailBody').val($opt.data('body'));
+        }
+    });
+
+    // Submit: send email
+    $('#customerEmailForm').on('submit', function (e) {
+        e.preventDefault();
+        if (!sendMailRoute) { toastr.error('Mail route not configured.'); return; }
+
+        var $btn = $('#sendCustEmailBtn');
+        $btn.html('<i class="fa-solid fa-spinner fa-spin me-6"></i>Sending...').prop('disabled', true);
+
+        commonAjax('POST', sendMailRoute,
+            function (res) {
+                if (res.status) {
+                    toastr.success(res.message);
+                    bootstrap.Modal.getInstance($('#sendCustomerEmailModal')[0]).hide();
+                    $('#customerEmailForm')[0].reset();
+                } else {
+                    toastr.error(res.message);
+                }
+                $btn.html('<i class="fa-solid fa-paper-plane me-6"></i>Send Email').prop('disabled', false);
+            },
+            function () {
+                toastr.error('Server error. Please try again.');
+                $btn.html('<i class="fa-solid fa-paper-plane me-6"></i>Send Email').prop('disabled', false);
+            },
+            $('#customerEmailForm').serialize()
+        );
+    });
+
 })(jQuery);
