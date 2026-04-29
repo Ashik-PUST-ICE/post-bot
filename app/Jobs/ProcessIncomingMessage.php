@@ -110,7 +110,7 @@ class ProcessIncomingMessage implements ShouldQueue
             'sender_type'     => MESSAGE_SENDER_CUSTOMER,
             'body'            => $text ?? '[non-text message]',
             'message_type'    => $data['type'] ?? 'text',
-            'external_id'     => $data['mid'] ?? $data['message_id'] ?? null,
+            'external_id'     => $data['mid'] ?? $data['message_id'] ?? $data['comment_id'] ?? null,
             'status'          => MESSAGE_STATUS_DELIVERED,
             'sent_at'         => now(),
         ]);
@@ -138,12 +138,12 @@ class ProcessIncomingMessage implements ShouldQueue
         }
 
 
-        // ── 8. Text-only auto-reply for now ───────────────────────────────────
+        // ── 9. Text-only auto-reply for now ───────────────────────────────────
         if (empty($text)) {
             return;
         }
 
-        // ── 9. Check keyword rules first (highest priority) ───────────────────
+        // ── 10. Check keyword rules first (highest priority) ──────────────────
         $keywordMatch = $this->matchKeyword($userId, $connection->id, $text);
         if ($keywordMatch !== null) {
             if ($keywordMatch['action'] === KEYWORD_ACTION_ESCALATE) {
@@ -166,7 +166,7 @@ class ProcessIncomingMessage implements ShouldQueue
             return;
         }
 
-        // ── 10. AI reply ───────────────────────────────────────────────────────
+        // ── 11. AI reply ───────────────────────────────────────────────────────
         $aiSettings = AiAgentSetting::forUser($userId);
 
         if ($aiSettings->auto_reply_enabled !== STATUS_ACTIVE) {
@@ -338,7 +338,9 @@ class ProcessIncomingMessage implements ShouldQueue
 
                 // Facebook post comment → reply publicly on the comment thread
                 'fb_comment' =>
-                    $service->sendFbCommentReply($incomingData['comment_id'], $text),
+                    !empty($incomingData['comment_id'])
+                        ? $service->sendFbCommentReply($incomingData['comment_id'], $text)
+                        : false,
 
                 // WhatsApp text message
                 'whatsapp' =>
@@ -350,11 +352,15 @@ class ProcessIncomingMessage implements ShouldQueue
 
                 // Instagram post comment → public reply on comment
                 'ig_comment' =>
-                    $service->sendIgCommentReply($incomingData['comment_id'], $text),
+                    !empty($incomingData['comment_id'])
+                        ? $service->sendIgCommentReply($incomingData['comment_id'], $text)
+                        : false,
 
-                // Instagram @mention → reply on the comment
+                // Instagram @mention → reply on the mention comment
                 'ig_mention' =>
-                    $service->sendIgCommentReply($incomingData['comment_id'], $text),
+                    !empty($incomingData['comment_id'])
+                        ? $service->sendIgCommentReply($incomingData['comment_id'], $text)
+                        : false,
 
                 default => false,
             };
