@@ -150,17 +150,22 @@
     <input type="hidden" id="getMessagesRoute" value="{{ route('admin.inbox.messages', $conversation->id) }}">
     <input type="hidden" id="forInboxRoute"    value="{{ route('admin.reply-templates.for.inbox') }}">
     <input type="hidden" id="noTemplatesText"  value="{{ __('No templates found.') }}">
-    <input type="hidden" id="sendMailRoute"    value="{{ route('admin.mail.send') }}">
+    <input type="hidden" id="sendMailRoute"        value="{{ route('admin.mail.send') }}">
+    <input type="hidden" id="convContactName"      value="{{ $conversation->contact_name ?? '' }}">
+    <input type="hidden" id="lblBusinessName"      value="{{ getOption('app_name', config('app.name')) }}">
 
 {{-- ── Send Email to Customer Modal ──────────────────────────────────────────── --}}
 <div class="modal fade" id="sendCustomerEmailModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:760px;">
         <div class="modal-content border-0 bd-ra-10 p-10">
+
             <div class="d-flex justify-content-between align-items-center pb-15 mb-15 bd-b-one bd-c-stroke">
-                <h5 class="fs-17 fw-700 text-textBlack">
-                    <i class="fa-solid fa-envelope me-8" style="color:#6366f1;"></i>
-                    {{ __('Send Email to Customer') }}
-                </h5>
+                <div>
+                    <h5 class="fs-17 fw-700 text-textBlack">
+                        <i class="fa-solid fa-envelope me-8" style="color:#6366f1;"></i>{{ __('Send Email to Customer') }}
+                    </h5>
+                    <p class="fs-12 text-para-text mt-2">{{ __('Fill in the details — the email will be composed automatically from the template.') }}</p>
+                </div>
                 <button type="button" class="border-0 bg-transparent text-para-text" data-bs-dismiss="modal">
                     <i class="fa-solid fa-times fs-16"></i>
                 </button>
@@ -168,34 +173,95 @@
 
             <form id="customerEmailForm">
                 @csrf
-                <div class="row rg-15">
-                    <div class="col-md-8">
-                        <label class="zForm-label">{{ __('To Email') }} <span class="text-danger">*</span></label>
-                        <input type="email" name="to_email" id="custEmailTo"
-                            class="form-control zForm-control"
-                            placeholder="{{ __('customer@example.com') }}" required>
+                <div class="row rg-0">
+
+                    {{-- ── Left: inputs ─────────────────────────────────────── --}}
+                    <div class="col-md-6 pe-md-12">
+
+                        {{-- Recipient --}}
+                        <div class="bd-one bd-c-stroke bd-ra-8 p-15 mb-12">
+                            <p class="fs-12 fw-700 text-textBlack mb-10">
+                                <span class="d-inline-flex wh-20 bd-ra-50 text-white fw-700 fs-10 align-items-center justify-content-center me-6"
+                                    style="background:#6366f1;">1</span>
+                                {{ __('Customer Details') }}
+                            </p>
+                            <div class="mb-10">
+                                <label class="zForm-label">{{ __('Customer Name') }}</label>
+                                <input type="text" id="custNameField" class="form-control zForm-control"
+                                    value="{{ $conversation->contact_name ?? '' }}"
+                                    placeholder="{{ __('Customer name') }}">
+                                <p class="fs-11 text-para-text mt-3">{{ __('Pre-filled from the conversation.') }}</p>
+                            </div>
+                            <div>
+                                <label class="zForm-label">{{ __('Customer Email') }} <span class="text-danger">*</span></label>
+                                <input type="email" name="to_email" id="custEmailTo"
+                                    class="form-control zForm-control"
+                                    placeholder="{{ __('customer@gmail.com') }}" required>
+                                <p class="fs-11 text-para-text mt-3">{{ __('Enter the email address to send the mail to.') }}</p>
+                            </div>
+                        </div>
+
+                        {{-- Template + Subject --}}
+                        <div class="bd-one bd-c-stroke bd-ra-8 p-15 mb-12">
+                            <p class="fs-12 fw-700 text-textBlack mb-10">
+                                <span class="d-inline-flex wh-20 bd-ra-50 text-white fw-700 fs-10 align-items-center justify-content-center me-6"
+                                    style="background:#6366f1;">2</span>
+                                {{ __('Template & Subject') }}
+                            </p>
+                            <div class="mb-10">
+                                <label class="zForm-label">{{ __('Use Template') }}</label>
+                                <select id="custEmailTemplate" class="form-control zForm-control">
+                                    <option value="">— {{ __('Pick a template') }} —</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="zForm-label">{{ __('Subject') }} <span class="text-danger">*</span></label>
+                                <input type="text" name="subject" id="custEmailSubject" class="form-control zForm-control" required>
+                            </div>
+                        </div>
+
+                        {{-- Dynamic order details --}}
+                        <div class="bd-one bd-c-stroke bd-ra-8 p-15" id="custPlaceholderSection" style="display:none;">
+                            <p class="fs-12 fw-700 text-textBlack mb-8">
+                                <span class="d-inline-flex wh-20 bd-ra-50 text-white fw-700 fs-10 align-items-center justify-content-center me-6"
+                                    style="background:#6366f1;">3</span>
+                                {{ __('Order Details') }}
+                            </p>
+                            <p class="fs-11 text-para-text mb-10">{{ __('These values replace the {placeholders} in the template automatically.') }}</p>
+                            <div id="custPlaceholderFields" class="row rg-10"></div>
+                        </div>
+
                     </div>
-                    <div class="col-md-4">
-                        <label class="zForm-label">{{ __('Use Template') }}</label>
-                        <select id="custEmailTemplate" class="form-control zForm-control">
-                            <option value="">— {{ __('Pick a template') }} —</option>
-                        </select>
+
+                    {{-- ── Right: live preview ──────────────────────────────── --}}
+                    <div class="col-md-6 ps-md-12">
+                        <div class="bd-one bd-c-stroke bd-ra-8 overflow-hidden h-100 d-flex flex-column" style="min-height:340px;">
+                            <div class="px-15 py-10 bd-b-one bd-c-stroke d-flex align-items-center cg-8" style="background:#f8fafc;">
+                                <i class="fa-solid fa-eye fs-12 text-para-text"></i>
+                                <p class="fs-12 fw-600 text-para-text">{{ __('Email Preview') }}</p>
+                            </div>
+                            <div class="px-15 py-10 bd-b-one bd-c-stroke" style="background:#fff;">
+                                <p class="fs-11 text-para-text">
+                                    <strong class="text-textBlack">{{ __('To:') }}</strong>
+                                    <span id="custPreviewTo" class="ms-5">—</span>
+                                </p>
+                                <p class="fs-11 text-para-text mt-4">
+                                    <strong class="text-textBlack">{{ __('Subject:') }}</strong>
+                                    <span id="custPreviewSubject" class="ms-5">—</span>
+                                </p>
+                            </div>
+                            <div class="flex-fill p-15 overflow-auto" style="background:#fff;">
+                                <p id="custPreviewBody" class="fs-13 text-para-text" style="white-space:pre-wrap;line-height:1.7;">
+                                    {{ __('Select a template to see the preview here.') }}
+                                </p>
+                            </div>
+                            <textarea name="body" id="custEmailBody" style="display:none;" required></textarea>
+                        </div>
                     </div>
-                    <div class="col-12">
-                        <label class="zForm-label">{{ __('Subject') }} <span class="text-danger">*</span></label>
-                        <input type="text" name="subject" id="custEmailSubject"
-                            class="form-control zForm-control" required>
-                    </div>
-                    <div class="col-12">
-                        <label class="zForm-label">{{ __('Message') }} <span class="text-danger">*</span></label>
-                        <textarea name="body" id="custEmailBody" class="form-control zForm-control"
-                            rows="8" placeholder="{{ __('Write your message here...') }}" required></textarea>
-                        <p class="fs-11 text-para-text mt-5">
-                            {{ __('Tip: Use') }} {customer_name}, {business_name}, {order_id}, {amount} {{ __('as placeholders.') }}
-                        </p>
-                    </div>
+
                 </div>
-                <div class="d-flex justify-content-end cg-10 mt-20 pt-15 bd-t-one bd-c-stroke">
+
+                <div class="d-flex justify-content-end cg-10 mt-15 pt-15 bd-t-one bd-c-stroke">
                     <button type="button" class="py-10 px-20 bd-one bd-ra-6 bd-c-stroke bg-white fs-13 fw-500 text-para-text"
                         data-bs-dismiss="modal">{{ __('Cancel') }}</button>
                     <button type="submit" id="sendCustEmailBtn"
