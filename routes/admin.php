@@ -137,8 +137,6 @@ Route::group(['prefix' => 'ai-agent', 'as' => 'ai-agent.'], function () {
     Route::get('models-for-provider', [AiAgentController::class, 'modelsForProvider'])->name('models.for.provider');
 });
 
-// ─── Analytics ───────────────────────────────────────────────────────────────
-Route::get('analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
 
 // ─── Meta App Configuration (Facebook / WhatsApp / Instagram) ────────────────
 Route::group(['prefix' => 'meta-app', 'as' => 'meta-app.'], function () {
