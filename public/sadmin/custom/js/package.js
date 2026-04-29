@@ -3,6 +3,7 @@
     $(document).on('click', '#add', function () {
         var selector = $('#addModal');
         selector.find('.otherFields').html('');
+        selector.find('input[name=sync_stripe]').prop('checked', false);
         selector.modal('show');
     });
 
@@ -34,7 +35,6 @@
         selector.find('.icon-preview').attr('src', response.data.icon_url);
         selector.find('.otherFields').html(otherHtmlFields);
 
-
         selector.find('input[name=monthly_price]').val(response.data.monthly_price)
         selector.find('input[name=yearly_price]').val(response.data.yearly_price)
         if (response.data.status == 1) {
@@ -52,6 +52,22 @@
         } else {
             selector.find('input[name=is_default]').prop('checked', false);
         }
+
+        // Stripe — reset toggle, then show info panel if already synced
+        selector.find('input[name=sync_stripe]').prop('checked', false);
+        var stripePanel = selector.find('.stripe-ids-panel');
+        if (response.data.stripe_product_id) {
+            stripePanel.show();
+            stripePanel.find('.stripe-product-id').text(response.data.stripe_product_id);
+            stripePanel.find('.stripe-monthly-id').text(response.data.stripe_monthly_plan_id || '—');
+            stripePanel.find('.stripe-yearly-id').text(response.data.stripe_yearly_plan_id || '—');
+        } else {
+            stripePanel.hide();
+            stripePanel.find('.stripe-product-id').text('—');
+            stripePanel.find('.stripe-monthly-id').text('—');
+            stripePanel.find('.stripe-yearly-id').text('—');
+        }
+
         selector.modal('show')
     }
 

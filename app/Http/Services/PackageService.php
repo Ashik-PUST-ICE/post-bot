@@ -12,6 +12,7 @@ use App\Models\UserPackage;
 use App\Traits\ResponseTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Stripe\StripeClient;
 
 
 class PackageService
@@ -113,6 +114,10 @@ class PackageService
             $package->yearly_price = $request->yearly_price;
             $package->save();
 
+            if ($request->sync_stripe) {
+                $this->syncWithStripe($package);
+            }
+
             // user subscription update
             UserPackage::where('package_id', $package->id)->update([
                 'page_limit' => $package->page_limit,
@@ -127,6 +132,90 @@ class PackageService
             $message = getErrorMessage($e, $e->getMessage());
             return $this->error([], $message);
         }
+    }
+
+    private function syncWithStripe(Package $package): void
+    {
+        $adminUser = User::where('role', USER_ROLE_SUPER_ADMIN)->first();
+        $gateway   = Gateway::where(['user_id' => $adminUser->id, 'slug' => 'stripe'])->first();
+
+        if (!$gateway || !$gateway->key) {
+            throw new Exception(__('Stripe gateway is not configured. Please add your Stripe key in payment settings.'));
+        }
+
+        $currency = strtolower(
+            Currency::where('current_currency', ACTIVE)->value('currency_code') ?? 'usd'
+        );
+
+        $stripe = new StripeClient($gateway->key);
+
+        // ── Product ───────────────────────────────────────────────────────────
+        // Create once; only update the name on subsequent syncs.
+        if ($package->stripe_product_id) {
+            $stripe->products->update($package->stripe_product_id, [
+                'name' => $package->name,
+            ]);
+        } else {
+            $product = $stripe->products->create([
+                'name' => $package->name,
+            ]);
+            $package->stripe_product_id = $product->id;
+        }
+
+        // ── Monthly Price ─────────────────────────────────────────────────────
+        // Stripe prices are immutable. We only create a NEW price when the
+        // amount changes. The old price is intentionally left active so that
+        // any existing subscriber continues to be billed correctly.
+        $monthlyAmountCents = (int) round($package->monthly_price * 100);
+
+        $needNewMonthly = true;
+        if ($package->stripe_monthly_plan_id) {
+            try {
+                $existing = $stripe->prices->retrieve($package->stripe_monthly_plan_id);
+                if ($existing->unit_amount === $monthlyAmountCents) {
+                    $needNewMonthly = false;
+                }
+            } catch (\Exception $e) {
+                // price missing on Stripe — will be re-created below
+            }
+        }
+
+        if ($needNewMonthly) {
+            $monthlyPrice = $stripe->prices->create([
+                'product'     => $package->stripe_product_id,
+                'unit_amount' => $monthlyAmountCents,
+                'currency'    => $currency,
+                'recurring'   => ['interval' => 'month'],
+            ]);
+            $package->stripe_monthly_plan_id = $monthlyPrice->id;
+        }
+
+        // ── Yearly Price ──────────────────────────────────────────────────────
+        $yearlyAmountCents = (int) round($package->yearly_price * 100);
+
+        $needNewYearly = true;
+        if ($package->stripe_yearly_plan_id) {
+            try {
+                $existing = $stripe->prices->retrieve($package->stripe_yearly_plan_id);
+                if ($existing->unit_amount === $yearlyAmountCents) {
+                    $needNewYearly = false;
+                }
+            } catch (\Exception $e) {
+                // price missing on Stripe — will be re-created below
+            }
+        }
+
+        if ($needNewYearly) {
+            $yearlyPrice = $stripe->prices->create([
+                'product'     => $package->stripe_product_id,
+                'unit_amount' => $yearlyAmountCents,
+                'currency'    => $currency,
+                'recurring'   => ['interval' => 'year'],
+            ]);
+            $package->stripe_yearly_plan_id = $yearlyPrice->id;
+        }
+
+        $package->save();
     }
 
     public function getInfo($id)

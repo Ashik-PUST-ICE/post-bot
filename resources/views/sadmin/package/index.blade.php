@@ -156,6 +156,25 @@
                                     </div>
                                 </div>
                             </div>
+
+                            {{-- Stripe sync --}}
+                            <div class="bd-t-one bd-c-stroke pt-15 mt-5">
+                                <div class="d-flex align-items-center g-10 mb-8">
+                                    <img src="{{ asset('assets/images/icon/stripe.svg') }}" alt="stripe"
+                                         onerror="this.style.display='none'"
+                                         class="h-18">
+                                    <span class="fs-13 fw-600 text-textBlack">{{ __('Stripe Integration') }}</span>
+                                </div>
+                                <div class="d-flex form-check ps-0">
+                                    <div class="zCheck form-check form-switch">
+                                        <input class="form-check-input mt-0" value="1" name="sync_stripe"
+                                               type="checkbox" id="add_sync_stripe">
+                                    </div>
+                                    <label class="form-check-label ps-3 d-flex fs-13 text-para-text" for="add_sync_stripe">
+                                        {{ __('Create product & prices on Stripe') }}
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
                         <button type="submit"
@@ -266,6 +285,39 @@
                                             {{ __('Is Trail') }}
                                         </label>
                                     </div>
+                                </div>
+                            </div>
+
+                            {{-- Stripe sync --}}
+                            <div class="bd-t-one bd-c-stroke pt-15 mt-5">
+                                <div class="d-flex align-items-center g-10 mb-8">
+                                    <img src="{{ asset('assets/images/icon/stripe.svg') }}" alt="stripe"
+                                         onerror="this.style.display='none'"
+                                         class="h-18">
+                                    <span class="fs-13 fw-600 text-textBlack">{{ __('Stripe Integration') }}</span>
+                                </div>
+                                <div class="d-flex form-check ps-0 mb-10">
+                                    <div class="zCheck form-check form-switch">
+                                        <input class="form-check-input mt-0" value="1" name="sync_stripe"
+                                               type="checkbox" id="edit_sync_stripe">
+                                    </div>
+                                    <label class="form-check-label ps-3 d-flex fs-13 text-para-text" for="edit_sync_stripe">
+                                        {{ __('Sync / re-sync with Stripe') }}
+                                    </label>
+                                </div>
+                                <div class="stripe-ids-panel bd-one bd-c-stroke bd-ra-4 p-10" style="display:none;">
+                                    <p class="fs-12 text-para-text mb-4">
+                                        <span class="fw-600">{{ __('Product ID') }}:</span>
+                                        <span class="stripe-product-id text-textBlack">—</span>
+                                    </p>
+                                    <p class="fs-12 text-para-text mb-4">
+                                        <span class="fw-600">{{ __('Monthly Price ID') }}:</span>
+                                        <span class="stripe-monthly-id text-textBlack">—</span>
+                                    </p>
+                                    <p class="fs-12 text-para-text mb-0">
+                                        <span class="fw-600">{{ __('Yearly Price ID') }}:</span>
+                                        <span class="stripe-yearly-id text-textBlack">—</span>
+                                    </p>
                                 </div>
                             </div>
                         </div>
