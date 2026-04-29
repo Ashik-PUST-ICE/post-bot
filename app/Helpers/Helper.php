@@ -43,6 +43,22 @@ if (!function_exists("getOption")) {
     }
 }
 
+if (!function_exists('setOption')) {
+    /**
+     * Persist a single key→value pair to the settings table and refresh the config cache.
+     */
+    function setOption(string $option_key, $option_value): void
+    {
+        $row = \App\Models\Setting::firstOrCreate(['option_key' => $option_key]);
+        $row->option_value = $option_value;
+        $row->save();
+
+        // Refresh the in-memory config so getOption() reflects the new value
+        $all = \App\Models\Setting::pluck('option_value', 'option_key')->toArray();
+        config(['settings' => $all]);
+    }
+}
+
 function getSettingImage($option_key)
 {
 
