@@ -134,6 +134,17 @@ const KEYWORD_MATCH_CONTAINS    = 1;
 const KEYWORD_MATCH_EXACT       = 2;
 const KEYWORD_MATCH_STARTS_WITH = 3;
 
+// ─── SocialAgent: Keyword Rule Actions ───────────────────────────────────────
+const KEYWORD_ACTION_REPLY    = 'reply';
+const KEYWORD_ACTION_ESCALATE = 'escalate';
+const KEYWORD_ACTION_IGNORE   = 'ignore';
+
+// ─── SocialAgent: Reply Template Platforms ────────────────────────────────────
+const TEMPLATE_PLATFORM_ALL       = 'all';
+const TEMPLATE_PLATFORM_FACEBOOK  = 'facebook';
+const TEMPLATE_PLATFORM_WHATSAPP  = 'whatsapp';
+const TEMPLATE_PLATFORM_INSTAGRAM = 'instagram';
+
 // ─── SocialAgent: AI Providers ──────────────────────────────────────────────
 const AI_PROVIDER_CLAUDE   = 'claude';
 const AI_PROVIDER_OPENAI   = 'openai';

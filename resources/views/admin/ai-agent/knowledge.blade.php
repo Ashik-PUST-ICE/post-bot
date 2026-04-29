@@ -76,9 +76,13 @@
                         <div class="bd-one bd-c-stroke bd-ra-8 p-14">
                             <div class="d-flex align-items-start justify-content-between">
                                 <div class="flex-grow-1 min-w-0">
-                                    <div class="d-flex align-items-center cg-6 mb-6">
+                                    <div class="d-flex align-items-center flex-wrap cg-4 mb-6">
                                         <span class="py-3 px-9 bd-ra-50 bg-body fs-11 fw-600 text-textBlack">
                                             {{ keywordMatchTypes($rule->match_type) }}
+                                        </span>
+                                        <span class="py-3 px-9 bd-ra-50 fs-11 fw-600 text-white"
+                                            style="background:{{ keywordActionColor($rule->action ?? KEYWORD_ACTION_REPLY) }}">
+                                            {{ keywordActionLabel($rule->action ?? KEYWORD_ACTION_REPLY) }}
                                         </span>
                                         @if($rule->use_ai)
                                             <span class="py-3 px-9 bd-ra-50 fs-11 fw-600" style="background:#6366f11a;color:#6366f1;">
@@ -87,7 +91,9 @@
                                         @endif
                                     </div>
                                     <p class="fs-14 fw-600 text-textBlack text-truncate">"{{ $rule->keyword }}"</p>
-                                    <p class="fs-12 text-para-text mt-3 text-truncate">{{ $rule->reply_template }}</p>
+                                    @if(($rule->action ?? KEYWORD_ACTION_REPLY) === KEYWORD_ACTION_REPLY)
+                                        <p class="fs-12 text-para-text mt-3 text-truncate">{{ $rule->reply_template }}</p>
+                                    @endif
                                 </div>
                                 <button type="button" class="border-0 bg-transparent ms-10 delete-keyword-btn"
                                     data-route="{{ route('admin.ai-agent.keyword.destroy', $rule->id) }}">
@@ -141,11 +147,19 @@
                         </select>
                     </div>
                     <div>
+                        <label class="zForm-label">{{ __('Action') }}</label>
+                        <select name="action" id="keywordAction" class="form-control zForm-control">
+                            @foreach(keywordActionLabels() as $val => $label)
+                                <option value="{{ $val }}">{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div id="replyTemplateWrap">
                         <label class="zForm-label">{{ __('Reply Template') }} <span class="text-red">*</span></label>
                         <textarea name="reply_template" rows="4" class="form-control zForm-control"
-                            placeholder="{{ __('Enter the reply message...') }}"></textarea>
+                            placeholder="{{ __('Enter the reply message... Use {customer_name}, {business_name}, {platform}') }}"></textarea>
                     </div>
-                    <div class="d-flex align-items-center justify-content-between bd-one bd-c-stroke bd-ra-8 p-12">
+                    <div class="d-flex align-items-center justify-content-between bd-one bd-c-stroke bd-ra-8 p-12" id="useAiWrap">
                         <div>
                             <p class="fs-14 fw-600 text-textBlack">{{ __('Use AI') }}</p>
                             <p class="fs-12 text-para-text">{{ __('AI enhances the reply with context.') }}</p>

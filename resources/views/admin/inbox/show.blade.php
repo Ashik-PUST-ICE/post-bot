@@ -48,66 +48,46 @@
                     {{-- Messages --}}
                     <div class="flex-grow-1 p-20 d-flex flex-column rg-12" id="messageThread"
                         style="overflow-y:auto; max-height:500px;">
-
-                        @forelse($messages as $msg)
-                            @if($msg->direction == MESSAGE_DIRECTION_INBOUND)
-                                {{-- Inbound (customer) --}}
-                                <div class="d-flex align-items-end cg-10">
-                                    <div class="wh-34 bd-ra-50 flex-shrink-0 d-flex align-items-center justify-content-center"
-                                        style="background:{{ platformColors($conversation->platform_type) }}1a;">
-                                        <i class="{{ platformIcons($conversation->platform_type) }} fs-14"
-                                            style="color:{{ platformColors($conversation->platform_type) }}"></i>
-                                    </div>
-                                    <div style="max-width:65%;">
-                                        <div class="bd-one bd-c-stroke bd-ra-10 p-12 bg-body">
-                                            <p class="fs-14 fw-400 text-textBlack">{{ $msg->body }}</p>
-                                        </div>
-                                        <p class="fs-11 text-para-text mt-5">
-                                            {{ $msg->sent_at ? $msg->sent_at->format('M d, g:i A') : '' }}
-                                        </p>
-                                    </div>
-                                </div>
-                            @else
-                                {{-- Outbound (AI or Human) --}}
-                                <div class="d-flex align-items-end justify-content-end cg-10">
-                                    <div style="max-width:65%;">
-                                        <div class="bd-ra-10 p-12 {{ $msg->sender_type == MESSAGE_SENDER_AI ? 'bg-main-color' : 'bg-textBlack' }}">
-                                            <p class="fs-14 fw-400 text-white">{{ $msg->body }}</p>
-                                        </div>
-                                        <div class="d-flex align-items-center justify-content-end cg-5 mt-5">
-                                            @if($msg->sender_type == MESSAGE_SENDER_AI)
-                                                <i class="fa-solid fa-robot fs-11 text-para-text"></i>
-                                                <span class="fs-11 text-para-text">{{ __('AI Agent') }}</span>
-                                            @else
-                                                <i class="fa-solid fa-user fs-11 text-para-text"></i>
-                                                <span class="fs-11 text-para-text">{{ __('You') }}</span>
-                                            @endif
-                                            <span class="fs-11 text-para-text">· {{ $msg->sent_at ? $msg->sent_at->format('g:i A') : '' }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-                        @empty
-                            <div class="text-center py-50">
-                                <i class="fa-regular fa-comment-dots fs-36 text-para-text"></i>
-                                <p class="fs-14 text-para-text mt-10">{{ __('No messages in this conversation yet.') }}</p>
-                            </div>
-                        @endforelse
+                        @include('admin.inbox._messages', ['messages' => $messages, 'conversation' => $conversation])
                     </div>
 
                     {{-- Reply Box --}}
                     <div class="bd-t-one bd-c-stroke p-15">
-                        <form class="ajax" action="{{ route('admin.inbox.reply', $conversation->id) }}"
-                            method="POST" data-handler="commonResponse" id="replyForm">
+                        <form id="replyForm" method="POST">
                             @csrf
+                            {{-- Template Picker --}}
+                            <div class="mb-10 d-flex align-items-center cg-8" id="templatePickerWrap" style="display:none!important;">
+                                <button type="button" id="btnPickTemplate"
+                                    class="py-5 px-12 bd-one bd-c-stroke bd-ra-4 fs-12 fw-500 text-para-text bg-white">
+                                    <i class="fa-solid fa-bolt me-4"></i>{{ __('Quick Reply') }}
+                                </button>
+                                <div class="position-relative" id="templateDropdown" style="display:none;">
+                                    <div class="border bd-ra-8 bg-white shadow-sm overflow-auto"
+                                        style="max-height:220px; min-width:280px; position:absolute; bottom:110%; left:0; z-index:999;">
+                                        <div class="px-12 py-8 bd-b-one bd-c-stroke">
+                                            <input type="text" id="templateSearch" class="form-control zForm-control fs-12 py-5"
+                                                placeholder="{{ __('Search templates…') }}">
+                                        </div>
+                                        <ul class="list-unstyled mb-0" id="templateList">
+                                            <li class="px-14 py-8 fs-13 text-para-text">{{ __('Loading…') }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="d-flex align-items-end cg-10">
                                 <textarea name="body" id="replyBody" rows="3"
                                     class="form-control zForm-control flex-grow-1"
-                                    placeholder="{{ __('Type your reply...') }}" style="resize:none;"></textarea>
-                                <button type="submit"
-                                    class="py-13 px-20 bd-one bd-ra-4 bd-c-main-color bg-main-color text-white fs-14 fw-600 flex-shrink-0">
-                                    <i class="fa-solid fa-paper-plane me-5"></i> {{ __('Send') }}
-                                </button>
+                                    placeholder="{{ __('Type your reply…') }}" style="resize:none;"></textarea>
+                                <div class="d-flex flex-column rg-6">
+                                    <button type="button" id="btnPickTemplate2" title="{{ __('Quick Reply') }}"
+                                        class="py-10 px-14 bd-one bd-ra-4 bd-c-stroke bg-white text-para-text fs-14 flex-shrink-0">
+                                        <i class="fa-solid fa-bolt"></i>
+                                    </button>
+                                    <button type="submit"
+                                        class="py-10 px-14 bd-one bd-ra-4 bd-c-main-color bg-main-color text-white fs-14 fw-600 flex-shrink-0">
+                                        <i class="fa-solid fa-paper-plane"></i>
+                                    </button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -149,7 +129,7 @@
                         </div>
                         <div>
                             <p class="fs-12 fw-500 text-para-text text-uppercase">{{ __('Total Messages') }}</p>
-                            <p class="fs-14 fw-600 text-textBlack">{{ $messages->count() }}</p>
+                            <p class="fs-14 fw-600 text-textBlack" id="totalMsgCount">{{ $messages->count() }}</p>
                         </div>
                     </div>
                 </div>
@@ -157,32 +137,14 @@
         </div>
     </div>
 
-    <input type="hidden" id="convId" value="{{ $conversation->id }}">
-    <input type="hidden" id="statusRoute" value="{{ route('admin.inbox.update.status', $conversation->id) }}">
+    <input type="hidden" id="convId"           value="{{ $conversation->id }}">
+    <input type="hidden" id="statusRoute"      value="{{ route('admin.inbox.update.status', $conversation->id) }}">
+    <input type="hidden" id="replyRoute"       value="{{ route('admin.inbox.reply', $conversation->id) }}">
+    <input type="hidden" id="getMessagesRoute" value="{{ route('admin.inbox.messages', $conversation->id) }}">
+    <input type="hidden" id="forInboxRoute"    value="{{ route('admin.reply-templates.for.inbox') }}">
+    <input type="hidden" id="noTemplatesText"  value="{{ __('No templates found.') }}">
 @endsection
 
 @push('script')
-<script>
-    // Scroll to bottom of thread
-    var thread = document.getElementById('messageThread');
-    if (thread) thread.scrollTop = thread.scrollHeight;
-
-    // Status change
-    $('#conversationStatusSelect').on('change', function () {
-        $.post($(this).data('route'), {
-            _token: '{{ csrf_token() }}',
-            status: $(this).val()
-        }, function (res) {
-            if (res.status) toastr.success(res.message);
-            else toastr.error(res.message);
-        });
-    });
-
-    // After reply sent, reload to show new message
-    $(document).on('ajaxSuccess', function (e, res) {
-        if (res.status && $('#replyForm').length) {
-            setTimeout(function () { window.location.reload(); }, 800);
-        }
-    });
-</script>
+<script src="{{ asset('admin/custom/js/inbox-show.js') }}"></script>
 @endpush

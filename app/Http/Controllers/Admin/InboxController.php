@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Conversation;
 use App\Models\Message;
+use App\Models\MetaAppConfig;
 use App\Models\PlatformConnection;
+use App\Services\MetaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 
 class InboxController extends Controller
@@ -126,7 +129,26 @@ class InboxController extends Controller
     }
 
     /**
+     * Return the rendered message thread HTML for AJAX refresh.
+     */
+    public function getMessages($id)
+    {
+        $conversation = Conversation::where('user_id', auth()->id())
+            ->with(['platformConnection', 'messages' => fn($q) => $q->orderBy('id')])
+            ->findOrFail($id);
+
+        $messages = $conversation->messages;
+
+        return response()->json([
+            'status' => true,
+            'html'   => view('admin.inbox._messages', compact('messages', 'conversation'))->render(),
+            'count'  => $messages->count(),
+        ]);
+    }
+
+    /**
      * Send a manual reply from the human admin.
+     * Saves to DB and delivers via Meta API.
      */
     public function reply(Request $request, $id)
     {
@@ -135,33 +157,79 @@ class InboxController extends Controller
         try {
             DB::beginTransaction();
 
-            $conversation = Conversation::where('user_id', auth()->id())->findOrFail($id);
+            $conversation = Conversation::where('user_id', auth()->id())
+                ->with('platformConnection')
+                ->findOrFail($id);
 
+            $body = resolveTemplateVariables($request->body, $conversation);
+
+            // ── Deliver via Meta API ───────────────────────────────────────────
+            $sent   = false;
+            $config = MetaAppConfig::where('user_id', auth()->id())->first();
+
+            if ($config) {
+                $service = new MetaService($config);
+                try {
+                    $sent = match ($conversation->platform_type) {
+                        PLATFORM_MESSENGER     => $service->sendFacebookMessage($conversation->contact_id, $body),
+                        PLATFORM_WHATSAPP      => $service->sendWhatsAppMessage($conversation->contact_id, $body),
+                        PLATFORM_INSTAGRAM     => $service->sendInstagramMessage($conversation->contact_id, $body),
+                        PLATFORM_FACEBOOK_PAGE => $this->replyToLastComment($service, $conversation, $body),
+                        default                => false,
+                    };
+                } catch (\Exception $e) {
+                    Log::error('InboxController::reply — MetaService failed', [
+                        'conversation' => $conversation->id,
+                        'error'        => $e->getMessage(),
+                    ]);
+                }
+            }
+
+            // ── Save to DB ─────────────────────────────────────────────────────
             Message::create([
                 'conversation_id' => $conversation->id,
                 'user_id'         => auth()->id(),
                 'tenant_id'       => auth()->user()->tenant_id,
                 'direction'       => MESSAGE_DIRECTION_OUTBOUND,
                 'sender_type'     => MESSAGE_SENDER_HUMAN_ADMIN,
-                'body'            => $request->body,
+                'body'            => $body,
                 'message_type'    => 'text',
-                'status'          => MESSAGE_STATUS_SENT,
+                'status'          => $sent ? MESSAGE_STATUS_SENT : MESSAGE_STATUS_FAILED,
                 'is_approved'     => 1,
                 'sent_at'         => now(),
             ]);
 
             $conversation->update([
-                'last_message'     => \Illuminate\Support\Str::limit($request->body, 100),
+                'last_message'     => \Illuminate\Support\Str::limit($body, 100),
                 'last_message_at'  => now(),
                 'human_taken_over' => 1,
             ]);
 
             DB::commit();
-            return response()->json(['status' => true, 'message' => __('Reply sent.')]);
+
+            $msg = $sent ? __('Reply sent.') : __('Reply saved but delivery to Meta API failed. Check your credentials.');
+            return response()->json(['status' => true, 'message' => $msg]);
+
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
         }
+    }
+
+    /**
+     * Reply to the last inbound comment on FB Page conversations.
+     * Uses the most recent inbound message's external_id as the comment_id.
+     */
+    private function replyToLastComment(MetaService $service, Conversation $conversation, string $text): bool
+    {
+        $commentId = $conversation->messages()
+            ->where('direction', MESSAGE_DIRECTION_INBOUND)
+            ->latest('id')
+            ->value('external_id');
+
+        if (!$commentId) return false;
+
+        return $service->sendFbCommentReply($commentId, $text);
     }
 
     /**

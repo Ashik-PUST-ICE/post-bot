@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\EmailTemplateController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\PlatformController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\ReplyTemplateController;
 use App\Http\Controllers\Admin\RolePermisionController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
@@ -122,6 +123,7 @@ Route::group(['prefix' => 'inbox', 'as' => 'inbox.'], function () {
     Route::get('/', [InboxController::class, 'index'])->name('index');
     Route::get('get-data', [InboxController::class, 'getData'])->name('get.data');
     Route::get('conversation/{id}', [InboxController::class, 'show'])->name('show');
+    Route::get('conversation/{id}/messages', [InboxController::class, 'getMessages'])->name('messages');
     Route::post('conversation/{id}/reply', [InboxController::class, 'reply'])->name('reply');
     Route::post('conversation/{id}/status', [InboxController::class, 'updateStatus'])->name('update.status');
 });
@@ -160,4 +162,23 @@ Route::group(['prefix' => 'queue', 'as' => 'queue.'], function () {
     Route::post('save', [QueueSettingController::class, 'save'])->name('save');
     Route::post('retry-failed', [QueueSettingController::class, 'retryFailed'])->name('retry.failed');
     Route::post('flush-failed', [QueueSettingController::class, 'flushFailed'])->name('flush.failed');
+});
+
+// ─── Quick Reply Templates ───────────────────────────────────────────────────
+Route::group(['prefix' => 'reply-templates', 'as' => 'reply-templates.'], function () {
+    Route::get('/', [ReplyTemplateController::class, 'index'])->name('index');
+    Route::get('get-data', [ReplyTemplateController::class, 'getData'])->name('get.data');
+    Route::post('store', [ReplyTemplateController::class, 'store'])->name('store');
+    Route::get('get-info', [ReplyTemplateController::class, 'getInfo'])->name('get.info');
+    Route::post('destroy/{id}', [ReplyTemplateController::class, 'destroy'])->name('destroy');
+    Route::get('for-inbox', [ReplyTemplateController::class, 'forInbox'])->name('for.inbox');
+});
+
+// ─── Notifications ───────────────────────────────────────────────────────────
+Route::group(['prefix' => 'notifications', 'as' => 'notifications.'], function () {
+    Route::get('/', [NotificationController::class, 'allNotification'])->name('index');
+    Route::get('view/{id}', [NotificationController::class, 'notificationView'])->name('view');
+    Route::get('mark-read/{id}', [NotificationController::class, 'notificationMarkAsRead'])->name('mark.read');
+    Route::get('mark-all-read', [NotificationController::class, 'notificationMarkAllAsRead'])->name('mark.all.read');
+    Route::get('delete/{id}', [NotificationController::class, 'notificationDelete'])->name('delete');
 });

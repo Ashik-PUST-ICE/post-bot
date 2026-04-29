@@ -14,12 +14,12 @@ class Message extends Model
         'conversation_id',
         'user_id',
         'tenant_id',
-        'external_id',         // fixed: was external_message_id
+        'external_id',
         'direction',
         'sender_type',
         'body',
         'message_type',
-        'meta_type',           // platform sub-type: messenger, fb_comment, whatsapp, instagram, ig_comment, ig_mention
+        'meta_type',
         'attachment_url',
         'ai_metadata',
         'status',
@@ -32,8 +32,10 @@ class Message extends Model
         'sent_at'     => 'datetime',
     ];
 
-    // ─── Note: direction/sender/status constants are in app/Helpers/Constant.php ─
-    // Use MESSAGE_DIRECTION_INBOUND, MESSAGE_SENDER_AI, MESSAGE_STATUS_SENT, etc.
+    // ─── Note: all direction/sender/status constants live in app/Helpers/Constant.php ─
+    // MESSAGE_DIRECTION_INBOUND / MESSAGE_DIRECTION_OUTBOUND
+    // MESSAGE_SENDER_CUSTOMER  / MESSAGE_SENDER_AI / MESSAGE_SENDER_HUMAN_ADMIN
+    // MESSAGE_STATUS_SENT      / MESSAGE_STATUS_DELIVERED / MESSAGE_STATUS_FAILED
 
     // ─── Relationships ─────────────────────────────────────────────────────────
 
@@ -51,16 +53,16 @@ class Message extends Model
 
     public function isFromCustomer(): bool
     {
-        return $this->sender_type === self::SENDER_CUSTOMER;
+        return $this->sender_type === MESSAGE_SENDER_CUSTOMER;
     }
 
     public function isFromAI(): bool
     {
-        return $this->sender_type === self::SENDER_AI;
+        return $this->sender_type === MESSAGE_SENDER_AI;
     }
 
     public function isFromHuman(): bool
     {
-        return $this->sender_type === self::SENDER_HUMAN_ADMIN;
+        return $this->sender_type === MESSAGE_SENDER_HUMAN_ADMIN;
     }
 }

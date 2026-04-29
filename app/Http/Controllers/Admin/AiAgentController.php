@@ -150,10 +150,13 @@ class AiAgentController extends Controller
      */
     public function storeKeyword(Request $request)
     {
+        $action = $request->input('action', 'reply');
+
         $request->validate([
             'keyword'        => 'required|string|max:255',
             'match_type'     => 'required|integer|in:1,2,3',
-            'reply_template' => 'required|string|max:2000',
+            'action'         => 'required|string|in:reply,escalate,ignore',
+            'reply_template' => $action === 'reply' ? 'required|string|max:2000' : 'nullable|string|max:2000',
         ]);
 
         try {
@@ -165,7 +168,8 @@ class AiAgentController extends Controller
                 'platform_connection_id' => $request->platform_connection_id ?: null,
                 'keyword'                => $request->keyword,
                 'match_type'             => $request->match_type,
-                'reply_template'         => $request->reply_template,
+                'action'                 => $action,
+                'reply_template'         => $request->reply_template ?? '',
                 'use_ai'                 => $request->boolean('use_ai') ? STATUS_ACTIVE : DEACTIVATE,
                 'status'                 => STATUS_ACTIVE,
                 'priority'               => $request->input('priority', 0),

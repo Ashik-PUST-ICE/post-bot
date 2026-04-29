@@ -144,9 +144,25 @@ class ProcessIncomingMessage implements ShouldQueue
         }
 
         // ── 9. Check keyword rules first (highest priority) ───────────────────
-        $keywordReply = $this->matchKeyword($userId, $connection->id, $text);
-        if ($keywordReply !== null) {
-            $this->sendReply($conversation, $connection, $userId, $keywordReply, MESSAGE_SENDER_AI, $data);
+        $keywordMatch = $this->matchKeyword($userId, $connection->id, $text);
+        if ($keywordMatch !== null) {
+            if ($keywordMatch['action'] === KEYWORD_ACTION_ESCALATE) {
+                $conversation->update([
+                    'status'           => CONVERSATION_STATUS_ESCALATED,
+                    'human_taken_over' => 1,
+                ]);
+                Log::info("Keyword rule escalated conversation", ['id' => $conversation->id]);
+                return;
+            }
+
+            if ($keywordMatch['action'] === KEYWORD_ACTION_IGNORE) {
+                Log::info("Keyword rule ignored message", ['id' => $conversation->id]);
+                return;
+            }
+
+            // ACTION_REPLY — resolve variables then send
+            $replyText = resolveTemplateVariables($keywordMatch['text'], $conversation);
+            $this->sendReply($conversation, $connection, $userId, $replyText, MESSAGE_SENDER_AI, $data);
             return;
         }
 
@@ -238,8 +254,9 @@ class ProcessIncomingMessage implements ShouldQueue
 
     /**
      * Check keyword rules for an exact/contains/starts-with match.
+     * Returns ['action' => string, 'text' => string] or null if no match.
      */
-    protected function matchKeyword(int $userId, int $connectionId, string $text): ?string
+    protected function matchKeyword(int $userId, int $connectionId, string $text): ?array
     {
         $rules = KeywordRule::where('user_id', $userId)
             ->where('status', STATUS_ACTIVE)
@@ -260,7 +277,10 @@ class ProcessIncomingMessage implements ShouldQueue
             };
 
             if ($matched && !$rule->use_ai) {
-                return $rule->reply_template;
+                return [
+                    'action' => $rule->action ?? KEYWORD_ACTION_REPLY,
+                    'text'   => $rule->reply_template ?? '',
+                ];
             }
         }
 

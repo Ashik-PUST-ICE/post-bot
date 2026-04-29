@@ -1425,6 +1425,67 @@ if (!function_exists('keywordMatchTypes')) {
     }
 }
 
+if (!function_exists('keywordActionLabel')) {
+    /**
+     * Return a human-readable label for a keyword rule action.
+     */
+    function keywordActionLabel(string $action): string
+    {
+        return match ($action) {
+            KEYWORD_ACTION_REPLY    => __('Send Reply'),
+            KEYWORD_ACTION_ESCALATE => __('Escalate to Human'),
+            KEYWORD_ACTION_IGNORE   => __('Ignore Message'),
+            default                 => __('Send Reply'),
+        };
+    }
+}
+
+if (!function_exists('keywordActionLabels')) {
+    /**
+     * Return all keyword rule action labels (for dropdowns).
+     */
+    function keywordActionLabels($input = null)
+    {
+        $output = [
+            KEYWORD_ACTION_REPLY    => __('Send Reply'),
+            KEYWORD_ACTION_ESCALATE => __('Escalate to Human'),
+            KEYWORD_ACTION_IGNORE   => __('Ignore Message'),
+        ];
+        return is_null($input) ? $output : ($output[$input] ?? __('Unknown'));
+    }
+}
+
+if (!function_exists('keywordActionColor')) {
+    /**
+     * Return a CSS hex color for a keyword rule action badge.
+     */
+    function keywordActionColor(string $action): string
+    {
+        return match ($action) {
+            KEYWORD_ACTION_REPLY    => '#22c55e',
+            KEYWORD_ACTION_ESCALATE => '#f59e0b',
+            KEYWORD_ACTION_IGNORE   => '#ef4444',
+            default                 => '#22c55e',
+        };
+    }
+}
+
+if (!function_exists('replyTemplatePlatforms')) {
+    /**
+     * Return reply template platform options (for dropdowns).
+     */
+    function replyTemplatePlatforms($input = null)
+    {
+        $output = [
+            TEMPLATE_PLATFORM_ALL       => __('All Platforms'),
+            TEMPLATE_PLATFORM_FACEBOOK  => __('Facebook'),
+            TEMPLATE_PLATFORM_WHATSAPP  => __('WhatsApp'),
+            TEMPLATE_PLATFORM_INSTAGRAM => __('Instagram'),
+        ];
+        return is_null($input) ? $output : ($output[$input] ?? __('All Platforms'));
+    }
+}
+
 if (!function_exists('aiProviders')) {
     /**
      * Return all supported AI provider labels.
@@ -1693,6 +1754,27 @@ if (!function_exists('messageSenderTypes')) {
             MESSAGE_SENDER_HUMAN_ADMIN => __('Agent'),
         ];
         return is_null($input) ? $output : ($output[$input] ?? __('Unknown'));
+    }
+}
+
+if (!function_exists('resolveTemplateVariables')) {
+    /**
+     * Replace template variables in a reply body.
+     *
+     * Supported variables:
+     *   {customer_name}   — conversation contact name
+     *   {business_name}   — app name from settings
+     *   {platform}        — platform type label
+     */
+    function resolveTemplateVariables(string $text, \App\Models\Conversation $conversation): string
+    {
+        $vars = [
+            '{customer_name}' => $conversation->contact_name ?? __('Customer'),
+            '{business_name}' => getOption('app_name') ?? config('app.name'),
+            '{platform}'      => platformTypes($conversation->platform_type),
+        ];
+
+        return str_replace(array_keys($vars), array_values($vars), $text);
     }
 }
 

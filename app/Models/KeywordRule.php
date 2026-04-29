@@ -17,26 +17,15 @@ class KeywordRule extends Model
         'keyword',
         'match_type',
         'reply_template',
+        'action',
         'use_ai',
         'status',
         'priority',
     ];
 
-    // ─── Constants ────────────────────────────────────────────────────────────
-
-    const MATCH_CONTAINS     = 1;
-    const MATCH_EXACT        = 2;
-    const MATCH_STARTS_WITH  = 3;
-
-    public static function matchLabel(int $type): string
-    {
-        return match ($type) {
-            self::MATCH_CONTAINS    => 'Contains',
-            self::MATCH_EXACT       => 'Exact Match',
-            self::MATCH_STARTS_WITH => 'Starts With',
-            default                 => 'Unknown',
-        };
-    }
+    // ─── Note: match_type constants → KEYWORD_MATCH_* in app/Helpers/Constant.php ─
+    // ─── Note: action constants    → KEYWORD_ACTION_* in app/Helpers/Constant.php ─
+    // ─── Note: label helpers       → keywordMatchTypes(), keywordActionLabel()     ─
 
     // ─── Relationships ─────────────────────────────────────────────────────────
 

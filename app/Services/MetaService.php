@@ -214,6 +214,28 @@ class MetaService
     }
 
     /**
+     * Send a text DM via Instagram Messaging API.
+     */
+    public function sendInstagramMessage(string $recipientId, string $text): bool
+    {
+        $response = Http::post(
+            "https://graph.facebook.com/v20.0/{$this->config->ig_user_id}/messages",
+            [
+                'access_token'   => $this->config->ig_access_token,
+                'recipient'      => ['id' => $recipientId],
+                'message'        => ['text' => $text],
+                'messaging_type' => 'RESPONSE',
+            ]
+        );
+
+        if ($response->failed()) {
+            Log::error('MetaService sendInstagramMessage failed', $response->json());
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Reply to an Instagram post comment publicly.
      * Uses /comment_id/replies endpoint.
      */

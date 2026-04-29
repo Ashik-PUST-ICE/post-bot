@@ -114,4 +114,18 @@
         });
     });
 
+    // ── Keyword action toggle (knowledge page) ─────────────────────────────────
+    // Show/hide the reply textarea based on the selected action
+    if ($('#keywordAction').length) {
+        function toggleReplyFields() {
+            if ($('#keywordAction').val() === 'reply') {
+                $('#replyTemplateWrap, #useAiWrap').show();
+            } else {
+                $('#replyTemplateWrap, #useAiWrap').hide();
+            }
+        }
+        $('#keywordAction').on('change', toggleReplyFields);
+        toggleReplyFields();
+    }
+
 })(jQuery);

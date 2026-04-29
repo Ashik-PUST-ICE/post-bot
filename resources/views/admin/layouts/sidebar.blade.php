@@ -100,6 +100,22 @@
                     </a>
                 </li>
 
+                {{-- Quick Reply Templates --}}
+                <li>
+                    <a href="{{ route('admin.reply-templates.index') }}"
+                        class="d-flex align-items-center cg-21 {{ @$activeReplyTemplates }}">
+                        <div class="d-flex">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V9L13 2Z" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M13 2V9H20" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M9 15H15" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M9 11H15" stroke="#7881A4" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <span>{{ __('Reply Templates') }}</span>
+                    </a>
+                </li>
+
                 {{-- ── Configuration ──────────────────────────────────────────── --}}
                 <li class="zSidebar-label">
                     <span>{{ __('Configuration') }}</span>
