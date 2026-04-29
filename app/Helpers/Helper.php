@@ -1537,36 +1537,57 @@ if (!function_exists('userNotification')) {
 }
 
 if (!function_exists('getAdminLimit')) {
-    function getAdminLimit($type)
+    /**
+     * Check how many units remain for a given limit type on the admin's active package.
+     *
+     * Returns:
+     *   (int)  remaining count  → limit applies, N units left (0 means exhausted)
+     *   true                   → no limit / unlimited (-1) or no package check needed
+     *   false                  → no active package found — deny access
+     *
+     * @param string $type  RULES_PAGE_LIMIT | RULES_MESSAGE_LIMIT
+     * @param int|null $userId  defaults to auth()->id()
+     */
+    function getAdminLimit(string $type, ?int $userId = null): int|bool
     {
-        if (isAddonInstalled('KPISAAS') < 1) {
-            return true;
-        }
+        $userId = $userId ?? auth()->id();
+
         $userPackage = UserPackage::query()
+            ->where('user_id', $userId)
             ->where('status', ACTIVE)
-            ->where('user_id', auth()->id())
-            ->whereDate('end_date', '>=', now()->toDateTimeString())
+            ->whereDate('end_date', '>=', now())
             ->first();
 
-        if (!is_null($userPackage)) {
-            if ($type == RULES_PAGE_LIMIT && $userPackage->page_limit != -1) {
-                $limit = $userPackage->page_limit;
-                $used = User::where('created_by', auth()->id())->where('role', USER_ROLE_EMPLOYEE)->count(); // Assuming pages are linked to users or something
-                $remain = $limit - $used;
-                $remain = $remain < 0 ? 0 : $remain;
-                return $remain;
-            } elseif ($type == RULES_MESSAGE_LIMIT && $userPackage->message_limit != -1) {
-                $limit = $userPackage->message_limit;
-                $used = 0; // Logic for used messages
-                $remain = $limit - $used;
-                $remain = $remain < 0 ? 0 : $remain;
-                return $remain;
-            } else {
-                $remain = true;
-            }
-        } else {
+        // No active package → deny
+        if (is_null($userPackage)) {
             return false;
         }
+
+        if ($type === RULES_PAGE_LIMIT) {
+            // -1 means unlimited
+            if ($userPackage->page_limit == -1) {
+                return true;
+            }
+            $used   = \App\Models\PlatformConnection::where('user_id', $userId)->count();
+            $remain = max(0, $userPackage->page_limit - $used);
+            return $remain;
+        }
+
+        if ($type === RULES_MESSAGE_LIMIT) {
+            // -1 means unlimited
+            if ($userPackage->message_limit == -1) {
+                return true;
+            }
+            // Count outbound messages sent since this subscription started
+            $used   = \App\Models\Message::where('user_id', $userId)
+                ->where('direction', MESSAGE_DIRECTION_OUTBOUND)
+                ->whereDate('created_at', '>=', $userPackage->start_date)
+                ->count();
+            $remain = max(0, $userPackage->message_limit - $used);
+            return $remain;
+        }
+
+        return true;
     }
 }
 
@@ -1808,10 +1829,8 @@ if (!function_exists('setUserPackage')) {
 if (!function_exists('getAddonCodeCurrentVersion')) {
     function getAddonCodeCurrentVersion($appCode)
     {
-        Artisan::call("config:clear");
-        if ($appCode == 'KPISAAS') {
-            return config('addon.KPISAAS.current_version', 0);
-        }
+        Artisan::call('config:clear');
+        return config('addon.' . $appCode . '.current_version', 0);
     }
 }
 

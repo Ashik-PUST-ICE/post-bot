@@ -126,6 +126,18 @@ class ProcessIncomingMessage implements ShouldQueue
             return;
         }
 
+        // ── 8. Check message limit before sending any auto-reply ──────────────
+        $msgLimit = getAdminLimit(RULES_MESSAGE_LIMIT, $userId);
+        if ($msgLimit === false || ($msgLimit !== true && $msgLimit <= 0)) {
+            Log::info("Auto-reply skipped — message limit reached or no active package", [
+                'user_id'         => $userId,
+                'conversation_id' => $conversation->id,
+                'limit_remaining' => $msgLimit,
+            ]);
+            return;
+        }
+
+
         // ── 8. Text-only auto-reply for now ───────────────────────────────────
         if (empty($text)) {
             return;

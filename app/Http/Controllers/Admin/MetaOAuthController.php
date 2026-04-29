@@ -178,8 +178,25 @@ class MetaOAuthController extends Controller
             return response()->json(['status' => false, 'message' => __('OAuth session expired.')]);
         }
 
+        // ── Package limit check ────────────────────────────────────────────────
+        $pageLimit = getAdminLimit(RULES_PAGE_LIMIT);
+        if ($pageLimit === false) {
+            return response()->json([
+                'status'  => false,
+                'message' => __('You do not have an active subscription. Please purchase a package to connect platforms.'),
+            ]);
+        }
+        if ($pageLimit !== true && $pageLimit <= 0) {
+            return response()->json([
+                'status'  => false,
+                'message' => __('You have reached your package platform limit. Please upgrade your plan to connect more platforms.'),
+            ]);
+        }
+        // ──────────────────────────────────────────────────────────────────────
+
         try {
             DB::beginTransaction();
+
 
             $metaConfig = MetaAppConfig::forUser(auth()->id());
 
