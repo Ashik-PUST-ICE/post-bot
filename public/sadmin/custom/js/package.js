@@ -1,19 +1,46 @@
 (function ($) {
-    ("use strict");
+    "use strict";
+
+    /** Bootstrap 5 has no jQuery .modal(); use native API (with jQuery fallback). */
+    function showBsModal(selector) {
+        var el = typeof selector === 'string' ? document.querySelector(selector) : selector;
+        if (!el) {
+            return;
+        }
+        if (el.jquery) {
+            el = el[0];
+        }
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            bootstrap.Modal.getOrCreateInstance(el).show();
+        } else {
+            $(el).modal('show');
+        }
+    }
+
     $(document).on('click', '#add', function () {
         var selector = $('#addModal');
         selector.find('.otherFields').html('');
         selector.find('input[name=sync_stripe]').prop('checked', false);
-        selector.modal('show');
+        showBsModal('#addModal');
     });
 
-
-
-    $(document).on('click', '.edit', function () {
+    $(document).on('click', '.edit-package', function () {
         commonAjax('GET', $('#packageInfoRoute').val(), getDataEditRes, getDataEditRes, { 'id': $(this).data('id') });
     });
 
     function getDataEditRes(response) {
+        // Error callback receives jqXHR; success receives { status, data, message }
+        if (response && typeof response.getResponseHeader === 'function') {
+            commonHandler(response);
+            return;
+        }
+        if (!response || response.status === false || !response.data) {
+            if (response && response.message) {
+                toastr.error(response.message);
+            }
+            return;
+        }
+
         var selector = $('#editModal');
         selector.find('.is-invalid').removeClass('is-invalid');
         selector.find('.error-message').remove();
@@ -24,12 +51,22 @@
         selector.find('input[name=page_limit]').val(response.data.page_limit);
         selector.find('input[name=message_limit]').val(response.data.message_limit);
 
-        // others
+        // others — API may send array (Package cast) or legacy JSON string
         var otherHtmlFields = '';
-        var otherFields = JSON.parse(response.data.others);
-        if (otherFields) {
+        var otherRaw = response.data.others;
+        var otherFields = [];
+        if (Array.isArray(otherRaw)) {
+            otherFields = otherRaw;
+        } else if (typeof otherRaw === 'string' && otherRaw.trim() !== '') {
+            try {
+                otherFields = JSON.parse(otherRaw);
+            } catch (e) {
+                otherFields = [];
+            }
+        }
+        if (otherFields && otherFields.length) {
             otherFields.forEach((val) => {
-                otherHtmlFields += otherFiledTemplate(val)
+                otherHtmlFields += otherFiledTemplate(val);
             });
         }
         selector.find('.icon-preview').attr('src', response.data.icon_url);
@@ -68,7 +105,7 @@
             stripePanel.find('.stripe-yearly-id').text('—');
         }
 
-        selector.modal('show')
+        showBsModal('#editModal');
     }
 
     $('.addOtherField').on('click', function () {
@@ -129,7 +166,7 @@
         selector.find('.is-invalid').removeClass('is-invalid');
         selector.find('.error-message').remove();
         selector.find('form').trigger('reset');
-        selector.modal('show')
+        showBsModal('#assignPackageModal');
     })
 
 
@@ -172,6 +209,32 @@
             { data: "status", name: "user_packages.status" },
             { data: "action", name: "action" }
         ],
+    });
+
+    $(document).on('click', '.edit-user-package', function () {
+        var id = $(this).data('id');
+        var infoRoute = $('#userPackageInfoRoute').val();
+        var baseUpdate = $('#userPackageUpdateBaseUrl').val();
+        if (!infoRoute || !baseUpdate) {
+            return;
+        }
+        commonAjax('GET', infoRoute, function (response) {
+            if (!response.status) {
+                toastr.error(response.message || 'Error');
+                return;
+            }
+            var d = response.data;
+            $('#editUserPackageUser').text(d.user_name + (d.user_email ? ' (' + d.user_email + ')' : ''));
+            $('#editUserPackagePkg').text(d.package_name);
+            $('#editUserPackageStart').val(d.start_date);
+            $('#editUserPackageEnd').val(d.end_date);
+            $('#editUserPackageStatus').val(String(d.status));
+            if (typeof $.fn.niceSelect !== 'undefined' && $('#editUserPackageStatus').next('.nice-select').length) {
+                $('#editUserPackageStatus').niceSelect('update');
+            }
+            $('#editUserPackageForm').attr('action', baseUpdate.replace(/\/$/, '') + '/' + id);
+            showBsModal('#editUserPackageModal');
+        }, commonHandler, { id: id });
     });
 
 })(jQuery);

@@ -70,5 +70,17 @@ class PackageController extends Controller
     {
         return $this->packageService->assignPackage($request);
     }
+
+    public function getUserPackageInfo(Request $request)
+    {
+        $request->validate(['id' => 'required|integer|exists:user_packages,id']);
+
+        return $this->success($this->packageService->getUserPackageInfo((int) $request->id));
+    }
+
+    public function updateUserPackage(Request $request, $id)
+    {
+        return $this->packageService->updateUserPackage($request, (int) $id);
+    }
 }
 

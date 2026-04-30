@@ -106,7 +106,46 @@
     </div>
 </div>
 
+<!-- Edit user subscription row -->
+<div class="modal fade" id="editUserPackageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 bd-ra-4 p-20">
+            <div class="d-flex justify-content-between align-items-center bd-b-one bd-c-light-border pb-20 mb-20">
+                <h4 class="fs-18 fw-600 lh-18 text-textBlack">{{ __('Edit user package') }}</h4>
+                <button type="button" class="border-0 p-0 bg-transparent text-para-text" data-bs-dismiss="modal"
+                    aria-label="Close"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <p class="fs-14 text-para-text pb-10"><strong>{{ __('User') }}:</strong> <span id="editUserPackageUser"></span></p>
+            <p class="fs-14 text-para-text pb-20"><strong>{{ __('Package') }}:</strong> <span id="editUserPackagePkg"></span></p>
+            <form id="editUserPackageForm" class="ajax reset" method="post" enctype="multipart/form-data"
+                data-handler="commonResponseWithPageLoad">
+                @csrf
+                <div class="row rg-20 pb-25">
+                    <div class="col-12">
+                        <label class="zForm-label">{{ __('Start date') }} <span class="text-danger">*</span></label>
+                        <input type="datetime-local" name="start_date" id="editUserPackageStart" class="form-control zForm-control" required>
+                    </div>
+                    <div class="col-12">
+                        <label class="zForm-label">{{ __('End date') }} <span class="text-danger">*</span></label>
+                        <input type="datetime-local" name="end_date" id="editUserPackageEnd" class="form-control zForm-control" required>
+                    </div>
+                    <div class="col-12">
+                        <label class="zForm-label">{{ __('Status') }} <span class="text-danger">*</span></label>
+                        <select name="status" id="editUserPackageStatus" class="sf-select-without-search form-control zForm-control">
+                            <option value="{{ ACTIVE }}">{{ __('Active') }}</option>
+                            <option value="{{ DEACTIVATE }}">{{ __('Inactive') }}</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="py-13 px-20 bd-one bd-ra-4 bd-c-main-color bg-main-color text-white fs-14 fw-600 lh-14">{{ __('Update') }}</button>
+            </form>
+        </div>
+    </div>
+</div>
+
 <input type="hidden" id="packagesUserRoute" value="{{ route('super-admin.packages.user') }}">
+<input type="hidden" id="userPackageInfoRoute" value="{{ route('super-admin.packages.user.info') }}">
+<input type="hidden" id="userPackageUpdateBaseUrl" value="{{ url('sadmin/packages/user-package-update') }}">
 @endsection
 
 @push('script')

@@ -13,6 +13,8 @@ use App\Models\FileManager;
 use App\Traits\ResponseTrait;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 use Stripe\StripeClient;
 
 
@@ -61,7 +63,7 @@ class PackageService
                            <button class="dropdown-toggle p-0 bg-transparent w-22 h-22 ms-auto bd-one bd-c-light-border rounded-circle fs-13 text-textBlack d-flex justify-content-center align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis"></i></button>
                            <ul class="dropdown-menu dropdownItem-one">
                               <li>
-                                 <button class="d-flex align-items-center cg-8 border-0 bg-transparent px-15 py-10 edit" data-id="' . $package->id . '">
+                                 <button type="button" class="d-flex align-items-center cg-8 border-0 bg-transparent px-15 py-10 edit-package" data-id="' . $package->id . '">
                                     <div class="d-flex"><i class="fa-solid fa-pen-to-square text-para-text fs-14"></i></div>
                                     <p class="fs-14 fw-500 lh-19 text-textBlack text-nowrap">' . __("Edit") . '</p>
                                  </button>
@@ -299,7 +301,7 @@ class PackageService
                            <button class="dropdown-toggle p-0 bg-transparent w-22 h-22 ms-auto bd-one bd-c-light-border rounded-circle fs-13 text-textBlack d-flex justify-content-center align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis"></i></button>
                            <ul class="dropdown-menu dropdownItem-one">
                               <li>
-                                 <button class="d-flex align-items-center cg-8 border-0 bg-transparent px-15 py-10 edit" data-id="' . $userPackage->id . '">
+                                 <button type="button" class="d-flex align-items-center cg-8 border-0 bg-transparent px-15 py-10 edit-user-package" data-id="' . $userPackage->id . '">
                                     <div class="d-flex"><i class="fa-solid fa-pen-to-square text-para-text fs-14"></i></div>
                                     <p class="fs-14 fw-500 lh-19 text-textBlack text-nowrap">' . __("Edit") . '</p>
                                  </button>
@@ -309,6 +311,49 @@ class PackageService
             })
             ->rawColumns(['user_name', 'package_name', 'payment_status', 'start_date', 'end_date', 'status', 'action'])
             ->make(true);
+    }
+
+    public function getUserPackageInfo(int $id): array
+    {
+        $up = UserPackage::query()
+            ->with(['package:id,name'])
+            ->findOrFail($id);
+
+        $user = User::find($up->user_id);
+
+        return [
+            'id' => $up->id,
+            'user_name' => $user?->name ?? '—',
+            'user_email' => $user?->email ?? '',
+            'package_name' => $up->name,
+            'start_date' => $up->start_date ? Carbon::parse($up->start_date)->format('Y-m-d\TH:i') : '',
+            'end_date' => $up->end_date ? Carbon::parse($up->end_date)->format('Y-m-d\TH:i') : '',
+            'status' => (int) $up->status,
+        ];
+    }
+
+    public function updateUserPackage($request, int $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'status' => 'required|in:' . DEACTIVATE . ',' . ACTIVE,
+        ]);
+        if ($validator->fails()) {
+            return $this->error([], $validator->errors()->first());
+        }
+
+        try {
+            $up = UserPackage::findOrFail($id);
+            $up->start_date = $request->start_date;
+            $up->end_date = $request->end_date;
+            $up->status = (int) $request->status;
+            $up->save();
+
+            return $this->success([], __(UPDATED_SUCCESSFULLY));
+        } catch (Exception $e) {
+            return $this->error([], getErrorMessage($e, $e->getMessage()));
+        }
     }
 
     public function assignPackage($request)

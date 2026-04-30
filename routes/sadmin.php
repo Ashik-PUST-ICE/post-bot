@@ -166,6 +166,8 @@ Route::group(['prefix' => 'roles', 'as' => 'roles.'], function () {
         Route::get('get-info', [PackageController::class, 'getInfo'])->name('get.info');
         Route::post('destroy/{id}', [PackageController::class, 'destroy'])->name('destroy');
         Route::get('user-package', [PackageController::class, 'userPackage'])->name('user');
+        Route::get('user-package-info', [PackageController::class, 'getUserPackageInfo'])->name('user.info');
+        Route::post('user-package-update/{id}', [PackageController::class, 'updateUserPackage'])->name('user.update')->middleware('isDemo');
         Route::post('assign', [PackageController::class, 'assignPackage'])->name('assign');
     });
 
