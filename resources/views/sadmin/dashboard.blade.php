@@ -60,17 +60,18 @@
                 ['icon' => 'fa-solid fa-calendar-week', 'color' => '#ef4444', 'label' => __('Revenue (this month)'), 'value' => $revMonthDisplay],
             ];
         @endphp
+        {{-- Summary cards (same shell as admin dashboard: padding, icon, fs-24 value) --}}
         <div class="row rg-20 pb-26">
             @foreach ($cards as $c)
                 <div class="col-xl-3 col-md-6">
-                    <div class="bd-one bd-c-stroke bd-ra-10 p-20 bg-white d-flex align-items-center cg-15 h-100">
+                    <div class="bd-one bd-c-stroke bd-ra-10 bg-white d-flex align-items-center cg-15 py-24 px-22">
                         <div class="wh-50 bd-ra-50 d-flex align-items-center justify-content-center flex-shrink-0"
                             style="background:{{ $c['color'] }}1a;">
                             <i class="{{ $c['icon'] }} fs-20" style="color:{{ $c['color'] }}"></i>
                         </div>
-                        <div class="min-w-0">
-                            <p class="fs-13 fw-400 text-para-text mb-4 text-truncate">{{ $c['label'] }}</p>
-                            <h4 class="fs-22 fw-700 text-textBlack mb-0 text-break">{{ $c['value'] }}</h4>
+                        <div class="flex-grow-1 min-w-0">
+                            <p class="fs-13 fw-400 text-para-text mb-6">{{ $c['label'] }}</p>
+                            <h4 class="fs-24 fw-700 lh-29 text-textBlack mb-0 text-break">{{ $c['value'] }}</h4>
                         </div>
                     </div>
                 </div>
