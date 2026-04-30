@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Package extends Model
 {
     use HasFactory, SoftDeletes;
+
+    protected $casts = [
+        'others' => 'array',
+    ];
+
     protected $fillable = [
         'name',
         'slug',

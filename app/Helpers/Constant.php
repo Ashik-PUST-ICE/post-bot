@@ -23,6 +23,10 @@ const DURATION_YEAR = 2;
 const PAYMENT_TYPE_ONETIME   = 1;
 const PAYMENT_TYPE_RECURRING = 2;
 
+// Notify / template routing (customNotifyTemplate in Helper.php)
+const NOTIFY_TYPE_EMAIL = 0;
+const NOTIFY_TYPE_NOTIFICATION = 1;
+
 // User Role Type
 const USER_STATUS_ACTIVE = 1;
 const USER_STATUS_INACTIVE = 0;
@@ -65,6 +69,7 @@ const STORAGE_DRIVER_DO = 'do';
 
 const ACTIVE = 1;
 const DEACTIVATE = 0;
+const INITIATE = 2;
 
 const GATEWAY_MODE_LIVE = 1;
 const GATEWAY_MODE_SANDBOX = 2;

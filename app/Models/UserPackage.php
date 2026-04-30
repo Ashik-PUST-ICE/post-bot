@@ -24,4 +24,9 @@ class UserPackage extends Model
         'status',
         'is_trail',
     ];
+
+    public function package()
+    {
+        return $this->belongsTo(Package::class);
+    }
 }

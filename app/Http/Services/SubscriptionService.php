@@ -10,6 +10,9 @@ use App\Models\UserPackage;
 
 class SubscriptionService
 {
+    /**
+     * Active subscription row for the user (snapshot: page_limit, message_limit, name, etc.).
+     */
     public function getCurrentPackage($userId = null)
     {
         $userId = $userId == null ? auth()->id() : $userId;

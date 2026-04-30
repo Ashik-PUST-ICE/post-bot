@@ -32,7 +32,7 @@
                         id="chooseAPlan" title="{{ __('Upgrade Plan') }}">{{ __('Upgrade Plan') }}</button>
                 </div>
                 <div class="">
-                    <p class="fs-14 fw-400 lh-18 text-para-text pb-12">{{ __('Usage') }}</p>
+                    <p class="fs-14 fw-400 lh-18 text-para-text pb-12">{{ __('Plan limits') }}</p>
                     <ul class="zList-pb-12">
                         <li>
                             <div class="d-flex align-items-center cg-10">
@@ -40,11 +40,24 @@
                                     <i class="fa fa-check" aria-hidden="true"></i>
                                 </div>
                                 <h4 class="flex-grow-1 fs-18 fw-400 lh-28 text-title-black">
-                                    {{ getExistingEmployees(auth()->id()) }} /
-                                    @if ($userPackage->employee_limit == -1)
-                                    {{ __('Add Unlimited Employees') }}
+                                    @if ($userPackage->page_limit == -1)
+                                        {{ __('Unlimited Pages') }}
                                     @else
-                                    {{ __($userPackage->employee_limit . ' Employees') }}
+                                        {{ __('Up to :n Pages', ['n' => $userPackage->page_limit]) }}
+                                    @endif
+                                </h4>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="d-flex align-items-center cg-10">
+                                <div class="text-title-black">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                </div>
+                                <h4 class="flex-grow-1 fs-18 fw-400 lh-28 text-title-black">
+                                    @if ($userPackage->message_limit == -1)
+                                        {{ __('Unlimited Messages/Month') }}
+                                    @else
+                                        {{ number_format($userPackage->message_limit) }} {{ __('Messages/Month') }}
                                     @endif
                                 </h4>
                             </div>

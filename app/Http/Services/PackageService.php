@@ -107,7 +107,7 @@ class PackageService
             $package->page_limit = $request->page_limit;
             $package->message_limit = $request->message_limit;
 
-            $package->others = json_encode($request->others);
+            $package->others = $request->others ?? [];
             $package->status = $request->status ? ACTIVE : DEACTIVATE;
             $package->is_trail = $request->is_trail ? ACTIVE : DEACTIVATE;
             $package->is_default = $request->is_default ? ACTIVE : DEACTIVATE;
@@ -263,6 +263,7 @@ class PackageService
                 'user_packages.*',
                 'users.name as userName',
                 'subscription_orders.payment_status',
+                'gateways.title as gatewaysName',
             );
 
         return datatables($userPackages)
@@ -273,12 +274,12 @@ class PackageService
                 return $userPackage->name;
             })
             ->addColumn('gateway', function ($userPackage) {
-                return $userPackage->gatewaysName;
+                return $userPackage->gatewaysName ?? '—';
             })
             ->addColumn('payment_status', function ($userPackage) {
-                if ($userPackage->payment_status == ORDER_PAYMENT_STATUS_PAID) {
+                if ($userPackage->payment_status == PAYMENT_STATUS_PAID) {
                     return '<div class="zBadge zBadge-paid">Paid</div>';
-                } elseif ($userPackage->payment_status == ORDER_PAYMENT_STATUS_PENDING) {
+                } elseif ($userPackage->payment_status == PAYMENT_STATUS_PENDING) {
                     return '<div class="zBadge zBadge-pending">Pending</div>';
                 } else {
                     return '<div class="zBadge zBadge-cancel">Cancelled</div>';
@@ -344,7 +345,7 @@ class PackageService
                 'user_id' => $user->id,
                 'package_id' => $package->id,
                 'order_id' => uniqid(),
-                'payment_status' => ORDER_PAYMENT_STATUS_PAID,
+                'payment_status' => PAYMENT_STATUS_PAID,
                 'transaction_id' => str_replace("-", "", uuid_create(UUID_TYPE_RANDOM)),
                 'system_currency' => $currency,
                 'gateway_id' => $gateway->id,

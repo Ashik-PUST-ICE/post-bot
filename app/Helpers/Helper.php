@@ -876,7 +876,7 @@ if (!function_exists('getExistingEmployees')) {
         } else {
             $totalCount = User::query()
                 ->where('created_by', $userId)
-                ->where('role', USER_ROLE_EMPLOYEE)
+                ->where('role', USER_ROLE_ADMIN)
                 ->count();
             return $totalCount;
         }
@@ -902,10 +902,13 @@ if (!function_exists('getPackageOtherFields')) {
 
         if (is_null($userPackage)) {
             return [];
-        } else {
-            $package = Package::find($userPackage->package_id);
-            return json_decode($package->others);
         }
+        $package = Package::find($userPackage->package_id);
+        if (!$package) {
+            return [];
+        }
+        $others = $package->others;
+        return is_array($others) ? $others : [];
     }
 }
 

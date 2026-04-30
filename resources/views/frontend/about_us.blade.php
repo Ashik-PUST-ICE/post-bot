@@ -112,7 +112,7 @@
     <!-- End Mission & Vision -->
 
     <!-- Start Team Members -->
-    @if(isset($about->team_members) && is_array($teamMembers = json_decode($about->team_members, true)) && count($teamMembers) > 0)
+    @if(isset($about->team_members) && is_array($about->team_members) && count($teamMembers = $about->team_members) > 0)
         <section class="py-md-150 py-sm-50 py-30 position-relative z-1 landing-teamMember-section">
         <div class="container">
             <div class="row justify-content-center">
@@ -191,7 +191,7 @@
 
             <!-- Core Values List -->
             <div class="row rg-20 justify-content-center">
-                @foreach(json_decode($about->core_values, true) as $value)
+                @foreach($about->core_values as $value)
                     <div class="col-lg-4 col-md-6">
                         <div class="landing-coreValue">
                             <div class="wrap">

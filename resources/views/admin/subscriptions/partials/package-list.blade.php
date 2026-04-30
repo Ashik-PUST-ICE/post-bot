@@ -13,13 +13,7 @@
             <div
                 class="price-plan-one {{ $key > 0 ? ($key == 1 ? 'price-plan-standard' : 'price-plan-enterprise') : '' }} {{ $package->is_popular == STATUS_ACTIVE ? 'price-plan-popular' : '' }}">
                 <div class=" price-head">
-                    <h4 class="title">{{ $package->name }}
-                        @if ($package->employee_limit == -1)
-                        ({{ __('Add Unlimited Members') }})
-                        @else
-                        ({{ __('Upto ' . $package->employee_limit . ' Members') }})
-                        @endif
-                    </h4>
+                    <h4 class="title">{{ $package->name }}</h4>
                     <h4 class="plan-price zPrice-plan-monthly">{{ showPrice($package->monthly_price) }}</h4>
                     <h4 class="plan-price zPrice-plan-yearly">{{ showPrice($package->yearly_price) }}</h4>
                 </div>
@@ -33,15 +27,31 @@
                                         alt="{{ $package->name }}" />
                                 </div>
                                 <p class="fs-18 fw-400 lh-22 text-para-text">
-                                    @if ($package->employee_limit == -1)
-                                    {{ __('Add Unlimited Members') }}
+                                    @if ($package->page_limit == -1)
+                                        {{ __('Unlimited Pages') }}
                                     @else
-                                    {{ __('Add ' . $package->employee_limit . ' Members') }}
+                                        {{ __('Up to :n Pages', ['n' => $package->page_limit]) }}
                                     @endif
                                 </p>
                             </div>
                         </li>
-                        @foreach (json_decode($package->others) ?? [] as $other)
+                        <li>
+                            <div class="d-flex align-items-start g-10">
+                                <div
+                                    class="flex-shrink-0 d-flex justify-content-center align-items-center w-15 h-15 rounded-circle bg-main-color mt-4">
+                                    <img src="{{asset('assets/images/icon/features-check-icon.svg')}}"
+                                        alt="{{ $package->name }}" />
+                                </div>
+                                <p class="fs-18 fw-400 lh-22 text-para-text">
+                                    @if ($package->message_limit == -1)
+                                        {{ __('Unlimited Messages/Month') }}
+                                    @else
+                                        {{ number_format($package->message_limit) }} {{ __('Messages/Month') }}
+                                    @endif
+                                </p>
+                            </div>
+                        </li>
+                        @foreach (($package->others ?? []) as $other)
                         <li>
                             <div class="d-flex align-items-start g-10">
                                 <div

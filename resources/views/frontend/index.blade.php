@@ -260,7 +260,7 @@
                                     </p>
                                 </div>
                             </li>
-                            @foreach (json_decode($package->others) ?? [] as $other)
+                            @foreach (($package->others ?? []) as $other)
                             <li>
                                 <div class="d-flex align-items-start g-10">
                                     <div class="flex-shrink-0 d-flex justify-content-center align-items-center w-15 h-15 rounded-circle bg-main-color mt-4">
@@ -272,7 +272,11 @@
                             @endforeach
                         </ul>
                         @auth
-                        <a href="{{ route('admin.subscription.index', ['id' => $package->id]) }}" class="btn link" title="{{ __('Get Started') }}">{{ __('Get Started') }}</a>
+                        <button type="button"
+                            class="btn link ldGetStarted"
+                            data-package="{{ $package->id }}"
+                            data-duration="{{ DURATION_MONTH }}"
+                            title="{{ __('Get Started') }}">{{ __('Get Started') }}</button>
                         @else
                         <a href="{{ route('register', ['package' => $package->id]) }}" class="btn link" title="{{ __('Get Started') }}">{{ __('Get Started') }}</a>
                         @endauth
@@ -290,13 +294,208 @@
 $('#billingMonthly-tab').on('shown.bs.tab', function () {
     $('.zPrice-plan-yearly').addClass('d-none');
     $('.zPrice-plan-monthly').removeClass('d-none');
+    $('.ldGetStarted').data('duration', {{ DURATION_MONTH }});
 });
 $('#billingYearly-tab').on('shown.bs.tab', function () {
     $('.zPrice-plan-monthly').addClass('d-none');
     $('.zPrice-plan-yearly').removeClass('d-none');
+    $('.ldGetStarted').data('duration', {{ DURATION_YEAR }});
 });
+
+@auth
+(function ($) {
+    var getGatewayUrl  = "{{ route('admin.subscription.get.gateway') }}";
+    var getCurrencyUrl = "{{ route('admin.subscription.get.currency') }}";
+    var checkoutUrl    = "{{ route('admin.subscription.checkout') }}";
+    var dashboardUrl   = "{{ route('admin.dashboard') }}";
+
+    // Open payment modal on "Get Started"
+    $(document).on('click', '.ldGetStarted', function () {
+        var packageId   = $(this).data('package');
+        var durationType = $(this).data('duration') || {{ DURATION_MONTH }};
+
+        $('#ldPackageId').val(packageId);
+        $('#ldDurationType').val(durationType);
+        $('#ldSelectGateway').val('');
+        $('#ldSelectCurrency').val('');
+        $('#ldGatewayCurrencyAmount').text('');
+        $('#ldCurrencyAppend').html('');
+        $('#ldGatewayListBlock').html('<p class="text-para-text text-center py-20">{{ __("Loading...") }}</p>');
+        $('#ldBankSection').addClass('d-none');
+        $('#ldPaymentModal').modal('show');
+
+        // Fetch gateway list for this package
+        var formData = new FormData();
+        formData.append('id', packageId);
+        formData.append('duration_type', durationType);
+        formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+
+        $.ajax({
+            type: 'POST',
+            url: getGatewayUrl,
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.status) {
+                    $('#ldGatewayListBlock').html(response.data);
+                } else {
+                    $('#ldGatewayListBlock').html('<p class="text-danger text-center py-20">' + (response.message || 'Error loading gateways.') + '</p>');
+                }
+            },
+            error: function () {
+                $('#ldGatewayListBlock').html('<p class="text-danger text-center py-20">{{ __("Could not load payment options.") }}</p>');
+            }
+        });
+    });
+
+    // Gateway card selected (IDs come from gateway-list.blade.php partial)
+    $(document).on('click', '#ldPaymentModal .paymentGateway', function () {
+        var $btn         = $(this);
+        var gatewaySlug  = $btn.data('gateway');
+        var gatewayId    = $btn.data('id');
+        var packageId    = $btn.data('package_id');
+        var durationType = $btn.data('duration_type');
+
+        // Highlight
+        $('#ldPaymentModal .payment-item').removeClass('bd-c-main-color').addClass('bd-c-stroke');
+        $('#ldPaymentModal .paymentGateway').text('{{ __("Select") }}');
+        $btn.closest('.payment-item').removeClass('bd-c-stroke').addClass('bd-c-main-color');
+        $btn.text('{{ __("Selected") }} ✓');
+
+        $('#ldSelectGateway').val(gatewaySlug);
+        $('#ldPackageId').val(packageId);
+        $('#ldDurationType').val(durationType);
+
+        // #bankSection lives inside the gateway-list partial
+        if (gatewaySlug === 'bank') {
+            $('#bankSection').removeClass('d-none');
+        } else {
+            $('#bankSection').addClass('d-none');
+        }
+
+        // #currencyAppend lives inside the gateway-list partial
+        $('#currencyAppend').html('<li class="text-para-text fs-14">{{ __("Loading...") }}</li>');
+        $.ajax({
+            type: 'GET',
+            url: getCurrencyUrl,
+            data: { id: gatewayId },
+            dataType: 'json',
+            success: function (response) {
+                var currencies = response.data;
+                var html = '';
+                if (currencies && currencies.length > 0) {
+                    // #planAmount lives inside the gateway-list partial
+                    var planAmount = parseFloat($('#planAmount').val()) || 0;
+                    $.each(currencies, function (i, c) {
+                        var converted  = (planAmount * parseFloat(c.conversion_rate)).toFixed(2);
+                        var priceLabel = c.currency + ' ' + converted;
+                        html += '<li class="d-flex justify-content-between align-items-center">' +
+                            '<label class="d-flex align-items-center g-10 cursor-pointer">' +
+                            '<input type="radio" name="ld_currency_radio" value="' + c.currency + '"' +
+                            ' data-code="' + c.currency + '" data-amount="' + converted + '"' +
+                            (i === 0 ? ' checked' : '') + '>' +
+                            ' <span class="fs-14 fw-400 lh-16 ms-2">' + c.currency + '</span>' +
+                            '</label>' +
+                            '<span class="fs-14 fw-600 lh-16">' + priceLabel + '</span>' +
+                            '</li>';
+                        if (i === 0) {
+                            $('#ldSelectCurrency').val(c.currency);
+                            $('#ldGatewayCurrencyAmount').text('(' + priceLabel + ')');
+                        }
+                    });
+                } else {
+                    html = '<li><p class="text-danger fs-14">{{ __("No currency configured for this gateway.") }}</p></li>';
+                }
+                $('#currencyAppend').html(html);
+            },
+            error: function (xhr) {
+                var msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : '{{ __("Failed to load currencies.") }}';
+                $('#currencyAppend').html('<li><p class="text-danger fs-14">' + msg + '</p></li>');
+            }
+        });
+    });
+
+    // Currency radio change
+    $(document).on('change', 'input[name="ld_currency_radio"]', function () {
+        $('#ldSelectCurrency').val($(this).val());
+        var priceLabel = $(this).data('code') + ' ' + $(this).data('amount');
+        $('#ldGatewayCurrencyAmount').text('(' + priceLabel + ')');
+    });
+
+    // Bank dropdown (#bank_id is inside the gateway-list partial)
+    $(document).on('change', '#bank_id', function () {
+        var details = $('option:selected', this).data('details') || '';
+        $('#bankDetails').find('p').html(details);
+    });
+
+    // Pay Now
+    $(document).on('click', '#ldPayBtn', function () {
+        if (!$('#ldSelectGateway').val()) {
+            alert('{{ __("Please select a payment gateway.") }}');
+            return;
+        }
+        if (!$('#ldSelectCurrency').val()) {
+            alert('{{ __("Please select a currency.") }}');
+            return;
+        }
+        $('#ldCheckoutForm').submit();
+    });
+
+})(jQuery);
+@endauth
 </script>
 @endpush
+
+{{-- Payment modal for logged-in users on landing page --}}
+@auth
+<style>
+    #ldPaymentModal .gateway-image {
+        max-width: 100px;
+        max-height: 40px;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto;
+    }
+    #ldPaymentModal .payment-item {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        text-align: center;
+    }
+</style>
+<div class="modal fade" id="ldPaymentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bd-ra-12 p-sm-30 p-15">
+            <div class="d-flex justify-content-between align-items-center pb-20 mb-20" style="border-bottom:1px solid #eee">
+                <h4 class="fs-20 fw-600">{{ __('Select Payment Method') }}</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <form id="ldCheckoutForm" action="{{ route('admin.subscription.checkout') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" id="ldPackageId"    name="package_id">
+                    <input type="hidden" id="ldSelectGateway" name="gateway">
+                    <input type="hidden" id="ldSelectCurrency" name="currency">
+                    <input type="hidden" id="ldDurationType"  name="duration_type" value="{{ DURATION_MONTH }}">
+
+                    {{-- Gateway list loaded via AJAX --}}
+                    <div id="ldGatewayListBlock"></div>
+
+                    <div class="d-flex justify-content-end mt-20">
+                        <button type="button" id="ldPayBtn"
+                            class="border-0 bd-ra-12 py-13 px-30 bg-main-color fs-16 fw-600 text-white">
+                            {{ __('Pay Now') }} <span id="ldGatewayCurrencyAmount"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endauth
 @endif
 
 @if (isset($section['testimonials_area']) && $section['testimonials_area']->status == STATUS_ACTIVE)
