@@ -25,7 +25,13 @@
     });
 
     $(document).on('click', '.edit-package', function () {
-        commonAjax('GET', $('#packageInfoRoute').val(), getDataEditRes, getDataEditRes, { 'id': $(this).data('id') });
+        var infoUrl = $('#packageInfoRoute').val();
+        var pkgId = $(this).data('id');
+        if (!infoUrl || pkgId == null || pkgId === '') {
+            toastr.error('Missing package info URL or id');
+            return;
+        }
+        commonAjax('GET', infoUrl, getDataEditRes, getDataEditRes, { id: pkgId });
     });
 
     function getDataEditRes(response) {
@@ -42,11 +48,17 @@
         }
 
         var selector = $('#editModal');
+        if (!selector.length || !document.getElementById('editModal')) {
+            toastr.error('Edit modal not found');
+            return;
+        }
+
+        try {
         selector.find('.is-invalid').removeClass('is-invalid');
         selector.find('.error-message').remove();
 
         selector.find('input[name=id]').val(response.data.id);
-        selector.find('input[name=icon]').val(response.data.icon);
+        // Do not set .val() on file inputs (browser security — can throw and block the modal).
         selector.find('input[name=name]').val(response.data.name);
         selector.find('input[name=page_limit]').val(response.data.page_limit);
         selector.find('input[name=message_limit]').val(response.data.message_limit);
@@ -106,6 +118,10 @@
         }
 
         showBsModal('#editModal');
+        } catch (err) {
+            console.error(err);
+            toastr.error(err.message || 'Could not load package into the form');
+        }
     }
 
     $('.addOtherField').on('click', function () {

@@ -196,7 +196,7 @@
                     </div>
 
                     <form class="ajax reset" action="{{ route('super-admin.packages.store') }}" method="post"
-                          data-handler="commonResponseForModal">
+                          data-handler="commonResponseForModal" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="id">
 
