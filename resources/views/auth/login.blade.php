@@ -89,7 +89,7 @@
                                         </tr>
                                         <tr>
                                             <td colspan="2" id="employeeCredentialShow" class="login-info">
-                                                <b>{{ __('Employee ') }}:</b> {{ __('employee@gmail.com') }} |
+                                                <b>{{ __('Super Admin ') }}:</b> {{ __('sadmin@gmail.com') }} |
                                                 123456
                                             </td>
                                         </tr>
@@ -129,7 +129,7 @@
             $('#inputPassword').val('123456');
         });
         $('#employeeCredentialShow').on('click', function() {
-            $('#inputPhoneNumberOrEmail').val('employee@gmail.com');
+            $('#inputPhoneNumberOrEmail').val('sadmin@gmail.com');
             $('#inputPassword').val('123456');
         });
 </script>
