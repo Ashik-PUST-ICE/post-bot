@@ -7,7 +7,7 @@
     "require": {
         "php": "^8.1",
         "bacon/bacon-qr-code": "^3.0",
-        "doctrine/dbal": "^4.2",
+        "doctrine/dbal": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
         "jenssegers/agent": "^2.6",
         "josiasmontag/laravel-recaptchav3": "^1.0",
@@ -18,7 +18,7 @@
         "laravel/ui": "^4.6",
         "league/flysystem-aws-s3-v3": "^3.30",
         "maatwebsite/excel": "^3.1",
-        "pragmarx/google2fa-laravel": "^2.3",
+        "pragmarx/google2fa-laravel": "^3.0",
         "pragmarx/google2fa-qrcode": "^3.0",
         "pusher/pusher-php-server": "^7.2",
         "spatie/laravel-backup": "^8.8",
