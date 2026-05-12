@@ -4,6 +4,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>{{ getOption('app_name') }} - @stack('title' ?? '')</title>
+
+    {{-- CSRF token MUST be outside any conditional so it is always rendered.
+         jQuery AJAX reads it via $('meta[name="csrf-token"]').attr('content').
+         If it were inside @else and a child view pushed a meta section it
+         would silently disappear and every POST would return 419. --}}
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+
     @hasSection('meta')
         @stack('meta')
     @else
@@ -26,8 +33,6 @@
 
             <!-- Meta keywords for SEO -->
             <meta name="keywords" content="{{ getOption('meta_keyword', '') }}">
-
-        <meta name="csrf-token" content="{{ csrf_token() }}" />
     @endif
 
     <!-- Place favicon.ico in the root directory -->

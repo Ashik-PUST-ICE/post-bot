@@ -8,6 +8,7 @@ use App\Models\PlatformConnection;
 use App\Services\MetaOAuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
@@ -164,6 +165,20 @@ class MetaOAuthController extends Controller
      */
     public function savePage(Request $request)
     {
+        // ── Debug logging — helps trace 419 / validation failures ──────────────
+        Log::info('[MetaOAuth] savePage called', [
+            'user_id'        => auth()->id(),
+            'ip'             => $request->ip(),
+            'page_id'        => $request->input('page_id'),
+            'page_name'      => $request->input('page_name'),
+            'platform_type'  => $request->input('platform_type'),
+            'phone_number_id'=> $request->input('phone_number_id'),
+            'ig_user_id'     => $request->input('ig_user_id'),
+            'has_token'      => $request->input('access_token') ? 'yes' : 'no',
+            'has_session'    => session()->has('meta_oauth_data') ? 'yes' : 'no',
+        ]);
+        // ──────────────────────────────────────────────────────────────────────
+
         $request->validate([
             'page_id'         => 'required|string',
             'page_name'       => 'required|string|max:255',
@@ -269,6 +284,11 @@ class MetaOAuthController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('[MetaOAuth] savePage exception', [
+                'user_id' => auth()->id(),
+                'error'   => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+            ]);
             return response()->json(['status' => false, 'message' => $e->getMessage()]);
         }
     }
