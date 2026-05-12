@@ -150,8 +150,8 @@ class MetaOAuthController extends Controller
                 ->with('error', __('OAuth session expired. Please try again.'));
         }
 
-        $data['title']          = __('Select Account to Connect');
-        $data['activePlatforms'] = 'active';
+        $data['title']            = __('Select Account to Connect');
+        $data['activeMetaPicker'] = 'active';
         $data['oauthData']       = $oauthData;
 
         return view('admin.platforms.oauth-picker', $data);

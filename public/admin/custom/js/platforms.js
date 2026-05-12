@@ -90,7 +90,7 @@
                 commonAjax('POST', url, function (res) {
                     if (res.status) {
                         toastr.success(res.message);
-                        platformTable.ajax.reload();
+                        location.reload();
                     } else {
                         toastr.error(res.message);
                     }
@@ -112,8 +112,7 @@
     // ── After add/edit success → reload table & close modal ──────────────────
     $(document).on('ajaxFormSuccess', function (e, res) {
         if (res.status) {
-            platformTable.ajax.reload();
-            $('.modal').modal('hide');
+            location.reload();
         }
     });
 

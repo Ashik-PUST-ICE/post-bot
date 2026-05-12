@@ -24,6 +24,23 @@
         $waPhones  = $oauthData['wa_phones'] ?? [];
     @endphp
 
+    {{-- Final Step Alert --}}
+    <div class="bd-one bd-ra-10 p-20 mb-26 d-flex align-items-center justify-content-between flex-wrap g-15"
+         style="background: linear-gradient(90deg, #6366f1, #a855f7); border: none; color: #fff;">
+        <div class="d-flex align-items-center cg-15">
+            <div class="wh-48 bd-ra-50 bg-white-20 d-flex align-items-center justify-content-center">
+                <i class="fa-solid fa-circle-check fs-24"></i>
+            </div>
+            <div>
+                <h5 class="fs-18 fw-700 mb-2">{{ __('Almost there!') }}</h5>
+                <p class="fs-14 opacity-80">{{ __('You’ve logged in with Meta. Now, click the "Connect" button on the specific account you want to use.') }}</p>
+            </div>
+        </div>
+        <div class="zCheck d-none d-md-block">
+            <i class="fa-solid fa-arrow-down fs-20 bounce-y"></i>
+        </div>
+    </div>
+
     {{-- ── WhatsApp: Phone Number Picker ──────────────────────────────────── --}}
     @if($platform === 'whatsapp')
         <div class="bd-one bd-c-stroke bd-ra-10 bg-white p-25">

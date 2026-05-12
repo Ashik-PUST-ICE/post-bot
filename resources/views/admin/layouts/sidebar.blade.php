@@ -57,7 +57,7 @@
                 {{-- Connect Account --}}
                 <li>
                     <a href="{{ route('admin.meta-oauth.picker') }}"
-                        class="d-flex align-items-center cg-21">
+                        class="d-flex align-items-center cg-21 {{ @$activeMetaPicker }}">
                         <div class="d-flex">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M14 11.998C14 9.506 11.683 7 8.857 7C7.429 7 6.143 7.636 5.286 8.636C4.429 9.636 4 10.998 4 11.998C4 13.002 4.429 14.364 5.286 15.364C6.143 16.364 7.429 17 8.857 17C11.683 17 14 14.494 14 11.998Z" stroke="#7881A4" stroke-width="1.5" stroke-miterlimit="10"/>

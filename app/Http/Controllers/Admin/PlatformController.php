@@ -17,6 +17,10 @@ class PlatformController extends Controller
     {
         $data['title']           = __('Platform Connections');
         $data['activePlatforms'] = 'active';
+        $data['connections']     = PlatformConnection::where('user_id', auth()->id())
+            ->orderByDesc('id')
+            ->get();
+
         return view('admin.platforms.index', $data);
     }
 

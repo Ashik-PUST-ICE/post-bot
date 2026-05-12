@@ -97,8 +97,11 @@
             localStorage.setItem("activeTab", jQuery(e.target).attr("href"));
           });
           var activeTab = localStorage.getItem("activeTab");
-          if (activeTab) {
-            jQuery('a[href="' + activeTab + '"]').tab("show");
+          if (activeTab && activeTab.startsWith('#')) {
+            var $tab = jQuery('a[data-bs-toggle="tab"][href="' + activeTab + '"]');
+            if ($tab.length > 0) {
+              $tab.tab("show");
+            }
           }
         });
       },
