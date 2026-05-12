@@ -54,6 +54,20 @@
                     </a>
                 </li>
 
+                {{-- Connect Account --}}
+                <li>
+                    <a href="{{ route('admin.meta-oauth.picker') }}"
+                        class="d-flex align-items-center cg-21">
+                        <div class="d-flex">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14 11.998C14 9.506 11.683 7 8.857 7C7.429 7 6.143 7.636 5.286 8.636C4.429 9.636 4 10.998 4 11.998C4 13.002 4.429 14.364 5.286 15.364C6.143 16.364 7.429 17 8.857 17C11.683 17 14 14.494 14 11.998Z" stroke="#7881A4" stroke-width="1.5" stroke-miterlimit="10"/>
+                                <path d="M10 11.998C10 14.49 12.317 17 15.143 17C16.571 17 17.857 16.364 18.714 15.364C19.571 14.364 20 13.002 20 11.998C20 10.994 19.571 9.632 18.714 8.632C17.857 7.632 16.571 7 15.143 7C12.317 7 10 9.506 10 11.998Z" stroke="#7881A4" stroke-width="1.5" stroke-miterlimit="10"/>
+                            </svg>
+                        </div>
+                        <span>{{ __('Connect Account') }}</span>
+                    </a>
+                </li>
+
                 {{-- Inbox --}}
                 <li>
                     <a href="{{ route('admin.inbox.index') }}"

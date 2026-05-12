@@ -417,7 +417,7 @@
                         <div class="row rg-10">
                             @php
                                 $fields = [
-                                    ['platform' => 'Facebook Messenger', 'color' => '#1877F2', 'icon' => 'fa-brands fa-facebook-messenger', 'fields' => 'messages, messaging_postbacks, messaging_optins'],
+                                    ['platform' => 'Facebook & Messenger', 'color' => '#1877F2', 'icon' => 'fa-brands fa-facebook-messenger', 'fields' => 'messages, messaging_postbacks, feed'],
                                     ['platform' => 'WhatsApp',           'color' => '#25D366', 'icon' => 'fa-brands fa-whatsapp',            'fields' => 'messages, message_status'],
                                     ['platform' => 'Instagram',          'color' => '#E1306C', 'icon' => 'fa-brands fa-instagram',           'fields' => 'messages, messaging_seen'],
                                 ];

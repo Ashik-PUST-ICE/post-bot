@@ -149,12 +149,12 @@ class MetaService
     /**
      * Send a text message via Facebook Messenger.
      */
-    public function sendFacebookMessage(string $recipientPsid, string $text): bool
+    public function sendFacebookMessage(string $recipientPsid, string $text, ?string $overrideToken = null): bool
     {
         $response = Http::post(
             "https://graph.facebook.com/v20.0/{$this->config->fb_page_id}/messages",
             [
-                'access_token' => $this->config->fb_page_access_token,
+                'access_token' => $overrideToken ?: $this->config->fb_page_access_token,
                 'recipient'    => ['id' => $recipientPsid],
                 'message'      => ['text' => $text],
                 'messaging_type' => 'RESPONSE',
@@ -171,9 +171,10 @@ class MetaService
     /**
      * Send a text message via WhatsApp Business API.
      */
-    public function sendWhatsAppMessage(string $to, string $text): bool
+    public function sendWhatsAppMessage(string $to, string $text, ?string $overrideToken = null): bool
     {
-        $response = Http::withToken($this->config->wa_access_token)
+        $token = $overrideToken ?: $this->config->wa_access_token;
+        $response = Http::withToken($token)
             ->post("https://graph.facebook.com/v20.0/{$this->config->wa_phone_number_id}/messages", [
                 'messaging_product' => 'whatsapp',
                 'recipient_type'    => 'individual',
@@ -193,12 +194,12 @@ class MetaService
      * Reply to a Facebook Page post comment (NOT Messenger — different endpoint).
      * Uses /comment_id/comments to post a public reply.
      */
-    public function sendFbCommentReply(string $commentId, string $text): bool
+    public function sendFbCommentReply(string $commentId, string $text, ?string $overrideToken = null): bool
     {
         $response = Http::post(
             "https://graph.facebook.com/v20.0/{$commentId}/comments",
             [
-                'access_token' => $this->config->fb_page_access_token,
+                'access_token' => $overrideToken ?: $this->config->fb_page_access_token,
                 'message'      => $text,
             ]
         );
@@ -216,12 +217,12 @@ class MetaService
     /**
      * Send a text DM via Instagram Messaging API.
      */
-    public function sendInstagramMessage(string $recipientId, string $text): bool
+    public function sendInstagramMessage(string $recipientId, string $text, ?string $overrideToken = null): bool
     {
         $response = Http::post(
             "https://graph.facebook.com/v20.0/{$this->config->ig_user_id}/messages",
             [
-                'access_token'   => $this->config->ig_access_token,
+                'access_token'   => $overrideToken ?: $this->config->ig_access_token,
                 'recipient'      => ['id' => $recipientId],
                 'message'        => ['text' => $text],
                 'messaging_type' => 'RESPONSE',
@@ -239,12 +240,12 @@ class MetaService
      * Reply to an Instagram post comment publicly.
      * Uses /comment_id/replies endpoint.
      */
-    public function sendIgCommentReply(string $commentId, string $text): bool
+    public function sendIgCommentReply(string $commentId, string $text, ?string $overrideToken = null): bool
     {
         $response = Http::post(
             "https://graph.facebook.com/v20.0/{$commentId}/replies",
             [
-                'access_token' => $this->config->ig_access_token,
+                'access_token' => $overrideToken ?: $this->config->ig_access_token,
                 'message'      => $text,
             ]
         );

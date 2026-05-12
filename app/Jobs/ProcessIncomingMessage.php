@@ -381,32 +381,32 @@ class ProcessIncomingMessage implements ShouldQueue
             $sent = match ($platform) {
                 // Messenger DM → PSID-based message
                 'messenger' =>
-                    $service->sendFacebookMessage($incomingData['sender_id'], $text),
+                    $service->sendFacebookMessage($incomingData['sender_id'], $text, $connection->access_token),
 
                 // Facebook post comment → reply publicly on the comment thread
                 'fb_comment' =>
                     !empty($incomingData['comment_id'])
-                        ? $service->sendFbCommentReply($incomingData['comment_id'], $text)
+                        ? $service->sendFbCommentReply($incomingData['comment_id'], $text, $connection->access_token)
                         : false,
 
                 // WhatsApp text message
                 'whatsapp' =>
-                    $service->sendWhatsAppMessage($incomingData['sender_phone'], $text),
+                    $service->sendWhatsAppMessage($incomingData['sender_phone'], $text, $connection->access_token),
 
                 // Instagram DM
                 'instagram' =>
-                    $service->sendInstagramMessage($incomingData['sender_id'], $text),
+                    $service->sendInstagramMessage($incomingData['sender_id'], $text, $connection->access_token),
 
                 // Instagram post comment → public reply on comment
                 'ig_comment' =>
                     !empty($incomingData['comment_id'])
-                        ? $service->sendIgCommentReply($incomingData['comment_id'], $text)
+                        ? $service->sendIgCommentReply($incomingData['comment_id'], $text, $connection->access_token)
                         : false,
 
                 // Instagram @mention → reply on the mention comment
                 'ig_mention' =>
                     !empty($incomingData['comment_id'])
-                        ? $service->sendIgCommentReply($incomingData['comment_id'], $text)
+                        ? $service->sendIgCommentReply($incomingData['comment_id'], $text, $connection->access_token)
                         : false,
 
                 default => false,
