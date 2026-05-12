@@ -188,6 +188,29 @@
                             </p>
                         </div>
                     </div>
+
+                    {{-- OAuth Redirect URI --}}
+                    <div class="bd-one bd-ra-8 p-14 mt-20" style="background:#f0f9ff; border-color:#bae6fd;">
+                        <p class="fs-13 fw-600 text-textBlack mb-10">
+                            <i class="fa-solid fa-link me-6" style="color:#0284c7"></i>
+                            {{ __('OAuth Redirect URI') }}
+                        </p>
+                        <p class="fs-12 text-para-text mb-10">
+                            {{ __('Copy this URL and add it to your') }}
+                            <strong>{{ __('Meta App Dashboard → Facebook Login → Settings → Valid OAuth Redirect URIs') }}</strong>.
+                            {{ __('This is required for the Connect via OAuth button to work.') }}
+                        </p>
+                        <div class="d-flex align-items-center cg-10">
+                            <input type="text" id="oauthCallbackUrlInput" class="form-control zForm-control"
+                                value="{{ $oauthCallbackUrl }}" readonly>
+                            <button type="button"
+                                class="py-11 px-18 bd-one bd-ra-4 bd-c-stroke bg-white fs-13 fw-500 text-textBlack flex-shrink-0 copy-btn"
+                                data-copy="oauthCallbackUrlInput">
+                                <i class="fa-solid fa-copy me-5"></i>{{ __('Copy') }}
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="d-flex justify-content-end mt-20">
                         <button type="submit" onclick="document.getElementById('metaSection').value='app'"
                             class="py-11 px-22 bd-one bd-ra-4 bd-c-main-color bg-main-color text-white fs-13 fw-600">

@@ -21,6 +21,9 @@ class MetaAppController extends Controller
         // Webhook URL = /webhook/meta/{userId} — one unique URL per admin account
         $data['webhookUrl'] = route('webhook.meta.verify', ['userId' => auth()->id()]);
 
+        // OAuth Callback URL — must be registered in Meta App → Facebook Login → Valid OAuth Redirect URIs
+        $data['oauthCallbackUrl'] = route('admin.meta-oauth.callback');
+
         return view('admin.meta-app.index', $data);
     }
 

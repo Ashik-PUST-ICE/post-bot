@@ -51,7 +51,7 @@ class MetaOAuthController extends Controller
         $oauthService = new MetaOAuthService($config);
 
         $authUrl = $oauthService->buildAuthUrl(
-            redirect_uri: route('admin.meta-oauth.callback'),
+            redirectUri:  route('admin.meta-oauth.callback'),
             platformType: $platform,
             state:        $state
         );
