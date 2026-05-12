@@ -53,7 +53,7 @@ class MetaOAuthController extends Controller
 
         $authUrl = $oauthService->buildAuthUrl(
             redirectUri:  route('admin.meta-oauth.callback'),
-            platformType: $platform,
+            platformType: 'unified',
             state:        $state
         );
 
@@ -100,29 +100,37 @@ class MetaOAuthController extends Controller
             // Step 3: Short-lived → Long-lived user token (~60 days)
             $longToken = $oauthService->getLongLivedToken($shortToken);
 
-            // Step 4: Fetch assets based on platform
-            $pages    = $oauthService->getPages($longToken);
-            $wabaId   = $config->wa_business_account_id;
-            $waPhones = [];
+            // Step 4: Fetch ALL assets
+            // 4a. Pages (now includes IG info)
+            $pages = $oauthService->getPages($longToken);
 
-            if ($platform === 'whatsapp' && $wabaId) {
-                $waPhones = $oauthService->getWhatsAppPhoneNumbers($wabaId, $longToken);
-            }
+            Log::info('[MetaOAuth] Pages fetched:', [
+                'count' => count($pages),
+                'pages' => collect($pages)->map(fn($p) => [
+                    'id' => $p['id'],
+                    'name' => $p['name'],
+                    'has_ig' => isset($p['instagram_business_account']) ? 'yes' : 'no'
+                ])
+            ]);
 
-            // Enrich pages with IG account info when connecting Instagram
-            if ($platform === 'instagram') {
-                foreach ($pages as &$page) {
-                    $page['instagram_account'] = $oauthService->getInstagramAccount(
-                        $page['id'],
-                        $page['access_token']
-                    );
+            // 4b. Enrich Pages with Instagram info (legacy loop if needed, but redundant now)
+            foreach ($pages as &$page) {
+                if (!isset($page['instagram_account']) && isset($page['instagram_business_account'])) {
+                    $page['instagram_account'] = $page['instagram_business_account'];
                 }
-                unset($page);
+            }
+            unset($page);
+
+            // 4c. WhatsApp Phone Numbers (if WABA ID is configured)
+            $waPhones = [];
+            $wabaId   = $config->wa_business_account_id;
+            if ($wabaId) {
+                $waPhones = $oauthService->getWhatsAppPhoneNumbers($wabaId, $longToken);
             }
 
             // Store data in session for the picker view
             Session::put('meta_oauth_data', [
-                'platform'   => $platform,
+                'platform'   => 'unified', // Tell picker to show everything
                 'long_token' => $longToken,
                 'pages'      => $pages,
                 'wa_phones'  => $waPhones,

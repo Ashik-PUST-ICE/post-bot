@@ -61,6 +61,17 @@ class MetaOAuthService
         $base = ['public_profile', 'email'];
 
         return match ($platformType) {
+            'unified', 'all' => array_merge($base, [
+                'pages_show_list',
+                'pages_read_engagement',
+                'pages_manage_metadata',
+                'pages_messaging',
+                'pages_read_user_content',
+                'instagram_basic',
+                'instagram_manage_messages',
+                'whatsapp_business_management',
+                'whatsapp_business_messaging',
+            ]),
             'facebook', 'messenger' => array_merge($base, [
                 'pages_show_list',
                 'pages_read_engagement',
@@ -78,13 +89,7 @@ class MetaOAuthService
                 'whatsapp_business_management',
                 'whatsapp_business_messaging',
             ]),
-            default => array_merge($base, [
-                'pages_show_list',
-                'pages_read_engagement',
-                'pages_messaging',
-                'instagram_basic',
-                'instagram_manage_messages',
-            ]),
+            default => $this->getScopesFor('unified'),
         };
     }
 
@@ -147,7 +152,7 @@ class MetaOAuthService
     {
         $response = Http::get("{$this->graphBase}/{$this->graphVersion}/me/accounts", [
             'access_token' => $userToken,
-            'fields'       => 'id,name,category,picture{url},access_token,tasks',
+            'fields'       => 'id,name,category,picture{url},access_token,tasks,instagram_business_account{id,name,username,profile_picture_url}',
         ]);
 
         if ($response->failed()) {
