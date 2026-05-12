@@ -63,8 +63,8 @@ class QueueSettingController extends Controller
             setOption('queue_memory',     $request->queue_memory);
             setOption('queue_delay',      $request->queue_delay ?? 0);
 
-            // Also write to .env dynamically
-            $this->updateEnvQueueConnection($request->queue_connection);
+            // Also write to .env dynamically using the helper function
+            updateEnv(['QUEUE_CONNECTION' => $request->queue_connection]);
 
             return response()->json([
                 'status'  => true,
@@ -74,7 +74,8 @@ class QueueSettingController extends Controller
                     . ' --memory=' . $request->queue_memory,
             ]);
         } catch (\Exception $e) {
-            return response()->json(['status' => false, 'message' => $e->getMessage()]);
+            \Illuminate\Support\Facades\Log::error('Queue settings save failed', ['error' => $e->getMessage()]);
+            return response()->json(['status' => false, 'message' => 'Failed to save queue settings: ' . $e->getMessage()]);
         }
     }
 
@@ -104,17 +105,6 @@ class QueueSettingController extends Controller
         }
     }
 
-    // ─── Private ──────────────────────────────────────────────────────────────
 
-    protected function updateEnvQueueConnection(string $connection): void
-    {
-        $path    = base_path('.env');
-        $content = file_get_contents($path);
-        $updated = preg_replace(
-            '/^QUEUE_CONNECTION=.*/m',
-            'QUEUE_CONNECTION=' . $connection,
-            $content
-        );
-        file_put_contents($path, $updated);
-    }
+
 }

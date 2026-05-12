@@ -57,6 +57,13 @@ class ProcessIncomingMessage implements ShouldQueue
         $platform = $data['platform'];
         $text     = $data['text'] ?? null;
 
+        Log::info("ProcessIncomingMessage started", [
+            'user_id' => $userId,
+            'platform' => $platform,
+            'text' => substr($text ?? '', 0, 100),
+            'job_id' => $this->job ? $this->job->getJobId() : null
+        ]);
+
         // ── 1. Resolve platform type constant ─────────────────────────────────
         $platformType = $this->resolvePlatformType($platform);
 
@@ -69,6 +76,11 @@ class ProcessIncomingMessage implements ShouldQueue
             ]);
             return;
         }
+
+        Log::info("ProcessIncomingMessage: Found connection", [
+            'connection_id' => $connection->id,
+            'platform_type' => $platformType
+        ]);
 
         // ── 3. Resolve contact identifier ──────────────────────────────────────
         $contactId   = $data['sender_id']    ?? $data['sender_phone'] ?? 'unknown';
@@ -113,6 +125,11 @@ class ProcessIncomingMessage implements ShouldQueue
             'external_id'     => $data['mid'] ?? $data['message_id'] ?? $data['comment_id'] ?? null,
             'status'          => MESSAGE_STATUS_DELIVERED,
             'sent_at'         => now(),
+        ]);
+
+        Log::info("ProcessIncomingMessage: Saved incoming message", [
+            'message_id' => $incomingMsg->id,
+            'conversation_id' => $conversation->id
         ]);
 
         // ── 6. Don't auto-reply if human has taken over ────────────────────────
@@ -170,6 +187,7 @@ class ProcessIncomingMessage implements ShouldQueue
         $aiSettings = AiAgentSetting::forUser($userId);
 
         if ($aiSettings->auto_reply_enabled !== STATUS_ACTIVE) {
+            Log::info("ProcessIncomingMessage: AI auto-reply disabled for user {$userId}");
             return;
         }
 
@@ -178,6 +196,11 @@ class ProcessIncomingMessage implements ShouldQueue
             Log::warning("No AI API key configured for user {$userId}");
             return;
         }
+
+        Log::info("ProcessIncomingMessage: Starting AI processing", [
+            'conversation_id' => $conversation->id,
+            'ai_provider' => $aiSettings->ai_provider
+        ]);
 
         try {
             $aiService = AiServiceFactory::makeForProvider(
@@ -200,8 +223,17 @@ class ProcessIncomingMessage implements ShouldQueue
                 return;
             }
 
+            Log::info("ProcessIncomingMessage: AI generated reply", [
+                'conversation_id' => $conversation->id,
+                'reply_length' => strlen($replyText),
+                'reply_preview' => substr($replyText, 0, 100)
+            ]);
+
             // Apply reply delay
             if ($aiSettings->reply_delay_seconds > 0) {
+                Log::info("ProcessIncomingMessage: Applying reply delay", [
+                    'delay_seconds' => $aiSettings->reply_delay_seconds
+                ]);
                 sleep($aiSettings->reply_delay_seconds);
             }
 
@@ -215,6 +247,11 @@ class ProcessIncomingMessage implements ShouldQueue
                 'error' => $e->getMessage(),
             ]);
         }
+
+        Log::info("ProcessIncomingMessage completed", [
+            'job_id' => $this->job ? $this->job->getJobId() : null,
+            'conversation_id' => $conversation->id
+        ]);
     }
 
     // ─── Helpers ──────────────────────────────────────────────────────────────
@@ -323,8 +360,18 @@ class ProcessIncomingMessage implements ShouldQueue
         int $senderType,
         array $incomingData
     ): void {
+        Log::info("ProcessIncomingMessage: Attempting to send reply", [
+            'conversation_id' => $conversation->id,
+            'platform' => $incomingData['platform'],
+            'sender_type' => $senderType,
+            'reply_length' => strlen($text)
+        ]);
+
         $config  = MetaAppConfig::where('user_id', $userId)->first();
-        if (!$config) return;
+        if (!$config) {
+            Log::warning("ProcessIncomingMessage: No MetaAppConfig found for user {$userId}");
+            return;
+        }
 
         $service  = new MetaService($config);
         $platform = $incomingData['platform'];
@@ -365,12 +412,21 @@ class ProcessIncomingMessage implements ShouldQueue
                 default => false,
             };
         } catch (\Exception $e) {
-            Log::error("Send reply failed", ['error' => $e->getMessage(), 'platform' => $platform]);
+            Log::error("Send reply failed", [
+                'error' => $e->getMessage(),
+                'platform' => $platform,
+                'conversation_id' => $conversation->id
+            ]);
         }
 
+        Log::info("ProcessIncomingMessage: Reply send result", [
+            'conversation_id' => $conversation->id,
+            'sent' => $sent,
+            'platform' => $platform
+        ]);
 
         // Save outbound message record
-        Message::create([
+        $outboundMsg = Message::create([
             'conversation_id' => $conversation->id,
             'user_id'         => $userId,
             'tenant_id'       => $connection->tenant_id,
@@ -383,11 +439,17 @@ class ProcessIncomingMessage implements ShouldQueue
             'sent_at'         => now(),
         ]);
 
+        Log::info("ProcessIncomingMessage: Saved outbound message", [
+            'message_id' => $outboundMsg->id,
+            'status' => $outboundMsg->status
+        ]);
+
         if ($sent) {
             $conversation->update([
                 'last_message'    => \Illuminate\Support\Str::limit($text, 100),
                 'last_message_at' => now(),
             ]);
+            Log::info("ProcessIncomingMessage: Updated conversation last message");
         }
     }
 }

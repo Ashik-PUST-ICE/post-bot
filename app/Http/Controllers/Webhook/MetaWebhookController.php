@@ -328,7 +328,16 @@ class MetaWebhookController extends Controller
     protected function dispatchMessage(array $data): void
     {
         try {
+            Log::info('Dispatching ProcessIncomingMessage to queue', [
+                'platform' => $data['platform'] ?? 'unknown',
+                'user_id' => $data['user_id'] ?? null,
+                'sender_id' => $data['sender_id'] ?? null,
+                'text_length' => isset($data['text']) ? strlen($data['text']) : 0,
+            ]);
+
             ProcessIncomingMessage::dispatch($data);
+
+            Log::info('ProcessIncomingMessage dispatched successfully');
         } catch (\Exception $e) {
             Log::error('Failed to dispatch ProcessIncomingMessage', [
                 'error'    => $e->getMessage(),

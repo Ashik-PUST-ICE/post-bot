@@ -80,8 +80,12 @@
         var orig  = $btn.html();
         $btn.html('<i class="fa-solid fa-spinner fa-spin me-6"></i>Saving...').prop('disabled', true);
 
-        commonAjax('POST', saveRoute,
-            function (res) {
+        $.ajax({
+            type: 'POST',
+            url: saveRoute,
+            data: $(this).serialize(),
+            dataType: 'json',
+            success: function (res) {
                 if (res.status) {
                     toastr.success(res.message || 'Saved!');
                     if (res.cmd) { $('.queue-worker-cmd').text(res.cmd); }
@@ -90,12 +94,11 @@
                 }
                 $btn.html(orig).prop('disabled', false);
             },
-            function () {
+            error: function () {
                 toastr.error('Server error. Please try again.');
                 $btn.html(orig).prop('disabled', false);
-            },
-            $(this).serialize()
-        );
+            }
+        });
     });
 
     // ─── Copy Worker Command to Clipboard ─────────────────────────────────────
