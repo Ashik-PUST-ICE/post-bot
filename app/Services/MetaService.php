@@ -149,10 +149,11 @@ class MetaService
     /**
      * Send a text message via Facebook Messenger.
      */
-    public function sendFacebookMessage(string $recipientPsid, string $text, ?string $overrideToken = null): bool
+    public function sendFacebookMessage(string $recipientPsid, string $text, ?string $overrideToken = null, ?string $overridePageId = null): bool
     {
+        $pageId = $overridePageId ?: $this->config->fb_page_id;
         $response = Http::post(
-            "https://graph.facebook.com/v20.0/{$this->config->fb_page_id}/messages",
+            "https://graph.facebook.com/v20.0/{$pageId}/messages",
             [
                 'access_token' => $overrideToken ?: $this->config->fb_page_access_token,
                 'recipient'    => ['id' => $recipientPsid],
@@ -171,11 +172,13 @@ class MetaService
     /**
      * Send a text message via WhatsApp Business API.
      */
-    public function sendWhatsAppMessage(string $to, string $text, ?string $overrideToken = null): bool
+    public function sendWhatsAppMessage(string $to, string $text, ?string $overrideToken = null, ?string $overridePhoneNumberId = null): bool
     {
         $token = $overrideToken ?: $this->config->wa_access_token;
+        $phoneId = $overridePhoneNumberId ?: $this->config->wa_phone_number_id;
+        
         $response = Http::withToken($token)
-            ->post("https://graph.facebook.com/v20.0/{$this->config->wa_phone_number_id}/messages", [
+            ->post("https://graph.facebook.com/v20.0/{$phoneId}/messages", [
                 'messaging_product' => 'whatsapp',
                 'recipient_type'    => 'individual',
                 'to'                => $to,
@@ -217,10 +220,11 @@ class MetaService
     /**
      * Send a text DM via Instagram Messaging API.
      */
-    public function sendInstagramMessage(string $recipientId, string $text, ?string $overrideToken = null): bool
+    public function sendInstagramMessage(string $recipientId, string $text, ?string $overrideToken = null, ?string $overrideIgUserId = null): bool
     {
+        $igUserId = $overrideIgUserId ?: $this->config->ig_user_id;
         $response = Http::post(
-            "https://graph.facebook.com/v20.0/{$this->config->ig_user_id}/messages",
+            "https://graph.facebook.com/v20.0/{$igUserId}/messages",
             [
                 'access_token'   => $overrideToken ?: $this->config->ig_access_token,
                 'recipient'      => ['id' => $recipientId],

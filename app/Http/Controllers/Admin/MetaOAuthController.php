@@ -121,11 +121,19 @@ class MetaOAuthController extends Controller
             }
             unset($page);
 
-            // 4c. WhatsApp Phone Numbers (if WABA ID is configured)
+            // 4c. WhatsApp Phone Numbers: Fetch all WABAs first, then phones for each
             $waPhones = [];
-            $wabaId   = $config->wa_business_account_id;
-            if ($wabaId) {
-                $waPhones = $oauthService->getWhatsAppPhoneNumbers($wabaId, $longToken);
+            try {
+                $wabas = $oauthService->getWhatsAppBusinessAccounts($longToken);
+                foreach ($wabas as $waba) {
+                    $phones = $oauthService->getWhatsAppPhoneNumbers($waba['id'], $longToken);
+                    foreach ($phones as $p) {
+                        $p['waba_id'] = $waba['id']; // tag with WABA ID for saving later
+                        $waPhones[] = $p;
+                    }
+                }
+            } catch (\Exception $e) {
+                Log::warning('[MetaOAuth] Failed to fetch WhatsApp assets: ' . $e->getMessage());
             }
 
             // Store data in session for the picker view
@@ -223,9 +231,9 @@ class MetaOAuthController extends Controller
 
             $metaConfig = MetaAppConfig::forUser(auth()->id());
 
-            // Facebook Page: save page ID + page access token into MetaAppConfig.
+            // Facebook Page / Messenger: save page ID + page access token into MetaAppConfig.
             // Page access tokens are long-lived (never expire unless revoked).
-            if ((int) $request->platform_type === PLATFORM_FACEBOOK_PAGE) {
+            if (in_array((int) $request->platform_type, [PLATFORM_FACEBOOK_PAGE, PLATFORM_MESSENGER])) {
                 $metaConfig->update([
                     'fb_page_id'           => $request->page_id,
                     'fb_page_access_token' => $request->access_token,

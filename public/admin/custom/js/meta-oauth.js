@@ -58,6 +58,7 @@
                 access_token   : accessToken,
                 platform_type  : platformType,
                 phone_number_id: phoneNumberId,
+                waba_id        : btn.data('waba-id') || '',
                 ig_user_id     : igUserId,
             },
             success: function (res) {

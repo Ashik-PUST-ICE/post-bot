@@ -202,6 +202,21 @@ class MetaOAuthService
         return $response->json('data', []);
     }
 
+    /**
+     * Fetch all WhatsApp Business Accounts (WABAs) managed by the user.
+     */
+    public function getWhatsAppBusinessAccounts(string $userToken): array
+    {
+        $response = Http::withToken($userToken)
+            ->get("{$this->graphBase}/{$this->graphVersion}/me/whatsapp_business_accounts");
+
+        if ($response->failed()) {
+            return [];
+        }
+
+        return $response->json('data', []);
+    }
+
     // ─── Helper: Verify Token Validity ────────────────────────────────────────
 
     /**

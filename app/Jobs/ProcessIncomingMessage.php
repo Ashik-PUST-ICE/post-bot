@@ -381,7 +381,7 @@ class ProcessIncomingMessage implements ShouldQueue
             $sent = match ($platform) {
                 // Messenger DM → PSID-based message
                 'messenger' =>
-                    $service->sendFacebookMessage($incomingData['sender_id'], $text, $connection->access_token),
+                    $service->sendFacebookMessage($incomingData['sender_id'], $text, $connection->access_token, $connection->platform_id),
 
                 // Facebook post comment → reply publicly on the comment thread
                 'fb_comment' =>
@@ -391,11 +391,11 @@ class ProcessIncomingMessage implements ShouldQueue
 
                 // WhatsApp text message
                 'whatsapp' =>
-                    $service->sendWhatsAppMessage($incomingData['sender_phone'], $text, $connection->access_token),
+                    $service->sendWhatsAppMessage($incomingData['sender_phone'], $text, $connection->access_token, $connection->platform_id),
 
                 // Instagram DM
                 'instagram' =>
-                    $service->sendInstagramMessage($incomingData['sender_id'], $text, $connection->access_token),
+                    $service->sendInstagramMessage($incomingData['sender_id'], $text, $connection->access_token, $connection->platform_id),
 
                 // Instagram post comment → public reply on comment
                 'ig_comment' =>

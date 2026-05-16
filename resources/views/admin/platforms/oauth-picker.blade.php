@@ -187,6 +187,7 @@
                             data-access-token="{{ $oauthData['long_token'] }}"
                             data-platform-type="{{ PLATFORM_WHATSAPP }}"
                             data-phone-number-id="{{ $phone['id'] }}"
+                            data-waba-id="{{ $phone['waba_id'] ?? '' }}"
                             data-route="{{ route('admin.meta-oauth.save.page') }}">
                             <i class="fa-solid fa-plug me-6"></i>{{ __('Connect WhatsApp') }}
                         </button>
