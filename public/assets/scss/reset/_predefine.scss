@@ -372,13 +372,15 @@ scrollUp
         width: 100%;
     }
     .main-header {
-        position: relative;
+        position: sticky;
+        top: 0;
         padding: toRem(21) toRem(30);
         background-color: $white;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        z-index: 1;
+        z-index: 1000;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
         @media screen and (max-width: 575px) {
             padding: toRem(10);
         }
