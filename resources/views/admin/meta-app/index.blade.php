@@ -97,14 +97,18 @@
                     box-shadow: none !important;
                 }
                 .meta-tab-link.active {
-                    background: white !important;
-                    border-color: #e5e7eb !important;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-                    color: var(--main-color, #6366f1) !important;
+                    background: var(--main-color, #6366f1) !important;
+                    border-color: var(--main-color, #6366f1) !important;
+                    color: white !important;
                     font-weight: 600 !important;
+                    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
                 }
                 .meta-tab-link.active i {
+                    color: white !important;
                     transform: scale(1.1);
+                }
+                .meta-tab-link.active .status-dot {
+                    border: 1px solid white;
                 }
                 .status-dot {
                     width: 7px;
