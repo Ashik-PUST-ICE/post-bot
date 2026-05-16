@@ -98,7 +98,8 @@ class MetaAppController extends Controller
             return response()->json(['status' => true, 'message' => __(UPDATED_SUCCESSFULLY)]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['status' => 'error', 'message' => getErrorMessage($e, $e->getMessage())]);
+            \Illuminate\Support\Facades\Log::error('[MetaAppConfig] Update failed: ' . $e->getMessage());
+            return response()->json(['status' => false, 'message' => getErrorMessage($e, $e->getMessage())]);
         }
     }
 

@@ -170,14 +170,19 @@
                             </p>
                         </div>
                         <div class="col-md-6">
-                            <label class="zForm-label">
-                                {{ __('App Secret') }}
-                                <span class="fs-11 text-para-text ms-5">{{ __('(leave blank to keep existing)') }}</span>
-                            </label>
+                            <div class="d-flex align-items-center justify-content-between mb-8">
+                                <label class="zForm-label mb-0">{{ __('App Secret') }}</label>
+                                @if($config->fb_app_secret)
+                                    <span class="badge bg-success-transparent text-success fs-10 px-8 py-2">
+                                        <i class="fa-solid fa-check-circle me-4"></i>{{ __('Configured') }}
+                                    </span>
+                                @endif
+                            </div>
                             <div class="position-relative">
                                 <input type="password" name="fb_app_secret" id="appSecretInput"
                                     class="form-control zForm-control"
-                                    placeholder="{{ $config->fb_app_secret ? '••••••••••••••••••••' : __('Paste App Secret') }}">
+                                    value="{{ $config->fb_app_secret }}"
+                                    placeholder="{{ __('Paste App Secret') }}">
                                 <button type="button" class="border-0 bg-transparent position-absolute top-50 translate-middle-y"
                                     style="right:12px;" onclick="toggleSecret()">
                                     <i class="fa-solid fa-eye fs-14 text-para-text" id="secretEyeIcon"></i>
@@ -245,12 +250,24 @@
                             </p>
                         </div>
                         <div class="col-md-6">
-                            <label class="zForm-label">
-                                {{ __('Page Access Token') }}
-                                <span class="fs-11 text-para-text ms-5">{{ __('(leave blank to keep existing)') }}</span>
-                            </label>
-                            <input type="password" name="fb_page_access_token" class="form-control zForm-control"
-                                placeholder="{{ $config->fb_page_access_token ? '••••••••••••••••••••' : __('Auto-filled via OAuth, or paste manually') }}">
+                            <div class="d-flex align-items-center justify-content-between mb-8">
+                                <label class="zForm-label mb-0">{{ __('Page Access Token') }}</label>
+                                @if($config->fb_page_access_token)
+                                    <span class="badge bg-success-transparent text-success fs-10 px-8 py-2">
+                                        <i class="fa-solid fa-check-circle me-4"></i>{{ __('Configured') }}
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="position-relative">
+                                <input type="password" name="fb_page_access_token" id="fbPageTokenInput" 
+                                    class="form-control zForm-control"
+                                    value="{{ $config->fb_page_access_token }}"
+                                    placeholder="{{ __('Auto-filled via OAuth, or paste manually') }}">
+                                <button type="button" class="border-0 bg-transparent position-absolute top-50 translate-middle-y toggle-token-vis"
+                                    style="right:12px;" data-target="fbPageTokenInput">
+                                    <i class="fa-solid fa-eye fs-14 text-para-text"></i>
+                                </button>
+                            </div>
                             <p class="fs-12 text-para-text mt-5">
                                 {{ __('Manual:') }}
                                 <a href="https://business.facebook.com/settings/system-users" target="_blank" class="text-main-color">
@@ -303,12 +320,24 @@
                             </p>
                         </div>
                         <div class="col-md-12">
-                            <label class="zForm-label">
-                                {{ __('System User Access Token') }}
-                                <span class="fs-11 text-para-text ms-5">{{ __('(leave blank to keep existing)') }}</span>
-                            </label>
-                            <input type="password" name="wa_access_token" class="form-control zForm-control"
-                                placeholder="{{ $config->wa_access_token ? '••••••••••••••••••••' : __('Permanent System User token — never expires') }}">
+                            <div class="d-flex align-items-center justify-content-between mb-8">
+                                <label class="zForm-label mb-0">{{ __('System User Access Token') }}</label>
+                                @if($config->wa_access_token)
+                                    <span class="badge bg-success-transparent text-success fs-10 px-8 py-2">
+                                        <i class="fa-solid fa-check-circle me-4"></i>{{ __('Configured') }}
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="position-relative">
+                                <input type="password" name="wa_access_token" id="waTokenInput" 
+                                    class="form-control zForm-control"
+                                    value="{{ $config->wa_access_token }}"
+                                    placeholder="{{ __('Permanent System User token — never expires') }}">
+                                <button type="button" class="border-0 bg-transparent position-absolute top-50 translate-middle-y toggle-token-vis"
+                                    style="right:12px;" data-target="waTokenInput">
+                                    <i class="fa-solid fa-eye fs-14 text-para-text"></i>
+                                </button>
+                            </div>
                             <p class="fs-12 text-para-text mt-5">
                                 <a href="https://business.facebook.com/settings/system-users" target="_blank" class="text-main-color">
                                     {{ __('Business Settings → System Users → Generate Token → select whatsapp_business_management + whatsapp_business_messaging') }}
@@ -350,12 +379,24 @@
                             </p>
                         </div>
                         <div class="col-md-6">
-                            <label class="zForm-label">
-                                {{ __('Instagram Access Token') }}
-                                <span class="fs-11 text-para-text ms-5">{{ __('(leave blank to keep existing)') }}</span>
-                            </label>
-                            <input type="password" name="ig_access_token" class="form-control zForm-control"
-                                placeholder="{{ $config->ig_access_token ? '••••••••••••••••••••' : __('Auto-filled via OAuth, or paste long-lived token') }}">
+                            <div class="d-flex align-items-center justify-content-between mb-8">
+                                <label class="zForm-label mb-0">{{ __('Instagram Access Token') }}</label>
+                                @if($config->ig_access_token)
+                                    <span class="badge bg-success-transparent text-success fs-10 px-8 py-2">
+                                        <i class="fa-solid fa-check-circle me-4"></i>{{ __('Configured') }}
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="position-relative">
+                                <input type="password" name="ig_access_token" id="igTokenInput" 
+                                    class="form-control zForm-control"
+                                    value="{{ $config->ig_access_token }}"
+                                    placeholder="{{ __('Auto-filled via OAuth, or paste long-lived token') }}">
+                                <button type="button" class="border-0 bg-transparent position-absolute top-50 translate-middle-y toggle-token-vis"
+                                    style="right:12px;" data-target="igTokenInput">
+                                    <i class="fa-solid fa-eye fs-14 text-para-text"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="d-flex justify-content-end mt-20">
