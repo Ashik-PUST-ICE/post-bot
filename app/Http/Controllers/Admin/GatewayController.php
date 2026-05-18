@@ -24,6 +24,7 @@ class GatewayController extends Controller
         $data['pageTitle'] = __('Gateway');
         $data['showManageApplicationSetting'] = 'show';
         $data['activeGatewaySetting'] = 'active';
+        $data['activeGateway'] = 'active';
         $data['gateways'] = $this->gatewayService->getAll(auth()->user()->tenant_id);
 
         return view('admin.setting.gateway.index', $data);
@@ -34,6 +35,7 @@ class GatewayController extends Controller
         $data['pageTitle'] = __('Gateway Edit');
         $data['showManageApplicationSetting'] = 'show';
         $data['activeGatewaySetting'] = 'active';
+        $data['activeGateway'] = 'active';
         $data['gateway'] = \App\Models\Gateway::where('tenant_id', auth()->user()->tenant_id)->findOrFail(decrypt($id));
         $data['gatewaySettings'] = gatewaySettings($data['gateway']->slug);
         $data['gatewayCurrencies'] = \App\Models\GatewayCurrency::where('gateway_id', $data['gateway']->id)->get();
