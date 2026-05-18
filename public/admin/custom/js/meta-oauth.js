@@ -71,6 +71,22 @@
                        .css({ 'background': '#10b9811a', 'color': '#10b981', 'border-color': '#10b981' })
                        .prop('disabled', true);
                        
+                    // Change the parent box to green as well to make it clearly distinct
+                    var cardBox = btn.closest('.oauth-card-box');
+                    if (cardBox.length) {
+                        cardBox.css({
+                            'border-color': '#10b981',
+                            'background-color': '#10b98108',
+                            'box-shadow': '0 4px 12px #10b9811a'
+                        });
+                        
+                        // Disable the other button in the same card (e.g. for FB Page vs Messenger) since they share the same ID
+                        cardBox.find('.connect-oauth-btn').not(btn)
+                               .html('<i class="fa-solid fa-check me-6"></i>Connected')
+                               .css({ 'background': '#10b9811a', 'color': '#10b981', 'border-color': '#10b981' })
+                               .prop('disabled', true);
+                    }
+                       
                 } else {
                     toastr.error(res.message);
                     btn.html(origHtml).prop('disabled', false);

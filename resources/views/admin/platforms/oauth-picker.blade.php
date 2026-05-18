@@ -54,7 +54,9 @@
         <div class="row rg-15">
             @foreach($pages as $page)
             <div class="col-md-6 col-lg-4">
-                <div class="bd-one bd-ra-10 p-20 h-100 d-flex flex-column" style="border-color:#e5e7eb; transition:border-color .2s;">
+                @php $isConnected = in_array($page['id'], $existingPlatformIds); @endphp
+                <div class="bd-one bd-ra-10 p-20 h-100 d-flex flex-column oauth-card-box" 
+                    style="border-color:{{ $isConnected ? '#10b981' : '#e5e7eb' }}; background-color:{{ $isConnected ? '#10b98108' : '#fff' }}; transition:all .3s; {{ $isConnected ? 'box-shadow: 0 4px 12px #10b9811a;' : '' }}">
                     <div class="d-flex align-items-center cg-12 mb-15">
                         @if(!empty($page['picture']['data']['url']))
                             <img src="{{ $page['picture']['data']['url'] }}" class="wh-44 bd-ra-50 object-fit-cover" alt="">
@@ -133,7 +135,9 @@
             @foreach($igPages as $page)
                 @php $ig = $page['instagram_account']; @endphp
                 <div class="col-md-6 col-lg-4">
-                    <div class="bd-one bd-ra-10 p-20 h-100 d-flex flex-column" style="border-color:#e5e7eb; transition:border-color .2s;">
+                    @php $isConnected = in_array($ig['id'], $existingPlatformIds); @endphp
+                    <div class="bd-one bd-ra-10 p-20 h-100 d-flex flex-column oauth-card-box" 
+                        style="border-color:{{ $isConnected ? '#10b981' : '#e5e7eb' }}; background-color:{{ $isConnected ? '#10b98108' : '#fff' }}; transition:all .3s; {{ $isConnected ? 'box-shadow: 0 4px 12px #10b9811a;' : '' }}">
                         <div class="d-flex align-items-center cg-12 mb-15">
                             @if(!empty($ig['profile_picture_url']))
                                 <img src="{{ $ig['profile_picture_url'] }}" class="wh-44 bd-ra-50 object-fit-cover" alt="">
@@ -189,7 +193,9 @@
         <div class="row rg-15">
             @foreach($waPhones as $phone)
             <div class="col-md-6 col-lg-4">
-                <div class="bd-one bd-ra-10 p-20 h-100 d-flex flex-column" style="border-color:#e5e7eb; transition:border-color .2s;">
+                @php $isConnected = in_array($phone['id'], $existingPlatformIds); @endphp
+                <div class="bd-one bd-ra-10 p-20 h-100 d-flex flex-column oauth-card-box" 
+                    style="border-color:{{ $isConnected ? '#10b981' : '#e5e7eb' }}; background-color:{{ $isConnected ? '#10b98108' : '#fff' }}; transition:all .3s; {{ $isConnected ? 'box-shadow: 0 4px 12px #10b9811a;' : '' }}">
                     <div class="d-flex align-items-center cg-12 mb-15">
                         <div class="wh-44 bd-ra-50 d-flex align-items-center justify-content-center"
                             style="background:#25D3661a;">
