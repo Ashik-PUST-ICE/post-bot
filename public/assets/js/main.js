@@ -22,6 +22,7 @@
         this.Animation();
         this.PassShowHide();
         this.ActiveTab();
+        this.ActiveSidebar();
         this.MyApisRating();
         this.GoalStepSlider();
         this.PriceToggle();
@@ -101,6 +102,34 @@
             var $tab = jQuery('a[data-bs-toggle="tab"][href="' + activeTab + '"]');
             if ($tab.length > 0) {
               $tab.tab("show");
+            }
+          }
+        });
+      },
+      ActiveSidebar: function () {
+        $(document).ready(function () {
+          var $activeItem = $('.zSidebar-menu .active').closest('li');
+          var $sidebarWrap = $('.zSidebar-fixed');
+          
+          if ($activeItem.length && $sidebarWrap.length) {
+            // Check if the item is within a collapsed submenu
+            var $submenu = $activeItem.closest('.zSidebar-submenu');
+            if ($submenu.length && !$submenu.hasClass('show')) {
+               $submenu.addClass('show');
+               $submenu.prev('a').removeClass('collapsed').attr('aria-expanded', 'true');
+            }
+
+            // Calculate the item's position relative to the scroll container
+            var containerTop = $sidebarWrap.offset().top;
+            var itemTop = $activeItem.offset().top;
+            var currentScroll = $sidebarWrap.scrollTop();
+            var containerHeight = $sidebarWrap.height();
+            
+            // Only scroll if the item is outside the initially visible area
+            if (itemTop - containerTop > containerHeight / 2 || itemTop - containerTop < 0) {
+              $sidebarWrap.animate({
+                scrollTop: currentScroll + (itemTop - containerTop) - (containerHeight / 3)
+              }, 300);
             }
           }
         });
