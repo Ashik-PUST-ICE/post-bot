@@ -58,16 +58,16 @@
     {{-- Table --}}
     <div class="bd-one bd-c-stroke bd-ra-10 bg-white">
         <div class="p-20">
-            <table id="inboxTable" class="zTable w-100">
+            <table id="inboxTable" class="table zTable zTable-last-item-right w-100">
                 <thead>
                     <tr>
-                        <th>{{ __('Platform') }}</th>
-                        <th>{{ __('Contact') }}</th>
-                        <th>{{ __('Last Message') }}</th>
-                        <th>{{ __('Status') }}</th>
-                        <th>{{ __('AI Replies') }}</th>
-                        <th>{{ __('Last Active') }}</th>
-                        <th>{{ __('Action') }}</th>
+                        <th><div>{{ __('Platform') }}</div></th>
+                        <th><div>{{ __('Contact') }}</div></th>
+                        <th><div>{{ __('Last Message') }}</div></th>
+                        <th><div>{{ __('Status') }}</div></th>
+                        <th><div>{{ __('AI Replies') }}</div></th>
+                        <th><div>{{ __('Last Active') }}</div></th>
+                        <th><div>{{ __('Action') }}</div></th>
                     </tr>
                 </thead>
                 <tbody></tbody>
