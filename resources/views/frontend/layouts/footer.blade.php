@@ -7,8 +7,8 @@
                 <div class="row rg-20">
                     <div class="col-lg-4">
                         <div class="max-w-366 me-auto me-lg-0 ms-auto text-center text-lg-start">
-                            <div class="max-w-194 pb-22"><img src="{{ getSettingImage('app_logo_white') }}"
-                                    alt="{{ getOption('app_name') }}" /></div>
+                            <div class="pb-22" style="max-width: 130px;"><img src="{{ getSettingImage('app_logo_white') }}"
+                                    alt="{{ getOption('app_name') }}" style="max-height: 78px; width: auto; object-fit: contain;" /></div>
                             <p class="pb-32 fs-18 fw-400 lh-28 text-white">{{ getOption('app_footer_text') }}</p>
                             <ul class="d-flex justify-content-center justify-content-lg-start align-items-center g-12 landing-footer-social">
                                 @if (getOption('social_media_facebook'))
