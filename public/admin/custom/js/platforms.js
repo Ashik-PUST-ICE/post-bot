@@ -40,15 +40,26 @@
     // ── Auto-reply toggle ──────────────────────────────────────────────────────
     $(document).on('change', '.platform-auto-reply-toggle', function () {
         var url = $(this).data('route');
-        commonAjax('POST', url, function (res) {
-            if (res.status) {
-                toastr.success(res.message);
-            } else {
-                toastr.error(res.message);
-                // revert toggle
-                $(this).prop('checked', !$(this).prop('checked'));
+        var $toggle = $(this);
+        $.ajax({
+            type: 'POST',
+            url: url,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (res) {
+                if (res.status) {
+                    toastr.success(res.message);
+                } else {
+                    toastr.error(res.message);
+                    $toggle.prop('checked', !$toggle.prop('checked'));
+                }
+            },
+            error: function (err) {
+                commonHandler(err);
+                $toggle.prop('checked', !$toggle.prop('checked'));
             }
-        }, commonHandler, { _token: $('meta[name="csrf-token"]').attr('content') });
+        });
     });
 
     // ── Edit: load info via AJAX → fill modal ──────────────────────────────────
