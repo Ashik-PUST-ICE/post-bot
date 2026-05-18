@@ -1,3 +1,57 @@
+<style>
+    /* Premium sleek landing header styling */
+    .landing-header {
+        padding: 0.875rem 0 !important;
+        border-bottom: 1px solid rgba(229, 229, 224, 0.3);
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+
+    /* Slim sticky state with backdrop blur */
+    .landing-header.sticky-on {
+        padding: 0.5rem 0 !important;
+        background-color: rgba(255, 255, 255, 0.85) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+        border-bottom: 1px solid rgba(229, 229, 224, 0.7);
+    }
+
+    /* Adjust logo size to look ultra-clean */
+    .landing-header img {
+        max-height: 38px !important;
+        width: auto !important;
+        object-fit: contain;
+    }
+
+    /* Premium menu navigation items styling */
+    .landing-menu-navbar-nav li a {
+        font-size: 0.975rem !important;
+        font-weight: 600 !important;
+        color: #4A4A45 !important;
+        padding: 0.5rem 1rem !important;
+        transition: color 0.2s ease !important;
+    }
+
+    .landing-menu-navbar-nav li a:hover {
+        color: var(--main-color) !important;
+    }
+
+    /* Overriding the chunky py-19 px-33 buttons */
+    .landing-header .col-xl-3 a {
+        padding: 0.625rem 1.5rem !important;
+        font-size: 0.925rem !important;
+        font-weight: 700 !important;
+        line-height: 1.25rem !important;
+        border-radius: 8px !important;
+        transition: all 0.25s ease !important;
+    }
+
+    .landing-header.sticky-on .col-xl-3 a {
+        padding: 0.5rem 1.25rem !important;
+        font-size: 0.875rem !important;
+    }
+</style>
+
 <!-- Start Header -->
 <header class="landing-header">
     <div class="container">
@@ -24,7 +78,6 @@
                             <li class="nav-item"><a class="nav-link" href="/#features">{{ __('Features') }}</a></li>
                             <li class="nav-item"><a class="nav-link" href="/#price">{{ __('Pricing') }}</a></li>
                             <li class="nav-item"><a class="nav-link" href="/#faq">{{ __('FAQ\'s') }}</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/#contact-us">{{ __('Contact us') }}</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('about_us') }}">{{ __('About Us') }}</a></li>
                         </ul>
                         <div class="d-lg-none mt-7">
