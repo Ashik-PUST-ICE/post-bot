@@ -166,9 +166,14 @@ class MetaOAuthController extends Controller
                 ->with('error', __('OAuth session expired. Please try again.'));
         }
 
-        $data['title']            = __('Select Account to Connect');
-        $data['activeMetaPicker'] = 'active';
-        $data['oauthData']       = $oauthData;
+        $existingPlatformIds = PlatformConnection::where('user_id', auth()->id())
+            ->pluck('platform_id')
+            ->toArray();
+
+        $data['title']               = __('Select Account to Connect');
+        $data['activeMetaPicker']    = 'active';
+        $data['oauthData']           = $oauthData;
+        $data['existingPlatformIds'] = $existingPlatformIds;
 
         return view('admin.platforms.oauth-picker', $data);
     }
@@ -228,7 +233,6 @@ class MetaOAuthController extends Controller
         try {
             DB::beginTransaction();
 
-
             $metaConfig = MetaAppConfig::forUser(auth()->id());
 
             // Facebook Page / Messenger: save page ID + page access token into MetaAppConfig.
@@ -278,7 +282,7 @@ class MetaOAuthController extends Controller
                 ]
             );
 
-            Session::forget('meta_oauth_data');
+            // Removed Session::forget('meta_oauth_data') so user can connect multiple accounts at once.
 
             DB::commit();
 

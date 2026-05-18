@@ -65,9 +65,12 @@
                 console.log('[meta-oauth] savePage response:', res);
                 if (res.status) {
                     toastr.success(res.message);
-                    setTimeout(function () {
-                        window.location.href = res.redirect;
-                    }, 800);
+                    
+                    // Don't redirect immediately. Change button state to "Connected" so they can connect multiple pages.
+                    btn.html('<i class="fa-solid fa-check me-6"></i>Connected')
+                       .css({ 'background': '#10b9811a', 'color': '#10b981', 'border-color': '#10b981' })
+                       .prop('disabled', true);
+                       
                 } else {
                     toastr.error(res.message);
                     btn.html(origHtml).prop('disabled', false);

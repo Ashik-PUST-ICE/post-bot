@@ -72,28 +72,42 @@
 
                     <div class="mt-auto d-flex flex-column rg-8">
                         {{-- Messenger --}}
-                        <button type="button"
-                            class="w-100 py-10 px-14 bd-one bd-ra-4 fs-13 fw-600 connect-oauth-btn"
-                            style="border-color:#0084FF; background:#0084FF1a; color:#0084FF;"
-                            data-page-id="{{ $page['id'] }}"
-                            data-page-name="{{ $page['name'] }}"
-                            data-access-token="{{ $page['access_token'] }}"
-                            data-platform-type="{{ PLATFORM_MESSENGER }}"
-                            data-route="{{ route('admin.meta-oauth.save.page') }}">
-                            <i class="fa-brands fa-facebook-messenger me-6"></i>{{ __('Connect Messenger') }}
-                        </button>
+                        @if(in_array($page['id'], $existingPlatformIds))
+                            <button type="button" class="w-100 py-10 px-14 bd-one bd-ra-4 fs-13 fw-600"
+                                style="border-color:#10b981; background:#10b9811a; color:#10b981;" disabled>
+                                <i class="fa-solid fa-check me-6"></i>{{ __('Connected') }}
+                            </button>
+                        @else
+                            <button type="button"
+                                class="w-100 py-10 px-14 bd-one bd-ra-4 fs-13 fw-600 connect-oauth-btn"
+                                style="border-color:#0084FF; background:#0084FF1a; color:#0084FF;"
+                                data-page-id="{{ $page['id'] }}"
+                                data-page-name="{{ $page['name'] }}"
+                                data-access-token="{{ $page['access_token'] }}"
+                                data-platform-type="{{ PLATFORM_MESSENGER }}"
+                                data-route="{{ route('admin.meta-oauth.save.page') }}">
+                                <i class="fa-brands fa-facebook-messenger me-6"></i>{{ __('Connect Messenger') }}
+                            </button>
+                        @endif
 
                         {{-- Facebook Page --}}
-                        <button type="button"
-                            class="w-100 py-10 px-14 bd-one bd-ra-4 fs-13 fw-600 connect-oauth-btn"
-                            style="border-color:#1877F2; background:#1877F21a; color:#1877F2;"
-                            data-page-id="{{ $page['id'] }}"
-                            data-page-name="{{ $page['name'] }}"
-                            data-access-token="{{ $page['access_token'] }}"
-                            data-platform-type="{{ PLATFORM_FACEBOOK_PAGE }}"
-                            data-route="{{ route('admin.meta-oauth.save.page') }}">
-                            <i class="fa-brands fa-facebook me-6"></i>{{ __('Connect FB Page') }}
-                        </button>
+                        @if(in_array($page['id'], $existingPlatformIds))
+                            <button type="button" class="w-100 py-10 px-14 bd-one bd-ra-4 fs-13 fw-600"
+                                style="border-color:#10b981; background:#10b9811a; color:#10b981;" disabled>
+                                <i class="fa-solid fa-check me-6"></i>{{ __('Connected') }}
+                            </button>
+                        @else
+                            <button type="button"
+                                class="w-100 py-10 px-14 bd-one bd-ra-4 fs-13 fw-600 connect-oauth-btn"
+                                style="border-color:#1877F2; background:#1877F21a; color:#1877F2;"
+                                data-page-id="{{ $page['id'] }}"
+                                data-page-name="{{ $page['name'] }}"
+                                data-access-token="{{ $page['access_token'] }}"
+                                data-platform-type="{{ PLATFORM_FACEBOOK_PAGE }}"
+                                data-route="{{ route('admin.meta-oauth.save.page') }}">
+                                <i class="fa-brands fa-facebook me-6"></i>{{ __('Connect FB Page') }}
+                            </button>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -135,16 +149,23 @@
                             </div>
                         </div>
                         <div class="mt-auto">
-                            <button type="button"
-                                class="w-100 py-11 px-18 bd-one bd-ra-4 bd-c-main-color bg-main-color text-white fs-13 fw-600 connect-oauth-btn"
-                                data-page-id="{{ $ig['id'] }}"
-                                data-page-name="{{ '@' . ($ig['username'] ?? $ig['id']) }}"
-                                data-access-token="{{ $page['access_token'] }}"
-                                data-platform-type="{{ PLATFORM_INSTAGRAM }}"
-                                data-ig-user-id="{{ $ig['id'] }}"
-                                data-route="{{ route('admin.meta-oauth.save.page') }}">
-                                <i class="fa-solid fa-plug me-6"></i>{{ __('Connect Instagram') }}
-                            </button>
+                            @if(in_array($ig['id'], $existingPlatformIds))
+                                <button type="button" class="w-100 py-11 px-18 bd-one bd-ra-4 fs-13 fw-600"
+                                    style="border-color:#10b981; background:#10b9811a; color:#10b981;" disabled>
+                                    <i class="fa-solid fa-check me-6"></i>{{ __('Connected') }}
+                                </button>
+                            @else
+                                <button type="button"
+                                    class="w-100 py-11 px-18 bd-one bd-ra-4 bd-c-main-color bg-main-color text-white fs-13 fw-600 connect-oauth-btn"
+                                    data-page-id="{{ $ig['id'] }}"
+                                    data-page-name="{{ '@' . ($ig['username'] ?? $ig['id']) }}"
+                                    data-access-token="{{ $page['access_token'] }}"
+                                    data-platform-type="{{ PLATFORM_INSTAGRAM }}"
+                                    data-ig-user-id="{{ $ig['id'] }}"
+                                    data-route="{{ route('admin.meta-oauth.save.page') }}">
+                                    <i class="fa-solid fa-plug me-6"></i>{{ __('Connect Instagram') }}
+                                </button>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -180,17 +201,24 @@
                         </div>
                     </div>
                     <div class="mt-auto">
-                        <button type="button"
-                            class="w-100 py-11 px-18 bd-one bd-ra-4 bd-c-main-color bg-main-color text-white fs-13 fw-600 connect-oauth-btn"
-                            data-page-id="{{ $phone['id'] }}"
-                            data-page-name="{{ $phone['display_phone_number'] ?? 'WhatsApp' }}"
-                            data-access-token="{{ $oauthData['long_token'] }}"
-                            data-platform-type="{{ PLATFORM_WHATSAPP }}"
-                            data-phone-number-id="{{ $phone['id'] }}"
-                            data-waba-id="{{ $phone['waba_id'] ?? '' }}"
-                            data-route="{{ route('admin.meta-oauth.save.page') }}">
-                            <i class="fa-solid fa-plug me-6"></i>{{ __('Connect WhatsApp') }}
-                        </button>
+                        @if(in_array($phone['id'], $existingPlatformIds))
+                            <button type="button" class="w-100 py-11 px-18 bd-one bd-ra-4 fs-13 fw-600"
+                                style="border-color:#10b981; background:#10b9811a; color:#10b981;" disabled>
+                                <i class="fa-solid fa-check me-6"></i>{{ __('Connected') }}
+                            </button>
+                        @else
+                            <button type="button"
+                                class="w-100 py-11 px-18 bd-one bd-ra-4 bd-c-main-color bg-main-color text-white fs-13 fw-600 connect-oauth-btn"
+                                data-page-id="{{ $phone['id'] }}"
+                                data-page-name="{{ $phone['display_phone_number'] ?? 'WhatsApp' }}"
+                                data-access-token="{{ $oauthData['long_token'] }}"
+                                data-platform-type="{{ PLATFORM_WHATSAPP }}"
+                                data-phone-number-id="{{ $phone['id'] }}"
+                                data-waba-id="{{ $phone['waba_id'] ?? '' }}"
+                                data-route="{{ route('admin.meta-oauth.save.page') }}">
+                                <i class="fa-solid fa-plug me-6"></i>{{ __('Connect WhatsApp') }}
+                            </button>
+                        @endif
                     </div>
                 </div>
             </div>
