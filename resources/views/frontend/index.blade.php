@@ -220,6 +220,168 @@
                 </li>
             </ul>
         </div>
+@push('style')
+<style>
+    /* Premium Claude-like pricing override */
+    .price-plan-one {
+        background: #FFFFFF !important;
+        border: 1px solid #E5E5E0 !important;
+        border-radius: 20px !important;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02), 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        overflow: hidden;
+        position: relative;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .price-plan-one:hover {
+        transform: translateY(-8px) !important;
+        border-color: #D1D1C7 !important;
+        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08), 0 1px 5px rgba(0, 0, 0, 0.03) !important;
+    }
+
+    /* Featured card highlight (sonnet/pro) */
+    .price-plan-one.price-plan-standard {
+        border: 2px solid #D97706 !important; /* Premium warm amber accent */
+        box-shadow: 0 10px 35px -5px rgba(217, 119, 6, 0.08) !important;
+    }
+    
+    .price-plan-one.price-plan-standard:hover {
+        border-color: #B45309 !important;
+        box-shadow: 0 25px 45px -10px rgba(217, 119, 6, 0.15) !important;
+    }
+
+    /* Elegant warm ivory background on hover */
+    .price-plan-one .price-head {
+        background: transparent !important;
+        padding: 3rem 2rem 2rem !important;
+        border-bottom: 1px solid #F0EFEA !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .price-plan-one .price-head::before, 
+    .price-plan-one .price-head::after {
+        display: none !important; /* Hide background shapes/vectors */
+    }
+
+    /* Claude-style squircle icon frame */
+    .plan-icon-container {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        background: #F5F4F0;
+        border: 1px solid #E5E5E0;
+        border-radius: 16px;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .price-plan-one:hover .plan-icon-container {
+        background: #EBEAE4;
+        transform: scale(1.05);
+    }
+
+    /* Clean monochrome/colored symbols */
+    .plan-icon-container img {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+    }
+
+    /* Typography fixes */
+    .price-plan-one .price-head .title {
+        font-family: "Inter Tight", "Nunito", sans-serif;
+        font-size: 1.5rem !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.02em;
+        color: #1A1A17 !important;
+        margin-bottom: 0.5rem !important;
+        padding-bottom: 0 !important;
+    }
+
+    .price-plan-one .price-head .plan-price {
+        font-size: 3rem !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.04em;
+        color: #1A1A17 !important;
+        margin-top: 0.5rem !important;
+    }
+
+    /* Body improvements */
+    .price-plan-one .price-body {
+        padding: 2.25rem 2rem 2.25rem !important;
+        background: #FCFCFB;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .price-plan-one .price-body ul {
+        border-bottom: none !important;
+        padding: 0 !important;
+        margin-bottom: 2.25rem !important;
+    }
+
+    .price-plan-one .price-body ul li {
+        margin-bottom: 0.875rem !important;
+    }
+
+    .price-plan-one .price-body ul li p {
+        font-size: 1rem !important;
+        font-weight: 500 !important;
+        color: #4A4A45 !important;
+        line-height: 1.5 !important;
+    }
+
+    /* Claude-style elegant buttons */
+    .price-plan-one .price-body .link {
+        display: inline-flex;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0.875rem 1.5rem !important;
+        border-radius: 12px !important;
+        font-size: 1rem !important;
+        font-weight: 600 !important;
+        text-align: center;
+        justify-content: center;
+        border: 1px solid #1A1A17 !important;
+        color: #1A1A17 !important;
+        background: #FFFFFF !important;
+        transition: all 0.25s ease !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+    }
+
+    .price-plan-one .price-body .link.d-none {
+        display: none !important;
+    }
+
+    .price-plan-one .price-body .link:hover {
+        background: #1A1A17 !important;
+        color: #FFFFFF !important;
+    }
+
+    /* Highlight standard CTA */
+    .price-plan-standard .price-body .link {
+        background: #1A1A17 !important;
+        color: #FFFFFF !important;
+        border: 1px solid #1A1A17 !important;
+    }
+
+    .price-plan-standard .price-body .link:hover {
+        background: #000000 !important;
+        border-color: #000000 !important;
+    }
+</style>
+@endpush
+
         <!--  -->
         <div class="row rg-20">
             @foreach ($packages as $key => $package)
@@ -227,8 +389,8 @@
                 <div class="price-plan-one {{ $key == 1 ? 'price-plan-standard' : ($key >= 2 ? 'price-plan-enterprise' : '') }}">
                     <div class="price-head">
                         @if (!empty($package->icon))
-                        <div class="plan-icon mb-15">
-                            <img src="{{ asset($package->icon) }}" alt="{{ $package->name }}" style="width: 50px; height: 50px; object-fit: contain; margin: 0 auto; display: block;" />
+                        <div class="plan-icon-container">
+                            <img src="{{ asset($package->icon) }}" alt="{{ $package->name }}" />
                         </div>
                         @endif
                         <h4 class="title">{{ $package->name }}</h4>
