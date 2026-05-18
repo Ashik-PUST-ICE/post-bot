@@ -86,16 +86,16 @@
             </div>
         </div>
         <div class="p-20">
-            <table id="platformTable" class="zTable w-100">
+            <table id="platformTable" class="table zTable zTable-last-item-right w-100">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>{{ __('Platform') }}</th>
-                        <th>{{ __('Name') }}</th>
-                        <th>{{ __('Page / Phone ID') }}</th>
-                        <th>{{ __('Auto Reply') }}</th>
-                        <th>{{ __('Status') }}</th>
-                        <th>{{ __('Action') }}</th>
+                        <th><div>{{ __('#') }}</div></th>
+                        <th><div>{{ __('Platform') }}</div></th>
+                        <th><div>{{ __('Name') }}</div></th>
+                        <th><div>{{ __('Page / Phone ID') }}</div></th>
+                        <th><div>{{ __('Auto Reply') }}</div></th>
+                        <th><div>{{ __('Status') }}</div></th>
+                        <th><div>{{ __('Action') }}</div></th>
                     </tr>
                 </thead>
                 <tbody></tbody>
