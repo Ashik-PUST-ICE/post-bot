@@ -126,13 +126,14 @@ class PlatformController extends Controller
     }
 
 
-    /**
-     * Return platform info for edit modal (AJAX).
-     */
     public function getInfo(Request $request)
     {
         $connection = PlatformConnection::where('user_id', auth()->id())
             ->findOrFail($request->id);
+        
+        // Make the access_token visible for the edit modal
+        $connection->makeVisible('access_token');
+            
         return response()->json(['status' => true, 'data' => $connection]);
     }
 
@@ -143,6 +144,7 @@ class PlatformController extends Controller
     {
         $request->validate([
             'platform_name' => 'required|string|max:255',
+            'platform_id'   => 'nullable|string|max:255',
             'access_token'  => 'nullable|string',
             'phone_number'  => 'nullable|string|max:50',
         ]);
@@ -153,6 +155,7 @@ class PlatformController extends Controller
             $connection = PlatformConnection::where('user_id', auth()->id())->findOrFail($id);
             $connection->update([
                 'platform_name'     => $request->platform_name,
+                'platform_id'       => $request->platform_id,
                 'access_token'      => $request->access_token ?? $connection->access_token,
                 'phone_number'      => $request->phone_number,
                 'auto_reply_status' => $request->input('auto_reply_status', DEACTIVATE),

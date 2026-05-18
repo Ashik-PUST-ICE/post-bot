@@ -73,9 +73,10 @@
 
             var modal = $('#editPlatformModal');
             modal.find('#edit_platform_id').val(d.id);
+            modal.find('#edit_platform_id_input').val(d.platform_id || '');
             modal.find('#edit_platform_name').val(d.platform_name);
             modal.find('#edit_phone_number').val(d.phone_number || '');
-            modal.find('#edit_access_token').val('');  // never prefill token
+            modal.find('#edit_access_token').val(d.access_token || '');  // prefill token as requested
             modal.find('#edit_status').val(d.status);
             modal.find('#editPlatformForm').attr(
                 'action',

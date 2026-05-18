@@ -209,18 +209,21 @@
                         <input type="text" id="edit_platform_name" name="platform_name" class="form-control zForm-control">
                     </div>
                     <div>
+                        <label class="zForm-label">{{ __('Page / App ID') }}</label>
+                        <input type="text" id="edit_platform_id_input" name="platform_id" class="form-control zForm-control" placeholder="{{ __('Facebook Page ID or IG Business Account ID') }}">
+                    </div>
+                    <div>
                         <label class="zForm-label">{{ __('Phone Number (WhatsApp)') }}</label>
                         <input type="text" id="edit_phone_number" name="phone_number" class="form-control zForm-control">
                     </div>
                     <div>
                         <label class="zForm-label">
-                            {{ __('New Access Token') }}
-                            <span class="fs-11 text-para-text ms-5">{{ __('(leave blank to keep existing)') }}</span>
+                            {{ __('Access Token') }}
                         </label>
                         <div class="position-relative">
                             <input type="password" id="edit_access_token" name="access_token"
                                 class="form-control zForm-control"
-                                placeholder="{{ __('Paste new token only if rotating') }}">
+                                placeholder="{{ __('Your access token') }}">
                             <button type="button" class="border-0 bg-transparent position-absolute top-50 translate-middle-y toggle-token-vis"
                                 data-target="edit_access_token" style="right:12px;">
                                 <i class="fa-solid fa-eye fs-13 text-para-text"></i>
