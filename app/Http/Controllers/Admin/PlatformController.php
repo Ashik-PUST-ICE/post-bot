@@ -59,12 +59,23 @@ class PlatformController extends Controller
                 return '<span class="zBadge zBadge-' . $class . '">' . $label . '</span>';
             })
             ->addColumn('action', function ($row) {
-                return '<div class="d-flex align-items-center cg-8">'
-                    . '<button class="zBtn-icon-outline edit-platform-btn" data-id="' . $row->id . '">'
-                    . '<i class="fa-solid fa-pen"></i></button>'
-                    . '<button class="zBtn-icon-outline delete-platform-btn" data-route="' . route('admin.platforms.destroy', $row->id) . '">'
-                    . '<i class="fa-solid fa-trash text-red"></i></button>'
-                    . '</div>';
+                return '<div class="dropdown dropdown-one">
+                             <button class="dropdown-toggle p-0 bg-transparent w-22 h-22 ms-auto bd-one bd-c-light-border rounded-circle fs-13 text-textBlack d-flex justify-content-center align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis"></i></button>
+                             <ul class="dropdown-menu dropdownItem-one">
+                                <li>
+                                   <button type="button" class="w-100 d-flex align-items-center cg-8 border-0 bg-transparent px-15 py-10 edit-platform-btn" data-id="' . $row->id . '">
+                                      <div class="d-flex"><i class="fa-solid fa-pen-to-square text-para-text fs-14"></i></div>
+                                      <p class="fs-14 fw-500 lh-19 text-textBlack text-nowrap mb-0">' . __("Edit") . '</p>
+                                   </button>
+                                </li>
+                                <li>
+                                   <button type="button" class="w-100 d-flex align-items-center cg-8 border-0 bg-transparent px-15 py-10 delete-platform-btn" data-route="' . route('admin.platforms.destroy', $row->id) . '">
+                                      <div class="d-flex"><i class="fa-solid fa-trash text-para-text fs-14"></i></div>
+                                      <p class="fs-14 fw-500 lh-19 text-textBlack text-nowrap mb-0">' . __("Delete") . '</p>
+                                   </button>
+                                </li>
+                             </ul>
+                          </div>';
             })
             ->rawColumns(['platform_type', 'platform_id', 'auto_reply', 'status', 'action'])
             ->make(true);
