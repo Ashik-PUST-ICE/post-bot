@@ -439,13 +439,21 @@
                             @endforeach
                         </ul>
                         @auth
-                        <button type="button"
-                            class="btn link ldGetStarted"
-                            data-package="{{ $package->id }}"
-                            data-duration="{{ DURATION_MONTH }}"
-                            title="{{ __('Get Started') }}">{{ __('Get Started') }}</button>
+                            @if (!is_null($currentPackage) && $package->id == $currentPackage->package_id)
+                                @if ($currentPackage->duration_type == DURATION_MONTH)
+                                    <button type="button" class="btn link zPrice-plan-monthly" disabled title="{{ __('Current Plan') }}">{{ __('Current Plan') }}</button>
+                                    <button type="button" class="btn link zPrice-plan-yearly d-none ldGetStarted" data-package="{{ $package->id }}" data-duration="{{ DURATION_YEAR }}" title="{{ __('Get Started') }}">{{ __('Get Started') }}</button>
+                                @else
+                                    <button type="button" class="btn link zPrice-plan-monthly ldGetStarted" data-package="{{ $package->id }}" data-duration="{{ DURATION_MONTH }}" title="{{ __('Get Started') }}">{{ __('Get Started') }}</button>
+                                    <button type="button" class="btn link zPrice-plan-yearly d-none" disabled title="{{ __('Current Plan') }}">{{ __('Current Plan') }}</button>
+                                @endif
+                            @else
+                                <button type="button" class="btn link zPrice-plan-monthly ldGetStarted" data-package="{{ $package->id }}" data-duration="{{ DURATION_MONTH }}" title="{{ __('Get Started') }}">{{ __('Get Started') }}</button>
+                                <button type="button" class="btn link zPrice-plan-yearly d-none ldGetStarted" data-package="{{ $package->id }}" data-duration="{{ DURATION_YEAR }}" title="{{ __('Get Started') }}">{{ __('Get Started') }}</button>
+                            @endif
                         @else
-                        <a href="{{ route('register', ['package' => $package->id]) }}" class="btn link" title="{{ __('Get Started') }}">{{ __('Get Started') }}</a>
+                            <a href="{{ route('register', ['package' => $package->id]) }}" class="btn link zPrice-plan-monthly" title="{{ __('Get Started') }}">{{ __('Get Started') }}</a>
+                            <a href="{{ route('register', ['package' => $package->id]) }}" class="btn link zPrice-plan-yearly d-none" title="{{ __('Get Started') }}">{{ __('Get Started') }}</a>
                         @endauth
                     </div>
                 </div>

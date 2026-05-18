@@ -16,6 +16,11 @@ class LandingController extends Controller
         $data             = $this->service->getLandingData();
         $data['packages'] = Package::where('status', ACTIVE)->orderBy('monthly_price')->get();
         $data['pageTitle'] = getOption('app_name', config('app.name'));
+        if (auth()->check()) {
+            $data['currentPackage'] = (new \App\Http\Services\SubscriptionService())->getCurrentPackage();
+        } else {
+            $data['currentPackage'] = null;
+        }
         return view('frontend.index', $data);
     }
 
