@@ -13,6 +13,11 @@
             <div
                 class="price-plan-one {{ $key > 0 ? ($key == 1 ? 'price-plan-standard' : 'price-plan-enterprise') : '' }} {{ $package->is_popular == STATUS_ACTIVE ? 'price-plan-popular' : '' }}">
                 <div class=" price-head">
+                    @if (!empty($package->icon))
+                    <div class="plan-icon mb-15">
+                        <img src="{{ asset($package->icon) }}" alt="{{ $package->name }}" style="width: 50px; height: 50px; object-fit: contain; margin: 0 auto; display: block;" />
+                    </div>
+                    @endif
                     <h4 class="title">{{ $package->name }}</h4>
                     <h4 class="plan-price zPrice-plan-monthly">{{ showPrice($package->monthly_price) }}</h4>
                     <h4 class="plan-price zPrice-plan-yearly">{{ showPrice($package->yearly_price) }}</h4>
