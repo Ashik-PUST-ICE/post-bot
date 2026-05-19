@@ -11,5 +11,8 @@ fi
 # Run migrations (force for production/docker deployment)
 php artisan migrate --force
 
+# Seed the database only if settings are empty
+php artisan tinker --execute="if (\App\Models\Setting::count() === 0) { \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]); }"
+
 # Run supervisor to start Nginx & PHP-FPM & Queue worker
 exec supervisord -c /etc/supervisor/conf.d/supervisord.conf
