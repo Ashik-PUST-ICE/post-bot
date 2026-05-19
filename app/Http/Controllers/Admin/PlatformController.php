@@ -54,7 +54,7 @@ class PlatformController extends Controller
                     . '</div>';
             })
             ->addColumn('status', function ($row) {
-                $class = $row->status == STATUS_ACTIVE ? 'success' : 'danger';
+                $class = $row->status == STATUS_ACTIVE ? 'active' : 'deactivate';
                 $label = $row->status == STATUS_ACTIVE ? __('Active') : __('Inactive');
                 return '<span class="zBadge zBadge-' . $class . '">' . $label . '</span>';
             })
@@ -158,6 +158,7 @@ class PlatformController extends Controller
             'platform_id'   => 'nullable|string|max:255',
             'access_token'  => 'nullable|string',
             'phone_number'  => 'nullable|string|max:50',
+            'status'        => 'nullable|integer',
         ]);
 
         try {
@@ -170,6 +171,7 @@ class PlatformController extends Controller
                 'access_token'      => $request->access_token ?? $connection->access_token,
                 'phone_number'      => $request->phone_number,
                 'auto_reply_status' => $request->input('auto_reply_status', DEACTIVATE),
+                'status'            => $request->input('status', $connection->status),
             ]);
 
             DB::commit();
