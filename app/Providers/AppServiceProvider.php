@@ -95,7 +95,7 @@ class AppServiceProvider extends ServiceProvider
                 Gate::before(function ($user, $ability) {
                     return (($user->is_alumni && $user->role == USER_ROLE_USER) | (is_null($user->created_by) && $user->role == USER_ROLE_ADMIN) ) ? true : null;
                 });
-                if (getOption('force_ssl', 0)){
+                if (getOption('force_ssl', 0) || config('app.env') === 'production'){
                     URL::forceScheme('https');
                 }
             }
