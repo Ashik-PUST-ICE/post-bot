@@ -7,13 +7,13 @@
 @section('content')
 <div class="signLog-section">
     <div class="signLog-section-wrap">
-        <div class="left" data-background="{{ asset('assets')}}/images/auth-img-bg.png" data-aos="fade-left"
+        <div class="left" data-background="{{ asset('assets/images/auth-img-bg.png') }}" data-aos="fade-left"
             data-aos-duration="1000">
             <div class="wrap">
                 <div class="zMain-signLog-content">
                     <!-- Logo -->
                     <a href="{{ route('frontend') }}" class="d-flex mb-30">
-                        <img src="{{ getSettingImage('app_logo') }}" alt="{{ getOption('app_name') }}" />
+                        <img src="{{ getSettingImage('app_logo') }}" alt="{{ getOption('app_name') }}" class="auth-logo" />
                     </a>
                     <!--  -->
                     <div class="pb-30">

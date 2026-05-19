@@ -14,6 +14,10 @@
                     <form id="email_verify_resend_form" method="POST" action="{{ route('email.verify.resend', $token) }}" class="d-none" aria-hidden="true">
                         @csrf
                     </form>
+                    <!-- Logo -->
+                    <a href="{{ route('frontend') }}" class="d-flex mb-30">
+                        <img src="{{ getSettingImage('app_logo') }}" alt="{{ getOption('app_name') }}" class="auth-logo" />
+                    </a>
                     <div class="pb-30">
                         <h4 class="fs-32 fw-600 lh-48 text-textBlack pb-5">{{ __('Verify Your Account') }}</h4>
                         <p class="fs-14 fw-400 lh-22 text-para-text">{{ __('Enter 4 digit code to') }}

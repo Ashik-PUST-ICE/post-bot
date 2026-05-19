@@ -17,6 +17,11 @@
       @media screen and (max-width: 575px) {
         padding: toRem(20);
       }
+      .auth-logo {
+        max-width: toRem(150);
+        max-height: toRem(45);
+        object-fit: contain;
+      }
     }
     // &-img {
     //   height: 100vh;
@@ -25,6 +30,12 @@
     //   }
     // }
   }
+}
+
+.auth-logo {
+  max-width: toRem(150);
+  max-height: toRem(45);
+  object-fit: contain;
 }
 
 .signLog-section {

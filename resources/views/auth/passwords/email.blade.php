@@ -7,12 +7,12 @@
 @section('content')
 <div class="signLog-section">
     <div class="signLog-section-wrap">
-        <div class="left" data-background="assets/images/auth-img-bg.png" data-aos="fade-left" data-aos-duration="1000">
+        <div class="left" data-background="{{ asset('assets/images/auth-img-bg.png') }}" data-aos="fade-left" data-aos-duration="1000">
             <div class="wrap">
                 <div class="zMain-signLog-content">
                     <!-- Logo -->
                     <a href="{{ route('frontend') }}" class="d-flex mb-30">
-                        <img src="{{ getSettingImage('app_logo') }}" alt="{{ getOption('app_name') }}" />
+                        <img src="{{ getSettingImage('app_logo') }}" alt="{{ getOption('app_name') }}" class="auth-logo" />
                     </a>
                     <!--  -->
                     <h4 class="fs-32 fw-600 lh-48 text-textBlack pb-24">{{__("Forgot Password")}}?</h4>
@@ -46,7 +46,5 @@
             </div>
         </div>
     </div>
-</div>
-<div class="right" data-background="{{ getSettingImage('login_left_image') }}"></div>
 </div>
 @endsection

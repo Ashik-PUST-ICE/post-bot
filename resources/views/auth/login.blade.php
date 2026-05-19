@@ -11,8 +11,10 @@
             data-aos-duration="1000">
             <div class="wrap">
                 <div class="zMain-signLog-content">
-                    
-                    
+                    <!-- Logo -->
+                    <a href="{{ route('frontend') }}" class="d-flex mb-30">
+                        <img src="{{ getSettingImage('app_logo') }}" alt="{{ getOption('app_name') }}" class="auth-logo" />
+                    </a>
                     @if (getOption('registration_status', 0) == ACTIVE)
                     <div class="pb-30">
                         <h4 class="fs-32 fw-600 lh-48 text-textBlack pb-5">{{ __('Sign In') }}</h4>

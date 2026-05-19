@@ -5275,10 +5275,20 @@ textarea.zForm-control-textarea-2 {
   flex-direction: column;
   justify-content: center;
 }
+.zMain-signLog-content .auth-logo {
+  max-width: 9.375rem;
+  max-height: 2.8125rem;
+  object-fit: contain;
+}
 @media screen and (max-width: 575px) {
   .zMain-signLog-content {
     padding: 1.25rem;
   }
+}
+.auth-logo {
+  max-width: 9.375rem;
+  max-height: 2.8125rem;
+  object-fit: contain;
 }
 
 .signLog-section {
