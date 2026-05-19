@@ -733,61 +733,6 @@ $('#billingYearly-tab').on('shown.bs.tab', function () {
 @endif
 
 
-<!-- Contact us (landing) -->
-<section class="py-sm-150 py-30 bg-white position-relative z-1" id="contact-us">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-6">
-                <div class="text-center pb-40">
-                    <p class="landing-section-subtitle bd-one bd-c-main-color">{{ __('Get in touch') }}</p>
-                    <h4 class="lh-sm-57 lh-44 landing-section-title text-ld-black">{{ __('Contact us') }}</h4>
-                    <p class="fs-18 fw-400 lh-26 text-para-text">
-                        {{ __('Send us a message and we will get back to you.') }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="bd-one bd-c-stroke bd-ra-12 p-sm-40 p-20 bg-white">
-                    <form action="{{ route('contact-us.store', [], false) }}" method="post" class="row rg-20">
-                        @csrf
-                        <div class="col-md-6">
-                            <label class="zForm-label">{{ __('Name') }} <span class="text-danger">*</span></label>
-                            <input type="text" name="name" value="{{ old('name') }}" class="form-control zForm-control"
-                                required maxlength="255">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="zForm-label">{{ __('Email') }} <span class="text-danger">*</span></label>
-                            <input type="email" name="email" value="{{ old('email') }}"
-                                class="form-control zForm-control" required maxlength="255">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="zForm-label">{{ __('Phone') }}</label>
-                            <input type="text" name="phone" value="{{ old('phone') }}"
-                                class="form-control zForm-control" maxlength="50">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="zForm-label">{{ __('Subject') }}</label>
-                            <input type="text" name="subject" value="{{ old('subject') }}"
-                                class="form-control zForm-control" maxlength="255">
-                        </div>
-                        <div class="col-12">
-                            <label class="zForm-label">{{ __('Message') }} <span class="text-danger">*</span></label>
-                            <textarea name="message" rows="5" class="form-control zForm-control" required
-                                maxlength="10000"
-                                placeholder="{{ __('How can we help you?') }}">{{ old('message') }}</textarea>
-                        </div>
-                        <div class="col-12">
-                            <button type="submit"
-                                class="py-13 px-30 bd-one bd-ra-4 bd-c-main-color bg-main-color text-white fs-16 fw-600 lh-16">{{ __('Send message') }}</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
 @if (isset($section['faqs_area']) && $section['faqs_area']->status == STATUS_ACTIVE)
 <!-- Start FAQ's -->
