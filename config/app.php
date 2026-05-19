@@ -31,6 +31,8 @@ return [
 
     'env' => env('APP_ENV', 'production'),
     'STORAGE_DRIVER' => env('STORAGE_DRIVER','public'),
+    'login_help' => env('LOGIN_HELP', 'inactive'),
+    'app_demo_note' => (bool) env('APP_DEMO_NOTE', false),
 
     /*
     |--------------------------------------------------------------------------

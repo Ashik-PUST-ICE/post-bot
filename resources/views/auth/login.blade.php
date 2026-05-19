@@ -62,7 +62,7 @@
                             class="border-0 d-flex justify-content-center align-items-center w-100 p-15 bd-ra-4 bg-main-color fs-14 fw-700 lh-20 text-white">{{
                             __('Sign In') }}</button>
                     </form>
-                    @if (env('LOGIN_HELP') == 'active')
+                    @if (config('app.login_help') == 'active')
                     <div class="row pt-12 fs-14">
                         <div class="col-md-12 mb-25">
                             <div class="table-responsive login-info-table mt-3">
