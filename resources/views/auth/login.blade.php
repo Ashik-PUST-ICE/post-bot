@@ -68,31 +68,14 @@
                             <div class="table-responsive login-info-table mt-3">
                                 <table class="table table-bordered">
                                     <tbody>
-                                        @if (isAddonInstalled('KPISAAS') > 0)
                                         <tr>
                                             <td colspan="2" id="sadminCredentialShow" class="login-info">
-                                                <b>{{ __('Super Admin') }} :</b> {{ __('sadmin@gmail.com') }}
-                                                |
-                                                123456
-{{--                                                @if(env('APP_DEMO_NOTE', false))--}}
-{{--                                                <span class="badge bg-danger ml-2">(Addon)</span>--}}
-{{--                                                @endif--}}
-                                                <span class="badge bg-danger "><a href="{{LINK_SAAS_ADDON}}" target="_blank" style="color: white">{{ __('SAAS Addon') }}</a></span>
-                                                <p class="font-16 pt-2">
-                                                    <a  href="/" class="secondary-color font-medium">{{ __('SAAS Landing Page') }}</a>
-                                                </p>
+                                                <b>{{ __('Super Admin') }} :</b> {{ __('sadmin@gmail.com') }} | 123456
                                             </td>
                                         </tr>
-                                        @endif
                                         <tr>
                                             <td colspan="2" id="adminCredentialShow" class="login-info">
                                                 <b>{{ __('Admin ') }}:</b> {{ __('admin@gmail.com') }} | 123456
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2" id="employeeCredentialShow" class="login-info">
-                                                <b>{{ __('Super Admin ') }}:</b> {{ __('sadmin@gmail.com') }} |
-                                                123456
                                             </td>
                                         </tr>
                                     </tbody>
@@ -128,10 +111,6 @@
         });
         $('#adminCredentialShow').on('click', function() {
             $('#inputPhoneNumberOrEmail').val('admin@gmail.com');
-            $('#inputPassword').val('123456');
-        });
-        $('#employeeCredentialShow').on('click', function() {
-            $('#inputPhoneNumberOrEmail').val('sadmin@gmail.com');
             $('#inputPassword').val('123456');
         });
 </script>
