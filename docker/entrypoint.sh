@@ -3,6 +3,9 @@
 # Set directory permissions
 chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Create storage symlink
+php artisan storage:link --force
+
 # Generate app key if not set
 if [ -z "$APP_KEY" ]; then
     php artisan key:generate --force
