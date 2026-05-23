@@ -242,7 +242,7 @@ class MetaOAuthService
     {
         $response = Http::post("{$this->graphBase}/{$this->graphVersion}/{$pageId}/subscribed_apps", [
             'access_token'      => $pageToken,
-            'subscribed_fields' => 'messages,messaging_postbacks,messaging_optins,message_deliveries,message_reads,feed,comments,mentions'
+            'subscribed_fields' => 'messages,messaging_postbacks,messaging_optins,message_deliveries,message_reads,feed'
         ]);
 
         if ($response->failed()) {

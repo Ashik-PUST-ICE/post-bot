@@ -7,6 +7,7 @@ $pass = 'ECOupK3I1WKGQO7A';
 
 try {
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$db", $user, $pass, [
+        PDO::MYSQL_ATTR_SSL_CA => 'c:\Users\ashik\post-bot\cacert.pem',
         PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
@@ -31,12 +32,17 @@ try {
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
                 'access_token' => $config['fb_page_access_token'],
-                'subscribed_fields' => 'messages,messaging_postbacks,messaging_optins,message_deliveries,message_reads,feed,comments,mentions'
+                'subscribed_fields' => 'messages,messaging_postbacks,messaging_optins,message_deliveries,message_reads,feed'
             ]));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             $response = curl_exec($ch);
+            $err = curl_error($ch);
+            $info = curl_getinfo($ch);
             curl_close($ch);
-            echo "Facebook Graph API Response: " . $response . "\n";
+            echo "Facebook Graph API Response HTTP Status: " . $info['http_code'] . "\n";
+            echo "Facebook Graph API Error: " . $err . "\n";
+            echo "Facebook Graph API Body: " . $response . "\n";
         }
     } else {
         echo "No meta_app_configs found in production DB.\n";
