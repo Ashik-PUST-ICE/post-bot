@@ -286,6 +286,32 @@ class ProcessIncomingMessage implements ShouldQueue
             if ($specific) return $specific;
         }
 
+        // ── Fallback: Messenger ↔ Facebook Page cross-lookup ──────────────────
+        // Both PLATFORM_MESSENGER and PLATFORM_FACEBOOK_PAGE share the same
+        // Facebook Page ID. If the admin connected their page as one type but
+        // messages arrive for the other type, we still find the connection.
+        if ($platformId && in_array($platformType, [PLATFORM_MESSENGER, PLATFORM_FACEBOOK_PAGE])) {
+            $fallbackType = ($platformType === PLATFORM_MESSENGER)
+                ? PLATFORM_FACEBOOK_PAGE
+                : PLATFORM_MESSENGER;
+
+            $fallback = PlatformConnection::where('user_id', $userId)
+                ->where('platform_type', $fallbackType)
+                ->where('platform_id', $platformId)
+                ->where('status', STATUS_ACTIVE)
+                ->first();
+
+            if ($fallback) {
+                Log::info('ProcessIncomingMessage: Used cross-type FB fallback connection', [
+                    'requested_type' => $platformType,
+                    'found_type'     => $fallbackType,
+                    'platform_id'    => $platformId,
+                ]);
+                return $fallback;
+            }
+        }
+
+        // Last resort: any active connection of the right type for this user
         return $query->first();
     }
 

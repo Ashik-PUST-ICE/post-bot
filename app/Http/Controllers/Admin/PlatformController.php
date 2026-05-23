@@ -128,6 +128,15 @@ class PlatformController extends Controller
                 'status'            => STATUS_ACTIVE,
             ]);
 
+            // Attempt to subscribe page to webhooks if manual connection is Facebook/Instagram
+            if (in_array((int) $request->platform_type, [PLATFORM_FACEBOOK_PAGE, PLATFORM_MESSENGER, PLATFORM_INSTAGRAM])) {
+                if ($request->platform_id && $request->access_token) {
+                    $metaConfig = \App\Models\MetaAppConfig::forUser(auth()->id());
+                    $oauthService = new \App\Services\MetaOAuthService($metaConfig);
+                    $oauthService->subscribePage($request->platform_id, $request->access_token);
+                }
+            }
+
             DB::commit();
             return response()->json(['status' => true, 'message' => __('Platform connected successfully.')]);
         } catch (\Exception $e) {

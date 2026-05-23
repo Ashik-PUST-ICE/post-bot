@@ -242,6 +242,10 @@ class MetaOAuthController extends Controller
                     'fb_page_id'           => $request->page_id,
                     'fb_page_access_token' => $request->access_token,
                 ]);
+
+                // Subscribe the page to webhooks automatically
+                $oauthService = new MetaOAuthService($metaConfig);
+                $oauthService->subscribePage($request->page_id, $request->access_token);
             }
 
             // Instagram: save IG user ID + page token into MetaAppConfig.
@@ -251,6 +255,10 @@ class MetaOAuthController extends Controller
                     'ig_user_id'      => $request->ig_user_id ?: $request->page_id,
                     'ig_access_token' => $request->access_token,
                 ]);
+
+                // For Instagram, the underlying Facebook Page must be subscribed
+                $oauthService = new MetaOAuthService($metaConfig);
+                $oauthService->subscribePage($request->page_id, $request->access_token);
             }
 
             // WhatsApp: only save the Phone Number ID from OAuth.

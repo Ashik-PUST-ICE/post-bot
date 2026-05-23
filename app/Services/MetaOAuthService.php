@@ -232,4 +232,24 @@ class MetaOAuthService
 
         return $response->json('data', []);
     }
+
+    // ─── Step 6: Subscribe Page to Webhooks ───────────────────────────────────
+
+    /**
+     * Subscribe the Facebook Page to the Meta App so it sends webhooks for messages and comments.
+     */
+    public function subscribePage(string $pageId, string $pageToken): bool
+    {
+        $response = Http::post("{$this->graphBase}/{$this->graphVersion}/{$pageId}/subscribed_apps", [
+            'access_token'      => $pageToken,
+            'subscribed_fields' => 'messages,messaging_postbacks,messaging_optins,message_deliveries,message_reads,feed,comments,mentions'
+        ]);
+
+        if ($response->failed()) {
+            Log::error('[MetaOAuthService] Failed to subscribe page: ' . $response->body());
+            return false;
+        }
+
+        return true;
+    }
 }
