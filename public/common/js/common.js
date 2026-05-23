@@ -185,12 +185,20 @@
             error: errorHandler
         }
         if (typeof (data) != 'undefined') {
+            if (data instanceof FormData) {
+                data.append('_token', $('meta[name="csrf-token"]').attr('content'));
+            } else if (typeof data === 'object') {
+                data._token = $('meta[name="csrf-token"]').attr('content');
+            }
             ajaxData.data = data;
         }
         if (type == 'POST' || type == 'post') {
             ajaxData.encType = 'enctype';
             ajaxData.contentType = false;
             ajaxData.processData = false;
+            ajaxData.headers = {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            };
         }
         $.ajax(ajaxData);
     }
