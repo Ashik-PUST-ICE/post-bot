@@ -88,7 +88,10 @@ class MetaWebhookController extends Controller
         }
 
         if (!$this->verifySignature($request, $config->fb_app_secret)) {
-            Log::error("Webhook HMAC signature mismatch for user {$userId}");
+            Log::error("Webhook HMAC signature mismatch for user {$userId}", [
+                'has_app_secret' => !empty($config->fb_app_secret),
+                'header_sig'     => $request->header('X-Hub-Signature-256'),
+            ]);
             return response('Invalid signature', 403);
         }
 
@@ -307,6 +310,7 @@ class MetaWebhookController extends Controller
     protected function verifySignature(Request $request, ?string $appSecret): bool
     {
         if (empty($appSecret)) {
+            Log::warning('verifySignature: fb_app_secret is empty or not configured.');
             // In local/dev you may skip — never skip in production
             if (app()->isLocal()) return true;
             return false;

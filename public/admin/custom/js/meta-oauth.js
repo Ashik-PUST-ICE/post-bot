@@ -23,6 +23,7 @@
         var platformType  = btn.data('platform-type');
         var phoneNumberId = btn.data('phone-number-id') || '';
         var igUserId      = btn.data('ig-user-id') || '';
+        var fbPageId      = btn.data('fb-page-id') || '';
         var csrfToken     = $('meta[name="csrf-token"]').attr('content');
 
         // Log what we are about to send (helps debug 419 / missing-field issues)
@@ -60,6 +61,7 @@
                 phone_number_id: phoneNumberId,
                 waba_id        : btn.data('waba-id') || '',
                 ig_user_id     : igUserId,
+                fb_page_id     : fbPageId,
             },
             success: function (res) {
                 console.log('[meta-oauth] savePage response:', res);

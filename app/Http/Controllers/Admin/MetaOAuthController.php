@@ -195,6 +195,7 @@ class MetaOAuthController extends Controller
             'platform_type'  => $request->input('platform_type'),
             'phone_number_id'=> $request->input('phone_number_id'),
             'ig_user_id'     => $request->input('ig_user_id'),
+            'fb_page_id'     => $request->input('fb_page_id'),
             'has_token'      => $request->input('access_token') ? 'yes' : 'no',
             'has_session'    => session()->has('meta_oauth_data') ? 'yes' : 'no',
         ]);
@@ -207,6 +208,7 @@ class MetaOAuthController extends Controller
             'platform_type'   => 'required|integer',
             'phone_number_id' => 'nullable|string',
             'ig_user_id'      => 'nullable|string',
+            'fb_page_id'      => 'nullable|string',
         ]);
 
         $oauthData = Session::get('meta_oauth_data');
@@ -256,9 +258,14 @@ class MetaOAuthController extends Controller
                     'ig_access_token' => $request->access_token,
                 ]);
 
-                // For Instagram, the underlying Facebook Page must be subscribed
                 $oauthService = new MetaOAuthService($metaConfig);
-                $oauthService->subscribePage($request->page_id, $request->access_token);
+                // Subscribe the Instagram Account using Instagram-specific fields
+                $oauthService->subscribeInstagram($request->page_id, $request->access_token);
+
+                // Also subscribe the underlying Facebook Page if provided
+                if ($request->filled('fb_page_id')) {
+                    $oauthService->subscribePage($request->fb_page_id, $request->access_token);
+                }
             }
 
             // WhatsApp: only save the Phone Number ID from OAuth.

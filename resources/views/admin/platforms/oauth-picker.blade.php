@@ -166,6 +166,7 @@
                                     data-access-token="{{ $page['access_token'] }}"
                                     data-platform-type="{{ PLATFORM_INSTAGRAM }}"
                                     data-ig-user-id="{{ $ig['id'] }}"
+                                    data-fb-page-id="{{ $page['id'] }}"
                                     data-route="{{ route('admin.meta-oauth.save.page') }}">
                                     <i class="fa-solid fa-plug me-6"></i>{{ __('Connect Instagram') }}
                                 </button>

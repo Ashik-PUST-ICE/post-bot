@@ -252,4 +252,23 @@ class MetaOAuthService
 
         return true;
     }
+
+    /**
+     * Subscribe the Instagram Business Account to the Meta App.
+     */
+    public function subscribeInstagram(string $igAccountId, string $pageToken): bool
+    {
+        $response = Http::post("{$this->graphBase}/{$this->graphVersion}/{$igAccountId}/subscribed_apps", [
+            'access_token'      => $pageToken,
+            'subscribed_fields' => 'messages,messaging_postbacks,messaging_optins,messaging_seen,comments,mentions'
+        ]);
+
+        if ($response->failed()) {
+            Log::error('[MetaOAuthService] Failed to subscribe Instagram: ' . $response->body());
+            return false;
+        }
+
+        return true;
+    }
 }
+
