@@ -199,16 +199,29 @@ class InboxController extends Controller
                 'sent_at'         => now(),
             ]);
 
+            // Auto-update status: open/escalated/resolved → pending (waiting for customer)
+            $newStatus = in_array($conversation->status, [
+                CONVERSATION_STATUS_OPEN,
+                CONVERSATION_STATUS_ESCALATED,
+                CONVERSATION_STATUS_RESOLVED,
+            ]) ? CONVERSATION_STATUS_PENDING : $conversation->status;
+
             $conversation->update([
                 'last_message'     => \Illuminate\Support\Str::limit($body, 100),
                 'last_message_at'  => now(),
                 'human_taken_over' => 1,
+                'status'           => $newStatus,
             ]);
 
             DB::commit();
 
             $msg = $sent ? __('Reply sent.') : __('Reply saved but delivery to Meta API failed. Check your credentials.');
-            return response()->json(['status' => true, 'message' => $msg]);
+            return response()->json([
+                'status'     => true,
+                'message'    => $msg,
+                'sent'       => $sent,
+                'new_status' => $newStatus,
+            ]);
 
         } catch (\Exception $e) {
             DB::rollBack();

@@ -86,6 +86,44 @@
         }, commonHandler, { id: id });
     });
 
+    // ── Re-subscribe Webhook ───────────────────────────────────────────────────
+    $(document).on('click', '.resubscribe-platform-btn', function () {
+        var url = $(this).data('route');
+        Swal.fire({
+            title: 'Re-subscribe Webhook?',
+            text: "This will re-register this platform with Meta so messages are delivered to your inbox.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#6366f1',
+            cancelButtonColor:  '#6b7280',
+            confirmButtonText:  'Yes, re-subscribe!',
+            cancelButtonText:   'Cancel'
+        }).then(function (result) {
+            if (result.isConfirmed) {
+                Swal.fire({ title: 'Subscribing...', allowOutsideClick: false, didOpen: function() { Swal.showLoading(); } });
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    success: function (res) {
+                        Swal.close();
+                        if (res.status) {
+                            toastr.success(res.message);
+                            platformTable.ajax.reload(null, false);
+                        } else {
+                            toastr.error(res.message);
+                        }
+                    },
+                    error: function (err) {
+                        Swal.close();
+                        var msg = err.responseJSON ? (err.responseJSON.message || 'Server error') : 'Server error';
+                        toastr.error(msg);
+                    }
+                });
+            }
+        });
+    });
+
     // ── Delete ─────────────────────────────────────────────────────────────────
     $(document).on('click', '.delete-platform-btn', function () {
         var url = $(this).data('route');

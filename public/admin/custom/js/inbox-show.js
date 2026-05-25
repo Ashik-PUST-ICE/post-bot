@@ -53,6 +53,17 @@
                     $('#replyBody').val('');
                     hidePicker();
                     refreshMessages();
+
+                    // ── Auto-update status dropdown ─────────────────────────────
+                    if (res.new_status !== undefined) {
+                        var $sel = $('#conversationStatusSelect');
+                        $sel.val(res.new_status);
+                        // Visual flash to show status changed
+                        $sel.css({ 'border-color': '#6366f1', 'box-shadow': '0 0 0 3px #6366f120' });
+                        setTimeout(function () {
+                            $sel.css({ 'border-color': '', 'box-shadow': '' });
+                        }, 1500);
+                    }
                 } else {
                     toastr.error(res.message || 'Could not send reply.');
                 }

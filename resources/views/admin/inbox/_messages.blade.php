@@ -13,6 +13,43 @@
                     style="color:{{ platformColors($conversation->platform_type) }}"></i>
             </div>
             <div style="max-width:65%;">
+                {{-- FB / IG comment context badge --}}
+                @if($msg->meta_type && in_array($msg->meta_type, ['fb_comment', 'ig_comment', 'ig_mention']) && $msg->ai_metadata)
+                    @php $meta = $msg->ai_metadata; @endphp
+                    <div class="d-flex align-items-center cg-6 mb-6 flex-wrap">
+                        @if($msg->meta_type === 'fb_comment')
+                            <span class="py-2 px-8 bd-ra-50 fs-10 fw-600 d-inline-flex align-items-center cg-4"
+                                style="background:#1877F21a; color:#1877F2; border:1px solid #1877F230;">
+                                <i class="fa-brands fa-facebook fs-10"></i> {{ __('FB Post Comment') }}
+                            </span>
+                        @elseif($msg->meta_type === 'ig_comment')
+                            <span class="py-2 px-8 bd-ra-50 fs-10 fw-600 d-inline-flex align-items-center cg-4"
+                                style="background:#E1306C1a; color:#E1306C; border:1px solid #E1306C30;">
+                                <i class="fa-brands fa-instagram fs-10"></i> {{ __('IG Post Comment') }}
+                            </span>
+                        @elseif($msg->meta_type === 'ig_mention')
+                            <span class="py-2 px-8 bd-ra-50 fs-10 fw-600 d-inline-flex align-items-center cg-4"
+                                style="background:#E1306C1a; color:#E1306C; border:1px solid #E1306C30;">
+                                <i class="fa-brands fa-instagram fs-10"></i> {{ __('IG Mention') }}
+                            </span>
+                        @endif
+                        @if(!empty($meta['post_id']))
+                            <span class="fs-10 text-para-text">
+                                {{ __('Post') }}: 
+                                <a href="https://www.facebook.com/{{ $meta['post_id'] }}" target="_blank"
+                                    class="text-main-color fw-600" style="font-size:10px;">
+                                    #{{ Str::limit($meta['post_id'], 20) }}
+                                    <i class="fa-solid fa-arrow-up-right-from-square fs-9 ms-2"></i>
+                                </a>
+                            </span>
+                        @endif
+                        @if(!empty($meta['parent_id']) && $meta['parent_id'] !== $meta['post_id'])
+                            <span class="fs-10 text-para-text">
+                                <i class="fa-solid fa-reply fs-9 me-2"></i>{{ __('Reply to comment') }}
+                            </span>
+                        @endif
+                    </div>
+                @endif
                 <div class="bd-one bd-c-stroke bd-ra-10 p-12 bg-body">
                     <p class="fs-14 fw-400 text-textBlack" style="white-space:pre-wrap;">{{ $msg->body }}</p>
                 </div>
@@ -54,3 +91,4 @@
         <p class="fs-14 text-para-text mt-10">{{ __('No messages in this conversation yet.') }}</p>
     </div>
 @endforelse
+

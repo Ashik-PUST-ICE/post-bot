@@ -116,6 +116,7 @@ Route::group(['prefix' => 'platforms', 'as' => 'platforms.'], function () {
     Route::get('get-info', [PlatformController::class, 'getInfo'])->name('get.info');
     Route::post('update/{id}', [PlatformController::class, 'update'])->name('update');
     Route::post('toggle-auto-reply/{id}', [PlatformController::class, 'toggleAutoReply'])->name('toggle-auto-reply');
+    Route::post('resubscribe/{id}', [PlatformController::class, 'resubscribe'])->name('resubscribe');
     Route::post('destroy/{id}', [PlatformController::class, 'destroy'])->name('destroy');
 });
 

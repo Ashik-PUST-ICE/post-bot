@@ -59,9 +59,16 @@ class PlatformController extends Controller
                 return '<span class="zBadge zBadge-' . $class . '">' . $label . '</span>';
             })
             ->addColumn('action', function ($row) {
+                $resubRoute = route('admin.platforms.resubscribe', $row->id);
                 return '<div class="dropdown dropdown-one">
                              <button class="dropdown-toggle p-0 bg-transparent w-22 h-22 ms-auto bd-one bd-c-light-border rounded-circle fs-13 text-textBlack d-flex justify-content-center align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis"></i></button>
                              <ul class="dropdown-menu dropdownItem-one">
+                                <li>
+                                   <button type="button" class="w-100 d-flex align-items-center cg-8 border-0 bg-transparent px-15 py-10 resubscribe-platform-btn" data-route="' . $resubRoute . '">
+                                      <div class="d-flex"><i class="fa-solid fa-rotate text-para-text fs-14"></i></div>
+                                      <p class="fs-14 fw-500 lh-19 text-textBlack text-nowrap mb-0">' . __("Re-subscribe Webhook") . '</p>
+                                   </button>
+                                </li>
                                 <li>
                                    <button type="button" class="w-100 d-flex align-items-center cg-8 border-0 bg-transparent px-15 py-10 edit-platform-btn" data-id="' . $row->id . '">
                                       <div class="d-flex"><i class="fa-solid fa-pen-to-square text-para-text fs-14"></i></div>
@@ -206,6 +213,56 @@ class PlatformController extends Controller
             return response()->json(['status' => true, 'message' => __('Auto-reply status updated.')]);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Re-subscribe a platform connection to Meta webhooks.
+     * Useful when the subscription failed previously (e.g. invalid fields).
+     * Uses the stored access_token — no need to redo the full OAuth flow.
+     */
+    public function resubscribe($id)
+    {
+        try {
+            $connection = PlatformConnection::where('user_id', auth()->id())->findOrFail($id);
+
+            // Make access_token visible for use
+            $connection->makeVisible('access_token');
+
+            if (empty($connection->access_token) || empty($connection->platform_id)) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => __('Missing access token or platform ID. Please reconnect this platform via OAuth.'),
+                ]);
+            }
+
+            $metaConfig   = \App\Models\MetaAppConfig::forUser(auth()->id());
+            $oauthService = new \App\Services\MetaOAuthService($metaConfig);
+
+            $success = false;
+            if ((int) $connection->platform_type === PLATFORM_INSTAGRAM) {
+                $success = $oauthService->subscribeInstagram($connection->platform_id, $connection->access_token);
+            } else {
+                $success = $oauthService->subscribePage($connection->platform_id, $connection->access_token);
+            }
+
+            if ($success) {
+                return response()->json([
+                    'status'  => true,
+                    'message' => __('Webhook re-subscribed successfully! Messages will now be delivered to your inbox.'),
+                ]);
+            }
+
+            return response()->json([
+                'status'  => false,
+                'message' => __('Re-subscription failed. Check your Meta App credentials and try again.'),
+            ]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('PlatformController::resubscribe failed', [
+                'platform_id' => $id,
+                'error'       => $e->getMessage(),
+            ]);
+            return response()->json(['status' => false, 'message' => $e->getMessage()]);
         }
     }
 

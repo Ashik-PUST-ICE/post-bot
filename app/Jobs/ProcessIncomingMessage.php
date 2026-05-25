@@ -114,6 +114,20 @@ class ProcessIncomingMessage implements ShouldQueue
         ]);
 
         // ── 5. Save incoming message ───────────────────────────────────────────
+        // For comment platforms store extra context (post_id, comment_id, sender_name)
+        // inside ai_metadata so the inbox view can show "Commented on post #xxx"
+        $commentMeta = null;
+        if (in_array($platform, ['fb_comment', 'ig_comment', 'ig_mention'])) {
+            $commentMeta = array_filter([
+                'post_id'     => $data['post_id']     ?? null,
+                'comment_id'  => $data['comment_id']  ?? null,
+                'parent_id'   => $data['parent_id']   ?? null,
+                'media_id'    => $data['media_id']    ?? null,
+                'sender_name' => $data['sender_name'] ?? null,
+                'platform'    => $platform,
+            ]);
+        }
+
         $incomingMsg = Message::create([
             'conversation_id' => $conversation->id,
             'user_id'         => $userId,
@@ -122,7 +136,9 @@ class ProcessIncomingMessage implements ShouldQueue
             'sender_type'     => MESSAGE_SENDER_CUSTOMER,
             'body'            => $text ?? '[non-text message]',
             'message_type'    => $data['type'] ?? 'text',
+            'meta_type'       => $platform,
             'external_id'     => $data['mid'] ?? $data['message_id'] ?? $data['comment_id'] ?? null,
+            'ai_metadata'     => $commentMeta ?: null,
             'status'          => MESSAGE_STATUS_DELIVERED,
             'sent_at'         => now(),
         ]);
